@@ -142,3 +142,60 @@ class Favorito(models.Model):
     def __str__(self):
         return f"{self.producto.nombre} es favorito de {self.usuario.username}"
 
+
+# =================================================================
+# 🧾 TABLA: ORDEN
+# =================================================================
+class Orden(models.Model):
+
+    # Opciones para los campos de estado (choices)
+    class MetodoPago(models.TextChoices):
+        TARJETA = 'tarjeta', 'Tarjeta'
+        WHATSAPP = 'whatsapp', 'WhatsApp'
+
+    class EstadoPago(models.TextChoices):
+        PENDIENTE = 'pendiente', 'Pendiente'
+        PAGADO = 'pagado', 'Pagado'
+        CANCELADO = 'cancelado', 'Cancelado'
+
+    class EstadoOrden(models.TextChoices):
+        PENDIENTE = 'pendiente', 'Pendiente'
+        ENVIADO = 'enviado', 'Enviado'
+        ENTREGADO = 'entregado', 'Entregado'
+
+    # ID_ordenes es creado automáticamente por Django
+    usuario = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True, related_name='ordenes', verbose_name="Usuario")
+    direccion = models.ForeignKey(Direccion, on_delete=models.SET_NULL, null=True, related_name='ordenes', verbose_name="Dirección de envío")
+    
+    total = models.DecimalField(max_digits=10, decimal_places=2, verbose_name="Monto total de la compra")
+    metodo_pago = models.CharField(max_length=50, choices=MetodoPago.choices, default=MetodoPago.WHATSAPP, verbose_name="Método de pago")
+    estado_pago = models.CharField(max_length=50, choices=EstadoPago.choices, default=EstadoPago.PENDIENTE, verbose_name="Estado del pago")
+    estado_orden = models.CharField(max_length=50, choices=EstadoOrden.choices, default=EstadoOrden.PENDIENTE, verbose_name="Estado de la orden")
+    
+    cantidad_compra = models.PositiveIntegerField(verbose_name="Total de productos en la orden")
+    comprobante_envio = models.ImageField(upload_to='comprobantes/', null=True, blank=True, verbose_name="Imagen del comprobante de envío")
+    
+    fecha_creacion = models.DateTimeField(auto_now_add=True, verbose_name="Fecha de creación")
+    fecha_actualizacion = models.DateTimeField(auto_now=True, verbose_name="Última actualización")
+
+    def __str__(self):
+        return f"Orden #{self.id} de {self.usuario.username if self.usuario else 'Usuario Eliminado'}"
+
+# =================================================================
+# 📦 TABLA: ORDEN_ITEMS
+# =================================================================
+class OrdenItem(models.Model):
+    # ID_orden_items es creado automáticamente por Django
+    orden = models.ForeignKey(Orden, on_delete=models.CASCADE, related_name='items', verbose_name="Orden")
+    producto = models.ForeignKey(Producto, on_delete=models.SET_NULL, null=True, verbose_name="Producto")
+    
+    cantidad = models.PositiveIntegerField(verbose_name="Cantidad comprada")
+    precio_unitario = models.DecimalField(max_digits=10, decimal_places=2, verbose_name="Precio unitario al comprar")
+    precio_total = models.DecimalField(max_digits=10, decimal_places=2, verbose_name="Precio total por este item")
+
+    fecha_creacion = models.DateTimeField(auto_now_add=True)
+    fecha_actualizacion = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        nombre_producto = self.producto.nombre if self.producto else "[Producto Eliminado]"
+        return f"{self.cantidad} x {nombre_producto} en Orden #{self.orden.id}"
