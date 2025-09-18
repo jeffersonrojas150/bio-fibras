@@ -85,7 +85,7 @@ class ImagenProducto(models.Model):
 
 
 # =================================================================
-# 🏠 TABLA: DIRECCION (VERSIÓN CORREGIDA)
+# 🏠 TABLA: DIRECCION
 # =================================================================
 class Direccion(models.Model):
     # ID_direccion es creado automáticamente por Django
