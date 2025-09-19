@@ -68,17 +68,20 @@ class Producto(models.Model):
 # 📸 TABLA: IMAGEN_PRODUCTO
 # =================================================================
 class ImagenProducto(models.Model):
-    # ID_ImagenProducto es creado automáticamente por Django
-    
-    # Relación 1 a Muchos con Producto. Si se borra el producto, se borran sus imágenes.
     producto = models.ForeignKey(Producto, on_delete=models.CASCADE, related_name='imagenes', verbose_name="Producto")
-    
     imagen = models.ImageField(upload_to='productos/', verbose_name="Archivo de imagen")
     es_principal = models.BooleanField(default=False, verbose_name="¿Es la imagen principal?")
     orden = models.PositiveIntegerField(default=0, verbose_name="Orden de visualización")
-
     fecha_creacion = models.DateTimeField(auto_now_add=True, verbose_name="Fecha de subida")
     fecha_actualizacion = models.DateTimeField(auto_now=True, verbose_name="Fecha de actualización")
+
+    def save(self, *args, **kwargs):
+        # Si esta imagen se está marcando como principal...
+        if self.es_principal:
+            # ...busca todas las otras imágenes del mismo producto que también sean principales...
+            ImagenProducto.objects.filter(producto=self.producto, es_principal=True).exclude(pk=self.pk).update(es_principal=False)
+        
+        super().save(*args, **kwargs)
 
     def __str__(self):
         return f"Imagen de {self.producto.nombre} ({self.id})"
