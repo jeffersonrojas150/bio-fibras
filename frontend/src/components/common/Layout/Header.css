@@ -1,0 +1,434 @@
+/* ==========================================
+   HEADER STYLES - COMPLETO Y CORREGIDO
+   ========================================== */
+
+/* ------------------------------------------
+   Barra de Anuncios
+   ------------------------------------------ */
+.top-announcement-carousel {
+  background: linear-gradient(135deg, #CB9851 0%, #C8860D 50%, #CB9851 100%);
+  color: white;
+  font-size: 14px;
+  font-weight: 200;
+  overflow: hidden;
+  position: relative;
+  height: 30px;
+  display: flex;
+  align-items: center;
+}
+
+.carousel-track {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.announcement-slide {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  opacity: 0;
+  transform: translateY(20px);
+  transition: all 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  pointer-events: none;
+}
+
+.announcement-slide.active {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+
+.announcement-icon {
+  font-size: 16px;
+  margin-right: 5px;
+}
+
+.carousel-dots {
+  position: absolute;
+  right: 20px;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  gap: 6px;
+  z-index: 5;
+}
+
+.dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  border: none;
+  background: rgba(255, 255, 255, 0.4);
+  cursor: pointer;
+  transition: all 0.3s ease;
+  padding: 0;
+}
+
+.dot.active {
+  background: white;
+  transform: scale(1.2);
+}
+
+/* ------------------------------------------
+   Navbar Principal y Navegación de Escritorio
+   ------------------------------------------ */
+.main-navbar {
+  padding: 10px 0;
+  transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  background: white !important;
+  border-bottom: 1px solid rgba(0,0,0,0.05);
+  z-index: 1050; /* Debe estar por encima del contenido empujado */
+}
+
+.brand-container {
+  display: flex !important;
+  align-items: center;
+  gap: 12px;
+}
+
+.brand-name {
+  font-family: var(--font-body), Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+  font-size: 26px;
+  font-weight: 800;
+  color: #2c5530;
+}
+
+.logo-image {
+  height: 50px;
+}
+
+.center-nav {
+  transition: all 0.4s ease;
+}
+
+.main-navbar.search-active .center-nav {
+  opacity: 0;
+  transform: translateY(-10px);
+  pointer-events: none;
+}
+
+.nav-link-custom {
+  color: #333 !important;
+  font-weight: 600;
+  font-size: 15px;
+  text-transform: uppercase; /* Para que coincida con la imagen original */
+  padding: 10px 15px !important;
+  position: relative;
+  transition: all 0.3s ease;
+  letter-spacing: 0.5px;
+  white-space: nowrap;
+}
+
+.nav-link-custom:hover {
+  color: #C8860D !important;
+}
+
+.nav-link-custom::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 0;
+  height: 3px;
+  background: linear-gradient(90deg, #C8860D, #CB9851);
+  transition: width 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  border-radius: 2px;
+}
+
+/* CORRECCIÓN 1: Estilos para el subrayado del link activo */
+.nav-link-custom:hover::after,
+.nav-link-custom.active::after {
+  width: 70%;
+}
+
+/* Y el color del texto para el link activo */
+.nav-link-custom.active {
+    color: #C8860D !important;
+}
+
+.right-nav {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.nav-icon-link {
+  display: flex !important;
+  flex-direction: column;
+  align-items: center;
+  color: #333 !important;
+  padding: 8px 10px !important;
+  transition: all 0.3s ease;
+  border-radius: 8px;
+  text-decoration: none;
+}
+
+.nav-icon-link:hover {
+  color: #C8860D !important;
+  background-color: rgba(200, 134, 13, 0.08);
+}
+
+.nav-icon {
+  font-size: 20px;
+  margin-bottom: 0;
+}
+
+/* CORRECCIÓN 2: Clase para resetear estilos de botón y que se vea como un link */
+.btn-reset {
+    background: none;
+    border: none;
+    padding: 0;
+    margin: 0;
+    cursor: pointer;
+    font-family: inherit;
+    font-size: inherit;
+    line-height: inherit;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+}
+
+/* ------------------------------------------
+   Buscador Mejorado
+   ------------------------------------------ */
+.enhanced-search-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: #ffffff;
+  z-index: 1100; /* Por encima de todo */
+  display: flex;
+  align-items: center;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-15px);
+  transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+}
+
+.enhanced-search-overlay.active {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+.enhanced-search-group {
+  box-shadow: 0 8px 30px rgba(0,0,0,0.12);
+  border-radius: 50px;
+  overflow: hidden;
+}
+.enhanced-search-input {
+  border: none !important;
+  background: white;
+  padding: 18px 25px !important;
+  font-size: 16px;
+  box-shadow: none !important;
+  color: #333;
+  font-weight: 500;
+}
+.enhanced-search-btn {
+  background: linear-gradient(135deg, #2c5530, #1a3520) !important;
+  color: #fff;
+  border: none !important;
+  border-radius: 0 50px 50px 0 !important;
+  width: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  z-index: 5;
+}
+
+.close-search-btn {
+    position: absolute;
+    top: 50%;
+    right: -60px;
+    transform: translateY(-50%);
+    color: #555;
+    font-size: 24px;
+    text-decoration: none !important;
+    box-shadow: none !important;
+}
+.search-results-dropdown {
+    position: absolute;
+    top: 110%;
+    left: 0;
+    width: 100%;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+    max-height: 400px;
+    overflow-y: auto;
+    z-index: 10;
+}
+.result-item {
+    display: flex;
+    align-items: center;
+    padding: 10px 15px;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+.result-item:hover { background-color: #f8f9fa; }
+.result-image { width: 50px; height: 50px; object-fit: cover; border-radius: 8px; margin-right: 15px; }
+.result-info { display: flex; flex-direction: column; }
+.result-name { font-weight: 600; color: #333; }
+.result-category { font-size: 13px; color: #777; }
+
+
+/* ==========================================
+   ESTILOS PARA EL EFECTO SANDWICH Y MENÚ MÓVIL
+   ========================================== */
+
+body.body-menu-open {
+  overflow: hidden; /* Evita el scroll del contenido de fondo */
+}
+
+body.body-menu-open #root {
+  transform: translateX(300px);
+  transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  filter: brightness(0.9); 
+  pointer-events: none;
+}
+
+.mobile-menu-panel {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 300px;
+  height: 100%;
+  background: #fff;
+  z-index: 2000;
+  transform: translateX(-100%);
+  transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  display: flex;
+  flex-direction: column;
+  box-shadow: 5px 0 25px rgba(0, 0, 0, 0.15);
+  overflow-y: auto;
+}
+
+.mobile-menu-panel.open {
+  transform: translateX(0);
+}
+
+.mobile-menu-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 1051;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.4s ease, visibility 0s 0.4s;
+}
+
+.mobile-menu-overlay.active {
+  opacity: 1;
+  visibility: visible;
+  transition: opacity 0.4s ease;
+}
+
+.mobile-menu-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px 20px;
+  border-bottom: 1px solid #eee;
+  flex-shrink: 0;
+}
+
+.mobile-close-btn {
+  color: #333;
+  font-size: 24px;
+  padding: 5px;
+  text-decoration: none !important;
+  background: none !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+.mobile-close-btn:hover {
+  color: #C8860D;
+}
+
+.mobile-menu-auth {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  border-bottom: 1px solid #eee;
+  flex-shrink: 0;
+}
+
+.auth-btn {
+  width: 100%;
+  font-weight: 600 !important;
+  padding: 10px !important;
+  border-radius: 8px !important;
+}
+
+.mobile-menu-nav {
+  padding: 10px 0;
+  flex-grow: 1;
+}
+
+.mobile-menu-nav .nav-link {
+  color: #333 !important;
+  font-size: 16px;
+  font-weight: 500;
+  padding: 15px 25px !important;
+  display: flex !important;
+  align-items: center;
+  gap: 15px;
+  transition: all 0.2s ease-in-out;
+}
+
+.mobile-menu-nav .nav-link:hover,
+.mobile-menu-nav .nav-link:focus {
+  background-color: #f8f9fa;
+  color: #C8860D !important;
+}
+
+.mobile-menu-nav .nav-link i {
+  font-size: 20px;
+  width: 25px;
+  text-align: center;
+  color: #C8860D;
+}
+
+.mobile-menu-footer {
+  padding: 20px;
+  text-align: center;
+  border-top: 1px solid #eee;
+  color: #777;
+  flex-shrink: 0;
+}
+
+.mobile-menu-footer p {
+  margin-bottom: 10px;
+  font-size: 14px;
+}
+
+.social-icons a {
+  color: #333;
+  font-size: 22px;
+  margin: 0 10px;
+  text-decoration: none;
+  transition: color 0.3s;
+}
+
+.social-icons a:hover {
+  color: #C8860D;
+}

@@ -1,0 +1,271 @@
+/* ==========================================
+   HERO BANNER STYLES - BIOFIBRA
+   ========================================== */
+
+.hero-banner {
+  position: relative;
+  height: 85vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  overflow: hidden;
+}
+
+/* Imagen de fondo - Usando imagen de cestas como en tu diseño */
+.hero-background {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: url('https://images.unsplash.com/photo-1586023492125-27b2c045efd7?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  z-index: 1;
+}
+
+/* Overlay gradiente */           
+.hero-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    135deg, 
+    rgba(0, 0, 0, 0.909) 0%, 
+    rgba(0, 0, 0, 0.691) 40%, 
+    rgba(200, 134, 13, 0.2) 70%,
+    transparent 100%
+  );
+  z-index: 2;
+}
+
+/* Contenido del hero */
+.hero-content {
+  position: relative;
+  z-index: 3;
+  flex: 1;
+  display: flex;
+  align-items: center;
+  padding-top: 60px;
+}
+
+/* Contenedor del texto */
+.hero-text-content {
+  color: white;
+  max-width: 800px;
+}
+
+/* Título principal */
+.hero-title {
+  font-size: 3.5rem;
+  font-weight: 900;
+  line-height: 1.1;
+  margin-bottom: 24px;
+  text-shadow: 2px 2px 8px rgba(0,0,0,0.5);
+  letter-spacing: -1px;
+}
+
+.hero-title-accent {
+  color: #DAA520;
+  font-weight: 800;
+  display: block;
+  margin-top: 8px;
+}
+
+/* Descripción */
+.hero-description {
+  font-size: 1.2rem;
+  font-weight: 300;
+  line-height: 1.6;
+  margin-bottom: 32px;
+  color: rgba(255, 255, 255, 0.95);
+  text-shadow: 1px 1px 3px rgba(0,0,0,0.4);
+}
+
+/* Contenedor de botones */
+.hero-buttons {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+/* Botón principal */
+.btn-primary-custom {
+ border: 2px solid rgba(255, 255, 255, 0.9);
+  padding: 12px 32px;
+  font-size: 15px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  border-radius: 50px;
+  transition: all 0.3s ease;
+  color: white;
+  background: transparent;
+}
+
+.btn-primary-custom:hover {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: #b78917;
+  color: #DAA520;
+  transform: translateY(-2px);
+}
+
+/* Botón outline */
+.btn-outline-custom {
+  border: 2px solid rgba(255, 255, 255, 0.9);
+  padding: 12px 32px;
+  font-size: 15px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  border-radius: 50px;
+  transition: all 0.3s ease;
+  color: white;
+  background: transparent;
+}
+
+.btn-outline-custom:hover {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: #b78917;
+  color: #DAA520;
+  transform: translateY(-2px);
+}
+
+/* Sección inferior del hero */
+.hero-bottom {
+  position: relative;
+  z-index: 3;
+  padding: 40px 0;
+}
+
+/* Enlace de productos destacados */
+.featured-link {
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 16px;
+  font-weight: 500;
+  letter-spacing: 0.5px;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 0;
+  transition: all 0.3s ease;
+  border-bottom: 1px solid transparent;
+}
+
+.featured-link:hover {
+  color: #3b2f12;
+  border-bottom-color: rgba(218, 165, 32, 0.5);
+  transform: translateY(-2px);
+  text-decoration: none;
+}
+
+.arrow-icon {
+  transition: transform 0.3s ease;
+}
+
+.featured-link:hover .arrow-icon {
+  transform: translateX(5px);
+}
+
+/* ==========================================
+   RESPONSIVE DESIGN
+   ========================================== */
+
+@media (max-width: 768px) {
+  .hero-banner {
+    height: 90vh;
+  }
+  
+  .hero-title {
+    font-size: 2.8rem;
+    margin-bottom: 20px;
+  }
+  
+  .hero-description {
+    font-size: 1.1rem;
+    margin-bottom: 28px;
+  }
+  
+  .hero-buttons {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 12px;
+  }
+  
+  .btn-primary-custom,
+  .btn-outline-custom {
+    text-align: center;
+    justify-content: center;
+  }
+}
+
+@media (max-width: 576px) {
+  .hero-banner {
+    height: 100vh;
+  }
+  
+  .hero-title {
+    font-size: 2.4rem;
+  }
+  
+  .hero-description {
+    font-size: 1rem;
+  }
+  
+  .hero-text-content {
+    text-align: center;
+    padding: 0 15px;
+  }
+  
+  .featured-link {
+    font-size: 14px;
+  }
+}
+
+/* ==========================================
+   ANIMACIONES
+   ========================================== */
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(40px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeInLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-40px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.hero-text-content {
+  animation: fadeInLeft 1.2s ease-out;
+}
+
+.hero-title {
+  animation: fadeInUp 1s ease-out 0.3s both;
+}
+
+.hero-description {
+  animation: fadeInUp 1s ease-out 0.5s both;
+}
+
+.hero-buttons {
+  animation: fadeInUp 1s ease-out 0.7s both;
+}
+
+.featured-link {
+  animation: fadeInUp 1s ease-out 0.9s both;
+}

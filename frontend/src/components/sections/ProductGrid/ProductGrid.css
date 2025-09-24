@@ -1,0 +1,35 @@
+/* ==========================================
+   PRODUCT GRID STYLES - BIOFIBRA
+   ========================================== */
+
+.product-grid-section {
+  padding: 60px 0;
+  background-color: #fafafa;
+}
+
+.section-header {
+  margin-bottom: 40px;
+}
+
+.products-count {
+  font-size: 16px;
+  color: #666;
+  font-weight: 500;
+  margin: 0;
+  letter-spacing: 0.5px;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .product-grid-section {
+    padding: 40px 0;
+  }
+  
+  .section-header {
+    margin-bottom: 30px;
+  }
+  
+  .products-count {
+    font-size: 14px;
+  }
+}   

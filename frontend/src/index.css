@@ -1,0 +1,31 @@
+/* src/index.css */
+
+/* 1. Importar la fuente Raleway de Google Fonts UNA SOLA VEZ */
+@import url('https://fonts.googleapis.com/css2?family=Raleway:wght@300;600;700&display=swap');
+
+/* 2. Definir variables globales (buena práctica) */
+:root {
+  --font-body: 'Raleway', sans-serif;
+  --primary-color: #2c5530; /* Verde oscuro de tu logo */
+  --secondary-color: #C8860D; /* Dorado/café de tu barra de anuncios */
+  --text-primary: #333333;
+  --text-secondary: #666666;
+  --background-light: #ffffff;
+  --border-color: #e0e0e0;
+}
+
+/* 3. Aplicar la fuente y estilos base a toda la aplicación */
+body {
+  margin: 0;
+  font-family: var(--font-body); /* Aplicamos la fuente a todo */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background-color: var(--background-light);
+  color: var(--text-primary);
+}
+
+/* Otros estilos globales que quieras añadir */
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-body);
+  font-weight: 700; /* Letras más gruesas para títulos */
+}

@@ -1,0 +1,265 @@
+/* Estilos generales de la página */
+.products-page {
+  min-height: 100vh;
+  background-color: var(--background-light);
+  font-family: var(--font-body);
+}
+
+.products-container {
+  padding-top: 2rem;
+  padding-bottom: 3rem;
+}
+
+/* Sidebar de filtros */
+.filters-sidebar {
+  position: sticky;
+  top: 2rem;
+}
+
+.filters-container {
+  background: white;
+  border-radius: 8px;
+  padding: 1.5rem;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+}
+
+.filters-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+  border-bottom: 1px solid var(--border-color);
+  padding-bottom: 1rem;
+}
+
+.filters-header h5 {
+  margin: 0;
+  color: var(--text-primary);
+  font-weight: 600;
+}
+
+.filter-section h4 {
+ margin: 0;
+  color: var(--text-primary);
+  font-weight: 600!important;
+}
+.clear-filters-btn {
+  color: var(--primary-color) !important;
+  text-decoration: none !important;
+  font-size: 0.9rem;
+  padding: 0;
+}
+
+/* Toolbar */
+.toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: white;
+  padding: 1rem 1.5rem;
+  border-radius: 8px;
+  margin-bottom: 2rem;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.sort-controls {
+  display: flex;
+  align-items: center;
+}
+
+.sort-controls .form-label {
+  margin: 0;
+  white-space: nowrap;
+  color: var(--text-primary);
+  font-weight: 500;
+}
+
+.sort-select {
+  min-width: 180px;
+  border-color: var(--border-color);
+}
+
+/* Grid de productos */
+.products-grid.grid .product-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+}
+
+/* Card del producto */
+.product-card {
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  overflow: hidden;
+  background: white;
+  transition: all 0.3s ease;
+}
+
+.product-image-container {
+  position: relative;
+  overflow: hidden;
+}
+
+.product-image-container img {
+  width: 100%;
+  height: 280px; /* Un poco más de altura para la imagen */
+  object-fit: cover;
+  transition: transform 0.4s ease;
+}
+
+.product-card:hover .product-image-container img {
+  transform: scale(1.05);
+}
+
+.product-badges {
+  position: absolute;
+  top: 1rem;
+  left: 1rem;
+  z-index: 2;
+}
+
+.product-badges .badge {
+  margin-bottom: 0.5rem;
+  font-size: 0.75rem;
+  padding: 0.4rem 0.7rem;
+}
+
+/* --- ESTILO MODIFICADO DEL BOTÓN FAVORITO --- */
+.favorite-btn {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  background-color: rgba(255, 255, 255, 0.9); /* Fondo semi-transparente */
+  border: 1.5px solid var(--text-primary) !important; /* Borde negro */
+  border-radius: 50% !important;
+  width: 42px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: none !important; /* Sin sombra */
+  transition: all 0.2s ease;
+  z-index: 2;
+  padding: 0;
+}
+
+.favorite-btn:hover {
+  background-color: white;
+  transform: scale(1.1);
+  
+}
+
+/* Estilo para el icono del corazón dentro del botón */
+.favorite-btn svg {
+  color: var(--text-primary); /* Color del icono negro */
+  font-size: 1.1rem;
+}
+
+/* --- ESTILOS MODIFICADOS DE TIPOGRAFÍA --- */
+.product-title {
+  font-family: var(--font-body);
+  font-size: 1.1rem;
+  font-weight: 600; /* Un poco de grosor para que sea legible */
+  color: var(--text-primary);
+  margin-bottom: 0.75rem;
+  line-height: 1.4;
+  flex-grow: 1; /* Para que empuje el precio hacia abajo si los títulos tienen distinta longitud */
+}
+
+.product-price {
+  margin-bottom: 0.5rem;
+}
+
+.original-price {
+  font-family: var(--font-body);
+  font-weight: 300; /* Delgado */
+  text-decoration: line-through;
+  color: var(--text-muted);
+  font-size: 0.9rem;
+  margin-right: 0.5rem;
+}
+
+.current-price {
+  font-family: var(--font-body);
+  font-size: 1.3rem;
+  font-weight: 700; /* Grueso para destacar */
+  color: var(--text-primary); /* Color de precio negro para un look más sobrio */
+}
+
+.add-to-cart-btn {
+  background-color: var(--text-primary);
+  border-color: var(--text-primary);
+  font-weight: 600;
+  transition: all 0.2s ease;
+  font-family: var(--font-body);
+}
+
+.add-to-cart-btn:hover:not(:disabled) {
+  background-color: #000;
+  border-color: #000;
+}
+
+.add-to-cart-btn:disabled {
+  background-color: var(--text-muted);
+  border-color: var(--text-muted);
+}
+
+/* Header mejorado */
+.products-header {
+  text-align: center;
+  margin: 1rem 0;;
+}
+
+.title-section {
+  margin-bottom: 1rem;
+}
+
+.products-main-title {
+  font-size: 3rem;
+  font-weight: 300;
+  color:#075f1b;
+  margin-bottom: 0.5rem;
+  letter-spacing: 0.5px;
+}
+
+.products-count {
+  color: var(--text-secondary);
+  font-size: 1rem;
+  margin-bottom: 0;
+}
+
+/* Checkboxes de filtros */
+.checkbox-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.filter-checkbox .form-check-input {
+  border-color: var(--border-color);
+  margin-right: 0.75rem;
+}
+
+.filter-checkbox .form-check-input:checked {
+  background-color: var(--text-primary);
+  border-color: var(--text-primary);
+}
+
+/* Estilos para precio por mayor */
+.wholesale-info {
+  font-family: var(--font-body);
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  background-color: #f8f9fa;
+  border: 1px solid #e9ecef;
+  padding: 0.3rem 0.6rem;
+  border-radius: 5px;
+  margin-bottom: 1rem;
+  text-align: center;
+}
+
+.wholesale-info strong {
+  color: var(--success-color);
+  font-weight: 600;
+}
