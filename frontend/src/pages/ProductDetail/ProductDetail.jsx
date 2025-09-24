@@ -28,11 +28,17 @@ const ProductDetail = () => {
     }
 
     const foundProduct = productsData.find(p => p.id === parseInt(id));
-    if (foundProduct) {
-      setProduct({
-        ...foundProduct,
-        stock: foundProduct.stock || Math.floor(Math.random() * 20) + 5
-      });
+if (foundProduct) {
+  const images = foundProduct.images && foundProduct.images.length > 0
+    ? foundProduct.images
+    : [foundProduct.image, foundProduct.image, foundProduct.image];
+
+  setProduct({
+    ...foundProduct,
+    images,
+    stock: foundProduct.stock || Math.floor(Math.random() * 20) + 5
+  });
+
       
       if (!foundProduct.images || foundProduct.images.length === 0) {
         foundProduct.images = [
