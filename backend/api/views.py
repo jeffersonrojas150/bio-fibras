@@ -1,25 +1,39 @@
 from rest_framework import generics
-from .models import Producto
-from .serializers import ProductoListSerializer, ProductoDetailSerializer
+from rest_framework.permissions import IsAuthenticated, AllowAny
+from django.contrib.auth.models import User
+from .models import Producto, Categoria
+from .serializers import ProductoListSerializer, ProductoDetailSerializer, CategoriaSerializer, UserSerializer, RegisterSerializer
 
-# =================================================================
-# VISTA PARA LA LISTA DE PRODUCTOS (GET /api/productos/)
-# =================================================================
 class ProductoListView(generics.ListAPIView):
-    """
-    Vista para listar todos los productos que están activos en la tienda.
-    Utiliza el serializer de lista para mostrar solo la información esencial.
-    La paginación se aplicará globalmente a esta vista.
-    """
     queryset = Producto.objects.filter(es_activo=True)
-    
     serializer_class = ProductoListSerializer
     
 class ProductoDetailView(generics.RetrieveAPIView):
-    """
-    Vista para ver los detalles de un único producto, identificado por su slug.
-    Solo muestra productos que están activos.
-    """
     queryset = Producto.objects.filter(es_activo=True)
     serializer_class = ProductoDetailSerializer
     lookup_field = 'slug'
+
+
+class CategoriaListView(generics.ListAPIView):
+    queryset = Categoria.objects.filter(activo=True)
+    serializer_class = CategoriaSerializer
+
+class ProductosPorCategoriaView(generics.ListAPIView):
+    serializer_class = ProductoListSerializer
+
+    def get_queryset(self):
+        categoria_slug = self.kwargs['slug']
+        return Producto.objects.filter(es_activo=True, categoria__slug=categoria_slug)
+
+class UserProfileView(generics.RetrieveAPIView):
+
+    serializer_class = UserSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_object(self):
+        return self.request.user
+
+class RegisterView(generics.CreateAPIView):
+    queryset = User.objects.all()
+    permission_classes = [AllowAny]
+    serializer_class = RegisterSerializer

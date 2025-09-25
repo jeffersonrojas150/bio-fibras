@@ -6,6 +6,7 @@ __pycache__/
 
 # Archivos de configuración local y secretos
 .env
+gcs_credentials.json
 
 # Archivos de base de datos de SQLite (aunque no la usemos, es buena práctica)
 *.sqlite3
