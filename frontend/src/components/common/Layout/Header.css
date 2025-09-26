@@ -1,5 +1,5 @@
 /* ==========================================
-   HEADER STYLES - COMPLETO Y CORREGIDO
+   HEADER STYLES - COMPLETO Y CORREGIDO PARA MÓVIL
    ========================================== */
 
 /* ------------------------------------------
@@ -53,30 +53,16 @@
   margin-right: 5px;
 }
 
-.carousel-dots {
-  position: absolute;
-  right: 20px;
-  top: 50%;
-  transform: translateY(-50%);
-  display: flex;
-  gap: 6px;
-  z-index: 5;
-}
-
-.dot {
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  border: none;
-  background: rgba(255, 255, 255, 0.4);
-  cursor: pointer;
-  transition: all 0.3s ease;
-  padding: 0;
-}
-
-.dot.active {
-  background: white;
-  transform: scale(1.2);
+/* Responsive para anuncios */
+@media (max-width: 768px) {
+  .top-announcement-carousel {
+    font-size: 12px;
+    height: 28px;
+  }
+  
+  .announcement-icon {
+    font-size: 14px;
+  }
 }
 
 /* ------------------------------------------
@@ -87,13 +73,13 @@
   transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
   background: white !important;
   border-bottom: 1px solid rgba(0,0,0,0.05);
-  z-index: 1050; /* Debe estar por encima del contenido empujado */
+  z-index: 1050;
 }
 
 .brand-container {
   display: flex !important;
   align-items: center;
-  gap: 12px;
+  gap: 0px;
 }
 
 .brand-name {
@@ -101,10 +87,13 @@
   font-size: 26px;
   font-weight: 800;
   color: #2c5530;
+  gap: 0px;
 }
 
 .logo-image {
-  height: 50px;
+  margin-right: 0px;
+  padding: 0px 0px !important;
+  height: 60px;
 }
 
 .center-nav {
@@ -121,7 +110,7 @@
   color: #333 !important;
   font-weight: 600;
   font-size: 15px;
-  text-transform: uppercase; /* Para que coincida con la imagen original */
+  text-transform: uppercase;
   padding: 10px 15px !important;
   position: relative;
   transition: all 0.3s ease;
@@ -146,15 +135,13 @@
   border-radius: 2px;
 }
 
-/* CORRECCIÓN 1: Estilos para el subrayado del link activo */
 .nav-link-custom:hover::after,
 .nav-link-custom.active::after {
   width: 70%;
 }
 
-/* Y el color del texto para el link activo */
 .nav-link-custom.active {
-    color: #C8860D !important;
+  color: #C8860D !important;
 }
 
 .right-nav {
@@ -184,19 +171,18 @@
   margin-bottom: 0;
 }
 
-/* CORRECCIÓN 2: Clase para resetear estilos de botón y que se vea como un link */
 .btn-reset {
-    background: none;
-    border: none;
-    padding: 0;
-    margin: 0;
-    cursor: pointer;
-    font-family: inherit;
-    font-size: inherit;
-    line-height: inherit;
-    -webkit-appearance: none;
-    -moz-appearance: none;
-    appearance: none;
+  background: none;
+  border: none;
+  padding: 0;
+  margin: 0;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: inherit;
+  line-height: inherit;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
 }
 
 /* ------------------------------------------
@@ -209,7 +195,7 @@
   width: 100%;
   height: 100%;
   background: #ffffff;
-  z-index: 1100; /* Por encima de todo */
+  z-index: 1100;
   display: flex;
   align-items: center;
   opacity: 0;
@@ -224,11 +210,13 @@
   visibility: visible;
   transform: translateY(0);
 }
+
 .enhanced-search-group {
   box-shadow: 0 8px 30px rgba(0,0,0,0.12);
   border-radius: 50px;
   overflow: hidden;
 }
+
 .enhanced-search-input {
   border: none !important;
   background: white;
@@ -238,6 +226,7 @@
   color: #333;
   font-weight: 500;
 }
+
 .enhanced-search-btn {
   background: linear-gradient(135deg, #2c5530, #1a3520) !important;
   color: #fff;
@@ -252,95 +241,133 @@
 }
 
 .close-search-btn {
-    position: absolute;
-    top: 50%;
-    right: -60px;
-    transform: translateY(-50%);
-    color: #555;
-    font-size: 24px;
-    text-decoration: none !important;
-    box-shadow: none !important;
+  position: absolute;
+  top: 50%;
+  right: 325px; /* Lo posiciona a la izquierda del botón de lupa */
+  transform: translateY(-50%);
+  color: #000000 !important;
+  font-size: 28px !important;
+  text-decoration: none !important;
+  box-shadow: none !important;
+  background: none;
+  border: none;
+  padding: 5px;
+  cursor: pointer;
+  z-index: 6; /* Debe estar por encima del input */
+  transition: color 0.2s ease;
 }
-.search-results-dropdown {
-    position: absolute;
-    top: 110%;
-    left: 0;
-    width: 100%;
-    background: white;
-    border-radius: 12px;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.15);
-    max-height: 400px;
-    overflow-y: auto;
-    z-index: 10;
-}
-.result-item {
-    display: flex;
-    align-items: center;
-    padding: 10px 15px;
-    cursor: pointer;
-    transition: background-color 0.2s ease;
-}
-.result-item:hover { background-color: #f8f9fa; }
-.result-image { width: 50px; height: 50px; object-fit: cover; border-radius: 8px; margin-right: 15px; }
-.result-info { display: flex; flex-direction: column; }
-.result-name { font-weight: 600; color: #333; }
-.result-category { font-size: 13px; color: #777; }
 
+.search-results-dropdown {
+  position: absolute;
+  top: 110%;
+  left: 0;
+  width: 100%;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+  max-height: 400px;
+  overflow-y: auto;
+  z-index: 10;
+}
+
+.result-item {
+  display: flex;
+  align-items: center;
+  padding: 10px 15px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.result-item:hover { 
+  background-color: #f8f9fa; 
+}
+
+.result-image { 
+  width: 50px; 
+  height: 50px; 
+  object-fit: cover; 
+  border-radius: 8px; 
+  margin-right: 15px; 
+}
+
+.result-info { 
+  display: flex; 
+  flex-direction: column; 
+}
+
+.result-name { 
+  font-weight: 600; 
+  color: #333; 
+}
+
+.result-category { 
+  font-size: 13px; 
+  color: #777; 
+}
 
 /* ==========================================
-   ESTILOS PARA EL EFECTO SANDWICH Y MENÚ MÓVIL
+   ESTILOS RESPONSIVOS Y MENÚ MÓVIL CORREGIDOS
    ========================================== */
 
-body.body-menu-open {
-  overflow: hidden; /* Evita el scroll del contenido de fondo */
+/* Ocultar navegación desktop en móvil */
+@media (max-width: 991.98px) {
+  .center-nav,
+  .right-nav {
+    display: none !important;
+  }
+  
+  .brand-name {
+    font-size: 22px;
+  }
+  
+  .logo-image {
+    height: 40px;
+  }
 }
 
-body.body-menu-open #root {
-  transform: translateX(300px);
-  transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-  filter: brightness(0.9); 
-  pointer-events: none;
+/* Overlay para cerrar el menú tocando fuera */
+.mobile-menu-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 1500;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.3s ease;
 }
 
+.mobile-menu-overlay.active {
+  opacity: 1;
+  visibility: visible;
+}
+
+/* Panel del menú móvil */
 .mobile-menu-panel {
   position: fixed;
   top: 0;
   left: 0;
-  width: 300px;
-  height: 100%;
-  background: #fff;
-  z-index: 2000;
+  width: 280px;
+  max-width: 85vw;
+  height: 100vh;
+  background: #ffffff;
+  z-index: 1600;
   transform: translateX(-100%);
-  transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  transition: transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
   display: flex;
   flex-direction: column;
-  box-shadow: 5px 0 25px rgba(0, 0, 0, 0.15);
+  box-shadow: 5px 0 25px rgba(0, 0, 0, 0.2);
   overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
 }
 
 .mobile-menu-panel.open {
   transform: translateX(0);
 }
 
-.mobile-menu-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0, 0, 0, 0.5);
-  z-index: 1051;
-  opacity: 0;
-  visibility: hidden;
-  transition: opacity 0.4s ease, visibility 0s 0.4s;
-}
-
-.mobile-menu-overlay.active {
-  opacity: 1;
-  visibility: visible;
-  transition: opacity 0.4s ease;
-}
-
+/* Header del menú móvil */
 .mobile-menu-header {
   display: flex;
   justify-content: space-between;
@@ -348,57 +375,115 @@ body.body-menu-open #root {
   padding: 15px 20px;
   border-bottom: 1px solid #eee;
   flex-shrink: 0;
+  background: white;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.mobile-menu-header .brand-container {
+  gap: 8px;
+}
+
+.mobile-menu-header .brand-name {
+  font-size: 18px;
+}
+
+.mobile-menu-header .logo-image {
+  height: 35px;
 }
 
 .mobile-close-btn {
-  color: #333;
+  color: #333 !important;
   font-size: 24px;
-  padding: 5px;
+  padding: 5px !important;
   text-decoration: none !important;
   background: none !important;
   border: none !important;
   box-shadow: none !important;
-}
-.mobile-close-btn:hover {
-  color: #C8860D;
+  min-width: auto !important;
+  width: auto !important;
+  height: auto !important;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
+.mobile-close-btn:hover,
+.mobile-close-btn:focus {
+  color: #C8860D !important;
+  background: none !important;
+}
+
+/* Sección de autenticación */
 .mobile-menu-auth {
   padding: 20px;
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 12px;
   border-bottom: 1px solid #eee;
   flex-shrink: 0;
 }
 
 .auth-btn {
-  width: 100%;
+  width: 100% !important;
   font-weight: 600 !important;
-  padding: 10px !important;
+  padding: 12px !important;
   border-radius: 8px !important;
+  font-size: 14px !important;
+  border: 2px solid #333 !important;
+  transition: all 0.3s ease !important;
 }
 
+.auth-btn:first-child {
+  background: #333 !important;
+  color: white !important;
+  border-color: #333 !important;
+}
+
+.auth-btn:first-child:hover {
+  background: #C8860D !important;
+  border-color: #C8860D !important;
+}
+
+.auth-btn:last-child {
+  background: transparent !important;
+  color: #333 !important;
+  border-color: #333 !important;
+}
+
+.auth-btn:last-child:hover {
+  background: #333 !important;
+  color: white !important;
+}
+
+/* Navegación móvil */
 .mobile-menu-nav {
-  padding: 10px 0;
+  padding: 0;
   flex-grow: 1;
+  display: flex !important;
+  flex-direction: column !important;
 }
 
 .mobile-menu-nav .nav-link {
   color: #333 !important;
   font-size: 16px;
   font-weight: 500;
-  padding: 15px 25px !important;
+  padding: 18px 25px !important;
   display: flex !important;
   align-items: center;
   gap: 15px;
   transition: all 0.2s ease-in-out;
+  text-decoration: none !important;
+  border-bottom: 1px solid #f8f9fa;
 }
 
 .mobile-menu-nav .nav-link:hover,
-.mobile-menu-nav .nav-link:focus {
-  background-color: #f8f9fa;
+.mobile-menu-nav .nav-link:focus,
+.mobile-menu-nav .nav-link:active {
+  background-color: #f8f9fa !important;
   color: #C8860D !important;
+  text-decoration: none !important;
 }
 
 .mobile-menu-nav .nav-link i {
@@ -406,29 +491,114 @@ body.body-menu-open #root {
   width: 25px;
   text-align: center;
   color: #C8860D;
+  flex-shrink: 0;
 }
 
+/* Footer del menú móvil */
 .mobile-menu-footer {
   padding: 20px;
   text-align: center;
   border-top: 1px solid #eee;
   color: #777;
   flex-shrink: 0;
+  background: white;
 }
 
 .mobile-menu-footer p {
-  margin-bottom: 10px;
+  margin-bottom: 15px;
   font-size: 14px;
+  font-weight: 500;
+}
+
+.social-icons {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
 }
 
 .social-icons a {
   color: #333;
   font-size: 22px;
-  margin: 0 10px;
   text-decoration: none;
   transition: color 0.3s;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: #f8f9fa;
 }
 
 .social-icons a:hover {
-  color: #C8860D;
+  color: white;
+  background: #C8860D;
+}
+
+/* Evitar scroll en el body cuando el menú está abierto */
+body.body-menu-open {
+  overflow: hidden;
+  position: fixed;
+  width: 100%;
+}
+
+/* Responsive para tablets */
+@media (max-width: 768px) and (min-width: 576px) {
+  .mobile-menu-panel {
+    width: 320px;
+  }
+}
+
+/* Responsive para móviles pequeños */
+@media (max-width: 575.98px) {
+  .mobile-menu-panel {
+    width: 90vw;
+    max-width: 300px;
+  }
+  
+  .announcement-slide {
+    padding: 0 15px;
+    text-align: center;
+  }
+  
+  .mobile-menu-nav .nav-link {
+    padding: 15px 20px !important;
+    font-size: 15px;
+  }
+  
+  .mobile-menu-header {
+    padding: 12px 15px;
+  }
+  
+  .mobile-menu-auth {
+    padding: 15px;
+  }
+}
+
+/* Ajustes para el buscador en móvil */
+@media (max-width: 768px) {
+  .enhanced-search-overlay {
+    padding: 15px;
+  }
+  
+  .enhanced-search-input {
+    padding: 15px 20px !important;
+    font-size: 15px;
+  }
+  
+  .enhanced-search-btn {
+    width: 50px;
+  }
+  
+  
+  
+   .close-search-btn {
+    right: 6px; /* Posición de la X ajustada para móvil */
+    font-size: 18px;
+    color: #333 !important;
+    font-size: 25px !important;
+  }
+  .search-results-dropdown {
+    max-height: 300px;
+  }
 }

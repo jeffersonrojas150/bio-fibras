@@ -1,11 +1,12 @@
 import React, { useState, useEffect, useRef } from 'react';
-// IMPORTANTE: Asegúrate de tener 'react-router-dom' instalado (npm install react-router-dom)
-// y de importar 'useLocation' para que el menú activo funcione.
 import { useLocation } from 'react-router-dom';
 import { Navbar, Nav, Container, Form, InputGroup, Button } from 'react-bootstrap';
 
 import logo from '../../../assets/logo.png'; 
 import './Header.css';
+
+// Paso 1: Importar el nuevo componente del carrito
+import { CartIcon } from '../../Cart/Cart';
 
 import { productsData } from '../../../mocks/productsData';
 
@@ -24,7 +25,6 @@ const Header = () => {
     { icon: <i className="bi bi-truck"></i>, text: "Envíos a todo el Perú" },
     { icon: <i className="bi bi-leaf"></i>, text: "🌱 100% Productos Ecológicos y Sostenibles" },
     { icon: <i className="bi bi-telephone"></i>, text: "Atención 24/7 - WhatsApp: +51 999 888 777" },
-    
   ];
 
   useEffect(() => {
@@ -84,20 +84,15 @@ const Header = () => {
     closeSearch();
   };
   
-  // Función que comprueba si el path del link coincide con la URL actual
   const isNavLinkActive = (path) => {
-    // Para la ruta raíz '/', debe ser una coincidencia exacta
     if (path === '/') {
         return location.pathname === path;
     }
-    // Para otras rutas, comprueba si la URL actual comienza con el path del link
-    // Esto hace que /productos se active también en /productos/lamparas
     return location.pathname.startsWith(path);
   };
 
   return (
     <>
-      {/* CORRECCIÓN 1: CARRUSEL DE ANUNCIOS - Se ha añadido el mapeo para mostrar los anuncios */}
       <div className="top-announcement-carousel">
         <div className="carousel-track">
           {announcements.map((announcement, index) => (
@@ -130,7 +125,6 @@ const Header = () => {
 
           <Navbar.Collapse id="responsive-navbar-nav" className="d-none d-lg-flex">
             <Nav className="center-nav mx-auto">
-              {/* CORRECCIÓN 2: INDICADOR DE PÁGINA ACTIVA - Se añade la clase 'active' dinámicamente */}
               <Nav.Link href="/" className={`nav-link-custom ${isNavLinkActive('/') ? 'active' : ''}`}>INICIO</Nav.Link>
               <Nav.Link href="/productos" className={`nav-link-custom ${isNavLinkActive('/productos') ? 'active' : ''}`}>PRODUCTOS</Nav.Link>
               <Nav.Link href="/categorias" className={`nav-link-custom ${isNavLinkActive('/categorias') ? 'active' : ''}`}>CATEGORIAS</Nav.Link>
@@ -139,24 +133,23 @@ const Header = () => {
             </Nav>
 
             <Nav className="right-nav ms-lg-auto">
-              {/* CORRECCIÓN 3: BUSCADOR - Cambiado a un <button> para asegurar que el onClick siempre funcione */}
               <button type="button" className="nav-icon-link btn-reset" onClick={() => setIsSearchVisible(true)}>
                 <i className="bi bi-search nav-icon"></i>
               </button>
-              <Nav.Link href="#login" className="nav-icon-link">
+              <Nav.Link href="/login" className="nav-icon-link">
                 <i className="bi bi-person-circle nav-icon"></i>
               </Nav.Link>
               <Nav.Link href="#favoritos" className="nav-icon-link">
                 <i className="bi bi-heart nav-icon"></i>
               </Nav.Link>
-              <Nav.Link href="#carrito" className="nav-icon-link">
-                <i className="bi bi-cart nav-icon"></i>
-              </Nav.Link>
+              
+              {/* Paso 2: Usar el componente CartIcon aquí */}
+              <CartIcon />
+              
             </Nav>
           </Navbar.Collapse>
         </Container>
         
-        {/* Lógica del buscador, ahora se mostrará correctamente */}
         <div className={`enhanced-search-overlay ${isSearchVisible ? 'active' : ''}`}>
           <Container className="h-100">
             <div className="d-flex align-items-center justify-content-center h-100">
@@ -220,7 +213,7 @@ const Header = () => {
         <Nav className="flex-column mobile-menu-nav">
           <Nav.Link href="/"><i className="bi bi-house-door-fill"></i> Inicio</Nav.Link>
           <Nav.Link href="/productos"><i className="bi bi-basket-fill"></i> Productos</Nav.Link>
-          <Nav.Link href="#categorias"><i className="bi bi-grid-fill"></i> Categorías</Nav.Link>
+          <Nav.Link href="/categorias"><i className="bi bi-grid-fill"></i> Categorías</Nav.Link>
           <Nav.Link href="#nosotros"><i className="bi bi-people-fill"></i> Sobre Nosotros</Nav.Link>
           <Nav.Link href="#contacto"><i className="bi bi-envelope-fill"></i> Contacto</Nav.Link>
         </Nav>

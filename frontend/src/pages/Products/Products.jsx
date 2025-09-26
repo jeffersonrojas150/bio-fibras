@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { Container, Row, Col, Card, Button, Form, Badge, Offcanvas } from 'react-bootstrap';
 import { FaHeart, FaRegHeart, FaShoppingCart, FaFilter, FaTimes } from 'react-icons/fa';
+import { useNavigate } from 'react-router-dom';
 
 import './Products.css';
-import { productsData } from '../../mocks/productsData'
-import { useNavigate } from 'react-router-dom';
+import { productsData } from '../../mocks/productsData';
+import CustomSortDropdown from './CustomSortDropdown';
 
 const Products = () => {
   const [products, setProducts] = useState([]);
@@ -29,7 +30,7 @@ const Products = () => {
     { value: '50-100', label: 'S/ 50 - S/ 100' },
     { value: '100-150', label: 'S/ 100 - S/ 150' },
     { value: '150-200', label: 'S/ 150 - S/ 200' },
-    { value: '200-250', label: 'Más de S/ 200' }
+    { value: '200-9999', label: 'Más de S/ 200' } // Corregido para que el filtro funcione
   ];
 
   const sortOptions = [
@@ -37,7 +38,7 @@ const Products = () => {
     { value: 'name-desc', label: 'Nombre Z-A' },
     { value: 'price-low', label: 'Precio: Menor a Mayor' },
     { value: 'price-high', label: 'Precio: Mayor a Menor' },
-    { value: 'newest', label: 'Más Nuevos' }
+    
   ];
 
   useEffect(() => {
@@ -64,7 +65,7 @@ const Products = () => {
       filtered = filtered.filter(product => {
         return Array.from(selectedPriceRanges).some(range => {
           const [min, max] = range.split('-').map(Number);
-          return max ? product.price >= min && product.price <= max : product.price >= min;
+          return product.price >= min && product.price <= max;
         });
       });
     }
@@ -73,21 +74,21 @@ const Products = () => {
         case 'price-low': return a.price - b.price;
         case 'price-high': return b.price - a.price;
         case 'name-desc': return b.name.localeCompare(a.name);
-        case 'newest': return b.isNew - a.isNew;
+        case 'newest': return new Date(b.addedDate) - new Date(a.addedDate); // Suponiendo que tengas una fecha
         case 'name':
         default: return a.name.localeCompare(b.name);
       }
     });
     setFilteredProducts(filtered);
   };
-
-  // !!! CORRECCIÓN CRÍTICA AQUÍ !!!
-  // La ruta debe coincidir exactamente con la definida en App.js
+  
   const handleProductClick = (productId) => {
     navigate(`/producto/${productId}`); 
   };
-
-  const toggleFavorite = (productId) => {
+  
+  // CORRECCIÓN 1: Se añade e.stopPropagation() para evitar que el clic navegue a otra página.
+  const toggleFavorite = (e, productId) => {
+    e.stopPropagation(); // ¡Esta es la clave! Detiene el evento de clic para que no se propague al contenedor padre.
     const newFavorites = new Set(favorites);
     if (newFavorites.has(productId)) newFavorites.delete(productId);
     else newFavorites.add(productId);
@@ -118,27 +119,30 @@ const Products = () => {
   const hasActiveFilters = searchTerm || selectedCategories.size > 0 || selectedPriceRanges.size > 0;
 
   const FilterSidebar = ({ isMobile = false }) => (
-    <div className={`filters-container ${isMobile ? 'mobile-filters' : 'desktop-filters'}`}>
+    <div className="filters-container">
       <div className="filters-header">
-        <h5>Filtrar Productos</h5>
-        {hasActiveFilters && <Button variant="link" className="clear-filters-btn" onClick={clearFilters}>Limpiar Filtros</Button>}
-        {isMobile && <Button variant="link" className="close-filters-btn" onClick={() => setShowFilters(false)}><FaTimes /></Button>}
+        <h5 >Filtrar Productos</h5>
+        {isMobile ? (
+          <Button variant="link" className="close-filters-btn" onClick={() => setShowFilters(false)}><FaTimes /></Button>
+        ) : (
+          hasActiveFilters && <Button variant="link" className="clear-filters-btn" onClick={clearFilters}>Limpiar Filtros</Button>
+        )}
       </div>
+
       <div className="filter-section">
-        <h4>🍂Categorías</h4>
+        <h4 className='hola'><span role="img" aria-label="leaf" className="bi bi-grid-fill"></span> Categorías</h4>
         <div className="checkbox-group">
           {categories.map((category) => (
-            <Form.Check key={category.value} type="checkbox" id={`category-${category.value}`} label={category.label} checked={selectedCategories.has(category.value)} onChange={() => handleCategoryChange(category.value)} className="filter-checkbox"/>
+            <Form.Check key={category.value} type="checkbox" id={`category-${category.value}-${isMobile}`} label={category.label} checked={selectedCategories.has(category.value)} onChange={() => handleCategoryChange(category.value)} className="filter-checkbox"/>
           ))}
         </div>
       </div>
-      <h4></h4>
-      <h4></h4>
+
       <div className="filter-section">
-        <h4>🍂Precio</h4>
+        <h4 className='hola'><span role="img" aria-label="money"className="bi bi-grid-fill"></span> Precio</h4>
         <div className="checkbox-group">
           {priceRanges.map((range) => (
-            <Form.Check key={range.value} type="checkbox" id={`price-${range.value}`} label={range.label} checked={selectedPriceRanges.has(range.value)} onChange={() => handlePriceRangeChange(range.value)} className="filter-checkbox"/>
+            <Form.Check key={range.value} type="checkbox" id={`price-${range.value}-${isMobile}`} label={range.label} checked={selectedPriceRanges.has(range.value)} onChange={() => handlePriceRangeChange(range.value)} className="filter-checkbox"/>
           ))}
         </div>
       </div>
@@ -147,7 +151,6 @@ const Products = () => {
 
   return (
     <div className="products-page">
-  
       <Container fluid className="products-container">
         <Container>
           <div className="products-header">
@@ -166,32 +169,35 @@ const Products = () => {
               <div className="toolbar">
                 <div className="toolbar-left">
                   <Button variant="outline-secondary" className="d-lg-none mobile-filter-btn" onClick={() => setShowFilters(true)}>
-                    <FaFilter className="me-2" />Filtros{hasActiveFilters && <Badge bg="danger" className="ms-2">!</Badge>}
+                    <FaFilter className="me-2" />Filtros{hasActiveFilters && <Badge pill bg="danger" className="ms-1 filter-badge-count">{selectedCategories.size + selectedPriceRanges.size}</Badge>}
                   </Button>
                 </div>
                 <div className="toolbar-right">
                   <div className="sort-controls">
                     <Form.Label className="me-2">Ordenar por:</Form.Label>
-                    <Form.Select size="sm" value={sortBy} onChange={(e) => setSortBy(e.target.value)} className="sort-select">
-                      {sortOptions.map((option) => (<option key={option.value} value={option.value}>{option.label}</option>))}
-                    </Form.Select>
+                    <CustomSortDropdown
+                      options={sortOptions}
+                      value={sortBy}
+                      onChange={setSortBy}
+                    />
                   </div>
                 </div>
               </div>
               {filteredProducts.length > 0 ? (
                 <Row className="products-grid grid">
                   {filteredProducts.map((product) => (
-                    <Col key={product.id} xs={12} sm={6} lg={4} className="mb-4">
+                    <Col key={product.id} xs={6} md={4} className="mb-4"> {/* Ajustado para mejor responsividad */}
                       <Card className="product-card h-100">
                         <div className="product-image-container" onClick={() => handleProductClick(product.id)} style={{cursor: 'pointer'}}>
                           <Card.Img variant="top" src={product.image} alt={product.name} />
                           <div className="product-badges">
-                            {!product.inStock && <Badge bg="danger">Agotado</Badge>}
-                            {product.originalPrice && <Badge bg="warning">-{Math.round((1 - product.price / product.originalPrice) * 100)}%</Badge>}
+                            {!product.inStock && <Badge bg="secondary">Agotado</Badge>}
+                            {product.originalPrice && <Badge bg="warning" text="dark">-{Math.round((1 - product.price / product.originalPrice) * 100)}%</Badge>}
                           </div>
-                          <Button variant="link" className="favorite-btn" onClick={() => toggleFavorite(product.id)}>
+                          {/* CORRECCIÓN 2: Se pasa el evento (e) a la función y se añade clase dinámica */}
+                          <button className={`favorite-btn ${favorites.has(product.id) ? 'favorited' : ''}`} onClick={(e) => toggleFavorite(e, product.id)}>
                             {favorites.has(product.id) ? <FaHeart /> : <FaRegHeart />}
-                          </Button>
+                          </button>
                         </div>
                         <Card.Body className="d-flex flex-column">
                           <Card.Title className="product-title">{product.name}</Card.Title>
@@ -199,15 +205,9 @@ const Products = () => {
                             {product.originalPrice && <span className="original-price">S/ {product.originalPrice.toFixed(2)}</span>}
                             <span className="current-price">S/ {product.price.toFixed(2)}</span>
                           </div>
-                          {product.wholesalePrice && (
-                            <div className="wholesale-info">
-                              A partir de {product.wholesalePrice.minUnits} unid. a <strong> S/ {product.wholesalePrice.pricePerUnit.toFixed(2)} c/u</strong>
-                            </div>
-                          )}
-                          {/* Este botón también debería navegar al detalle del producto para añadir al carrito desde allí */}
                           <Button variant="primary" className="add-to-cart-btn mt-auto" disabled={!product.inStock} onClick={() => handleProductClick(product.id)}>
                             <FaShoppingCart className="me-2" />
-                            {product.inStock ? 'Añadir al Carrito' : 'Agotado'}
+                            {product.inStock ? 'Ver Producto' : 'Agotado'}
                           </Button>
                         </Card.Body>
                       </Card>
@@ -218,8 +218,8 @@ const Products = () => {
                 <div className="no-products">
                   <div className="no-products-content">
                     <h4>No se encontraron productos</h4>
-                    <p>No hay productos que coincidan con los filtros seleccionados.</p>
-                    <Button variant="primary" onClick={clearFilters}>Limpiar Filtros</Button>
+                    <p>Prueba ajustando los filtros o limpiándolos para ver todos nuestros productos.</p>
+                    <Button variant="primary" className="btn-mustard" onClick={clearFilters}>Limpiar Filtros</Button>
                   </div>
                 </div>
               )}
@@ -227,13 +227,14 @@ const Products = () => {
           </Row>
         </Container>
       </Container>
-      <Offcanvas show={showFilters} onHide={() => setShowFilters(false)} placement="start">
-        <Offcanvas.Header closeButton><Offcanvas.Title>Filtrar Productos</Offcanvas.Title></Offcanvas.Header>
+      {/* CORRECCIÓN 3: Offcanvas modificado (sin header y con nueva clase CSS) */}
+      <Offcanvas show={showFilters} onHide={() => setShowFilters(false)} placement="start" className="mobile-filters-offcanvas">
         <Offcanvas.Body>
           <FilterSidebar isMobile={true} />
-          <div className="mobile-filter-actions mt-4">
-            <Button variant="primary" className="w-100 mb-2" onClick={() => setShowFilters(false)}>Aplicar Filtros</Button>
-            <Button variant="outline-secondary" className="w-100" onClick={() => { clearFilters(); setShowFilters(false); }}>Limpiar Filtros</Button>
+          <div className="mobile-filter-actions">
+            {/* CORRECCIÓN 4: Se aplican nuevas clases para los botones color mostaza */}
+            <Button className="w-100 mb-2 btn-mustard" onClick={() => setShowFilters(false)}>Aplicar Filtros</Button>
+            <Button variant="outline-secondary" className="w-100 btn-mustard-outline" onClick={() => { clearFilters(); }}>Limpiar Filtros</Button>
           </div>
         </Offcanvas.Body>
       </Offcanvas>

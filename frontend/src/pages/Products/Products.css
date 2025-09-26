@@ -1,3 +1,14 @@
+/* Variables de color para consistencia */
+:root {
+  --mustard-color: #C8860D;
+  --mustard-hover: #a56f0a;
+  --text-primary: #333;
+  --text-secondary: #6c757d;
+  --border-color: #dee2e6;
+  --background-light: #f8f9fa;
+  --font-body: 'Poppins', sans-serif; /* Usando una fuente más moderna como ejemplo */
+}
+
 /* Estilos generales de la página */
 .products-page {
   min-height: 100vh;
@@ -10,17 +21,35 @@
   padding-bottom: 3rem;
 }
 
-/* Sidebar de filtros */
+/* Header de la página */
+.products-header {
+  text-align: center;
+  margin: 1rem 0 2rem 0;
+}
+
+.products-main-title {
+  font-size: 2.9rem;
+  font-weight: 300;
+  color: #2c5530; /* Verde oscuro del logo */
+  margin-bottom: 0.5rem;
+}
+
+.products-count {
+  color: var(--text-secondary);
+  font-size: 1rem;
+}
+
+/* Sidebar de filtros (Desktop) */
 .filters-sidebar {
   position: sticky;
-  top: 2rem;
+  top: 90px; /* Espacio para el header pegajoso */
 }
 
 .filters-container {
   background: white;
-  border-radius: 8px;
+  border-radius: 12px;
   padding: 1.5rem;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.07);
 }
 
 .filters-header {
@@ -34,80 +63,115 @@
 
 .filters-header h5 {
   margin: 0;
-  color: var(--text-primary);
   font-weight: 600;
 }
 
-.filter-section h4 {
- margin: 0;
-  color: var(--text-primary);
-  font-weight: 600!important;
-}
 .clear-filters-btn {
-  color: var(--primary-color) !important;
+  color: var(--mustard-color) !important;
   text-decoration: none !important;
   font-size: 0.9rem;
+  font-weight: 500;
   padding: 0;
 }
+.clear-filters-btn:hover {
+  color: var(--mustard-hover) !important;
+}
 
-/* Toolbar */
+.filter-section {
+  margin-bottom: 2rem;
+}
+
+/* CORRECCIÓN: Espaciado para los títulos de filtros */
+.filter-section h4 {
+  font-size: 1.1rem;
+  font-weight: 600 !important;
+  color: var(--text-primary);
+  margin-bottom: 1rem; /* AÑADIDO: Espacio entre título y checkboxes */
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.checkbox-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+}
+
+.filter-checkbox .form-check-label {
+  cursor: pointer;
+}
+
+.filter-checkbox .form-check-input {
+  border-color: #adb5bd;
+}
+
+.filter-checkbox .form-check-input:checked {
+  background-color: var(--mustard-color);
+  border-color: var(--mustard-color);
+}
+
+/* Toolbar (Filtros móvil y ordenación) */
 .toolbar {
   display: flex;
   justify-content: space-between;
   align-items: center;
   background: white;
-  padding: 1rem 1.5rem;
-  border-radius: 8px;
+  padding: 0.8rem 1.5rem;
+  border-radius: 12px;
   margin-bottom: 2rem;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
-  flex-wrap: wrap;
-  gap: 1rem;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.07);
+  
 }
 
 .sort-controls {
   display: flex;
   align-items: center;
+  
 }
-
 .sort-controls .form-label {
   margin: 0;
   white-space: nowrap;
-  color: var(--text-primary);
-  font-weight: 500;
+ 
 }
-
 .sort-select {
   min-width: 180px;
-  border-color: var(--border-color);
+  
+}
+.sort-select:focus {
+  border-color: #C8860D !important; /* Color del borde en estado activo */
+box-shadow: 0 0 0 0.25rem rgba(200, 134, 13, 0.25) !important; /* Sombra/resplandor con el color mostaza */
 }
 
-/* Grid de productos */
-.products-grid.grid .product-card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+.sort-select option:hover {
+  background-color: var(--mustard-color) !important; /* Color de fondo mostaza al pasar el ratón */
+  color: white !important; /* Color de texto blanco para que contraste */
 }
 
-/* Card del producto */
+/* Tarjeta de Producto */
 .product-card {
-  border: 1px solid var(--border-color);
+  border: none;
   border-radius: 12px;
   overflow: hidden;
   background: white;
   transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+}
+.product-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
 }
 
 .product-image-container {
   position: relative;
   overflow: hidden;
 }
-
 .product-image-container img {
   width: 100%;
-  height: 280px; /* Un poco más de altura para la imagen */
+  height: 250px;
   object-fit: cover;
   transition: transform 0.4s ease;
 }
-
 .product-card:hover .product-image-container img {
   transform: scale(1.05);
 }
@@ -117,149 +181,220 @@
   top: 1rem;
   left: 1rem;
   z-index: 2;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
 }
 
-.product-badges .badge {
-  margin-bottom: 0.5rem;
-  font-size: 0.75rem;
-  padding: 0.4rem 0.7rem;
-}
-
-/* --- ESTILO MODIFICADO DEL BOTÓN FAVORITO --- */
+/* CORRECCIÓN: Nuevo estilo para el botón de favorito */
 .favorite-btn {
   position: absolute;
-  top: 1rem;
-  right: 1rem;
-  background-color: rgba(255, 255, 255, 0.9); /* Fondo semi-transparente */
-  border: 1.5px solid var(--text-primary) !important; /* Borde negro */
-  border-radius: 50% !important;
-  width: 42px;
-  height: 40px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  box-shadow: none !important; /* Sin sombra */
-  transition: all 0.2s ease;
+  top: 0.5rem;
+  right: 0.5rem;
+  background: none;
+  border: none;
+  padding: 0.5rem;
+  cursor: pointer;
   z-index: 2;
-  padding: 0;
+  transition: transform 0.2s ease;
 }
-
 .favorite-btn:hover {
-  background-color: white;
-  transform: scale(1.1);
-  
+  transform: scale(1.15);
 }
-
-/* Estilo para el icono del corazón dentro del botón */
 .favorite-btn svg {
-  color: var(--text-primary); /* Color del icono negro */
-  font-size: 1.1rem;
+  font-size: 1.6rem;
+  color: white;
+  filter: drop-shadow(0 1px 2px rgba(0,0,0,0.5)); /* Sombra para que se vea bien en fondos claros */
+}
+.favorite-btn.favorited svg {
+  color: var(--mustard-color); /* Color dorado cuando está activo */
 }
 
-/* --- ESTILOS MODIFICADOS DE TIPOGRAFÍA --- */
+.product-card .card-body {
+  padding: 1rem;
+}
+
 .product-title {
-  font-family: var(--font-body);
-  font-size: 1.1rem;
-  font-weight: 600; /* Un poco de grosor para que sea legible */
+  font-size: 1rem;
+  font-weight: 600;
   color: var(--text-primary);
-  margin-bottom: 0.75rem;
+  margin-bottom: 0.5rem;
   line-height: 1.4;
-  flex-grow: 1; /* Para que empuje el precio hacia abajo si los títulos tienen distinta longitud */
+  flex-grow: 1;
 }
 
 .product-price {
-  margin-bottom: 0.5rem;
+  margin-bottom: 1rem;
 }
-
 .original-price {
-  font-family: var(--font-body);
-  font-weight: 300; /* Delgado */
   text-decoration: line-through;
-  color: var(--text-muted);
+  color: var(--text-secondary);
   font-size: 0.9rem;
   margin-right: 0.5rem;
 }
-
 .current-price {
-  font-family: var(--font-body);
-  font-size: 1.3rem;
-  font-weight: 700; /* Grueso para destacar */
-  color: var(--text-primary); /* Color de precio negro para un look más sobrio */
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--text-primary);
 }
 
+/* CORRECCIÓN: Botón principal con color mostaza */
 .add-to-cart-btn {
-  background-color: var(--text-primary);
-  border-color: var(--text-primary);
-  font-weight: 600;
-  transition: all 0.2s ease;
-  font-family: var(--font-body);
-}
-
-.add-to-cart-btn:hover:not(:disabled) {
-  background-color: #000;
-  border-color: #000;
-}
-
-.add-to-cart-btn:disabled {
-  background-color: var(--text-muted);
-  border-color: var(--text-muted);
-}
-
-/* Header mejorado */
-.products-header {
-  text-align: center;
-  margin: 1rem 0;;
-}
-
-.title-section {
-  margin-bottom: 1rem;
-}
-
-.products-main-title {
-  font-size: 3rem;
-  font-weight: 300;
-  color:#075f1b;
-  margin-bottom: 0.5rem;
+  background-color: #C8860D !important;
+  border-color: #C8860D !important;
+  color: white !important;
+  font-size: 1.2em;
+  font-weight: 400;
+  padding: 15px 25px;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+  text-transform: uppercase;
   letter-spacing: 0.5px;
 }
-
-.products-count {
-  color: var(--text-secondary);
-  font-size: 1rem;
-  margin-bottom: 0;
+.add-to-cart-btn:hover:not(:disabled) {
+  background-color: #ffffff !important;
+  border-color: #C8860D !important;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 15px rgba(132, 93, 2, 0.974);
+  color: #361c00 !important;
 }
 
-/* Checkboxes de filtros */
-.checkbox-group {
+/* --- Filtros Móviles y Offcanvas --- */
+
+/* CORRECCIÓN: Ancho personalizado para el Offcanvas */
+.mobile-filters-offcanvas.offcanvas-start {
+  width: 85% !important;
+  max-width: 380px !important;
+}
+
+.mobile-filters-offcanvas .filters-container {
+  box-shadow: none;
+  padding: 0;
+}
+
+.mobile-filters-offcanvas .close-filters-btn {
+  font-size: 1.2rem;
+  padding: 0;
+  color: var(--text-secondary);
+}
+
+.mobile-filters-offcanvas .offcanvas-body {
   display: flex;
   flex-direction: column;
-  gap: 0.75rem;
 }
 
-.filter-checkbox .form-check-input {
-  border-color: var(--border-color);
-  margin-right: 0.75rem;
+.mobile-filter-actions {
+  margin-top: auto; /* Empuja los botones al fondo */
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--border-color);
+  background: #fff;
 }
 
-.filter-checkbox .form-check-input:checked {
-  background-color: var(--text-primary);
-  border-color: var(--text-primary);
+/* CORRECCIÓN: Clases para botones color mostaza */
+.btn-mustard {
+  background-color: var(--mustard-color) !important;
+  border-color: var(--mustard-color) !important;
+  color: white !important;
+  font-weight: 600;
+}
+.btn-mustard:hover {
+  background-color: var(--mustard-hover) !important;
+  border-color: var(--mustard-hover) !important;
 }
 
-/* Estilos para precio por mayor */
-.wholesale-info {
-  font-family: var(--font-body);
-  font-size: 0.85rem;
-  color: var(--text-secondary);
-  background-color: #f8f9fa;
-  border: 1px solid #e9ecef;
-  padding: 0.3rem 0.6rem;
-  border-radius: 5px;
-  margin-bottom: 1rem;
+.btn-mustard-outline {
+  color: var(--mustard-color) !important;
+  border-color: var(--mustard-color) !important;
+  font-weight: 600;
+}
+.btn-mustard-outline:hover {
+  background-color: var(--mustard-color) !important;
+  color: white !important;
+}
+
+/* Fallback para cuando no hay productos */
+.no-products {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 400px;
   text-align: center;
 }
+.no-products-content {
+  max-width: 400px;
+}
 
-.wholesale-info strong {
-  color: var(--success-color);
+.hola {
+  color:#956205 !important;
+}
+
+.custom-sort-dropdown {
+  position: relative;
+  width: 220px; /* Ancho del dropdown */
+  font-size: 0.875rem;
+}
+
+.sort-selected-value {
+  padding: 0.375rem 2.25rem 0.375rem 0.75rem;
+  background-color: #fff;
+  border: 1px solid #ced4da;
+  border-radius: 0.25rem;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: border-color .15s ease-in-out, box-shadow .15s ease-in-out;
+}
+
+.sort-selected-value:hover {
+  border-color: #c7b31e;
+}
+
+.custom-sort-dropdown.open .sort-selected-value,
+.sort-selected-value:focus {
+  border-color: var(--mustard-color);
+  box-shadow: 0 0 0 0.25rem rgba(200, 134, 13, 0.25);
+  outline: 0;
+}
+
+.chevron-icon {
+  transition: transform 0.2s ease-in-out;
+}
+.chevron-icon.open {
+  transform: rotate(180deg);
+}
+
+.options-list {
+  position: absolute;
+  top: calc(100% + 4px);
+  left: 0;
+  width: 100%;
+  background-color: white;
+  border: 1px solid #dee2e6;
+  border-radius: 0.25rem;
+  box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+  list-style: none;
+  padding: 0.5rem 0;
+  margin: 0;
+  z-index: 10;
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+.option-item {
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+/* ¡AQUÍ ESTÁ LA MAGIA! ESTE SÍ FUNCIONARÁ */
+.option-item:hover {
+  background-color: var(--mustard-color);
+  color: white;
+}
+
+.option-item.active {
+  background-color: var(--mustard-hover);
+  color: white;
   font-weight: 600;
 }

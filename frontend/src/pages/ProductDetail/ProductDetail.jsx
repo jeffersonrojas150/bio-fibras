@@ -1,14 +1,37 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Container, Row, Col, Button, Form, Badge, Modal, Alert } from 'react-bootstrap';
-import { FaHeart, FaRegHeart, FaShoppingCart, FaArrowLeft, FaMinus, FaPlus, FaShare, FaWhatsapp, FaFacebook, FaTwitter, FaBox } from 'react-icons/fa';
+import { FaHeart, FaRegHeart, FaShoppingCart, FaArrowLeft, FaMinus, FaPlus, FaShare, FaWhatsapp, FaFacebook, FaTwitter, FaBox, FaShippingFast, FaUndo } from 'react-icons/fa';
+
+// Paso 1: Importar el hook del contexto del carrito
+import { useCart } from '../../context/cartContext';
 
 import { productsData } from '../../mocks/productsData'; 
 import './ProductDetail.css';
 
+// Componente de Acordeón reutilizable para mantener el código limpio
+const AccordionItem = ({ title, content, isOpen, onToggle, icon }) => (
+  <div className="accordion-item">
+    <div className="accordion-header" onClick={onToggle}>
+      <div className="accordion-title-wrapper">
+        {icon}
+        <h3 className="accordion-title">{title}</h3>
+      </div>
+      <span className="accordion-icon">{isOpen ? '−' : '+'}</span>
+    </div>
+    <div className={`accordion-content ${isOpen ? 'open' : ''}`}>
+      <div className="accordion-content-inner">{content}</div>
+    </div>
+  </div>
+);
+
 const ProductDetail = () => {
   const { id } = useParams();
   const navigate = useNavigate();
+  
+  // Paso 2: Usar el hook del carrito para obtener la función addToCart
+  const { addToCart } = useCart();
+
   const [product, setProduct] = useState(null);
   const [quantity, setQuantity] = useState(1);
   const [selectedImage, setSelectedImage] = useState(0);
@@ -16,37 +39,27 @@ const ProductDetail = () => {
   const [showShareModal, setShowShareModal] = useState(false);
   const [showAddedAlert, setShowAddedAlert] = useState(false);
   const [relatedProducts, setRelatedProducts] = useState([]);
+  const [openAccordion, setOpenAccordion] = useState('description');
 
-  // Número de WhatsApp del administrador
   const adminWhatsappNumber = '931840727'; 
 
   useEffect(() => {
-    // Es importante que el ID de la URL exista para que no muestre "Cargando..."
     if (!id) {
-        navigate('/productos'); // Si no hay ID, redirige a la lista de productos
+        navigate('/productos');
         return;
     }
 
     const foundProduct = productsData.find(p => p.id === parseInt(id));
-if (foundProduct) {
-  const images = foundProduct.images && foundProduct.images.length > 0
-    ? foundProduct.images
-    : [foundProduct.image, foundProduct.image, foundProduct.image];
+    if (foundProduct) {
+      const images = (foundProduct.images && foundProduct.images.length > 0)
+        ? foundProduct.images
+        : [foundProduct.image, foundProduct.image, foundProduct.image];
 
-  setProduct({
-    ...foundProduct,
-    images,
-    stock: foundProduct.stock || Math.floor(Math.random() * 20) + 5
-  });
-
-      
-      if (!foundProduct.images || foundProduct.images.length === 0) {
-        foundProduct.images = [
-          foundProduct.image,
-          foundProduct.image, 
-          foundProduct.image
-        ];
-      }
+      setProduct({
+        ...foundProduct,
+        images,
+        stock: foundProduct.stock || Math.floor(Math.random() * 20) + 5
+      });
       
       const related = productsData
         .filter(p => p.category === foundProduct.category && p.id !== foundProduct.id)
@@ -56,18 +69,25 @@ if (foundProduct) {
       const storedFavorites = JSON.parse(localStorage.getItem('favorites') || '[]');
       setIsFavorite(storedFavorites.includes(parseInt(id)));
     } else {
-        // Si el producto con ese ID no se encuentra, también redirige
         navigate('/productos');
     }
   }, [id, navigate]);
+  
+  const handleAccordionToggle = (key) => {
+    setOpenAccordion(openAccordion === key ? null : key);
+  };
 
   const handleQuantityChange = (delta) => {
     const newQuantity = Math.max(1, Math.min(product.stock, quantity + delta));
     setQuantity(newQuantity);
   };
 
+  // Paso 3: Actualizar la función para usar el contexto
   const handleAddToCart = () => {
-    console.log(`Añadido al carrito: ${product.name}, Cantidad: ${quantity}`);
+    // Llama a la función del contexto para añadir el producto y la cantidad
+    addToCart(product, quantity);
+    
+    // Muestra la alerta de confirmación
     setShowAddedAlert(true);
     setTimeout(() => setShowAddedAlert(false), 3000);
   };
@@ -139,8 +159,6 @@ if (foundProduct) {
       )}
 
       <Container className="py-4 product-detail-custom-container">
-        {/* --- CAMBIO REALIZADO AQUÍ --- */}
-        {/* Se eliminó el Breadcrumb y se dejó solo el botón "Volver" alineado a la derecha */}
         <div className="d-flex justify-content-end align-items-center mb-4">
           <Button variant="link" className="back-btn" onClick={() => navigate('/productos')}>
             <FaArrowLeft className="me-2" />
@@ -228,30 +246,11 @@ if (foundProduct) {
               <div className="quantity-section mb-4">
                 <label className="quantity-label">Cantidad:</label>
                 <div className="quantity-control-group">
-                  <Button 
-                    variant="outline-secondary" 
-                    size="sm"
-                    className="quantity-btn"
-                    onClick={() => handleQuantityChange(-1)}
-                    disabled={quantity <= 1}
-                  >
+                  <Button variant="outline-secondary" size="sm" className="quantity-btn" onClick={() => handleQuantityChange(-1)} disabled={quantity <= 1}>
                     <FaMinus />
                   </Button>
-                  <Form.Control 
-                    type="number" 
-                    value={quantity} 
-                    onChange={(e) => setQuantity(Math.max(1, Math.min(product.stock, parseInt(e.target.value) || 1)))}
-                    className="quantity-input"
-                    min="1"
-                    max={product.stock}
-                  />
-                  <Button 
-                    variant="outline-secondary" 
-                    size="sm"
-                    className="quantity-btn"
-                    onClick={() => handleQuantityChange(1)}
-                    disabled={quantity >= product.stock}
-                  >
+                  <Form.Control type="number" value={quantity} onChange={(e) => setQuantity(Math.max(1, Math.min(product.stock, parseInt(e.target.value) || 1)))} className="quantity-input" min="1" max={product.stock}/>
+                  <Button variant="outline-secondary" size="sm" className="quantity-btn" onClick={() => handleQuantityChange(1)} disabled={quantity >= product.stock}>
                     <FaPlus />
                   </Button>
                 </div>
@@ -259,15 +258,8 @@ if (foundProduct) {
 
                {product.stock > 0 && (
                 <div className="stock-contact-message">
-                  <div className="contact-text">
-                    ¿Necesitas más cantidad o tienes alguna consulta especial?
-                  </div>
-                  <Button 
-                    variant="success" 
-                    size="sm" 
-                    className="whatsapp-contact-btn"
-                    onClick={() => handleWhatsappContact(`Hola, estoy interesado en el producto "${product.name}" y me gustaría consultar sobre disponibilidad de mayor cantidad.`)}
-                  >
+                  <div className="contact-text">¿Necesitas más cantidad o tienes alguna consulta especial?</div>
+                  <Button variant="success" size="sm" className="whatsapp-contact-btn" onClick={() => handleWhatsappContact(`Hola, estoy interesado en el producto "${product.name}" y me gustaría consultar sobre disponibilidad de mayor cantidad.`)}>
                     <FaWhatsapp className="me-2" />
                     Contáctanos por WhatsApp
                   </Button>
@@ -275,20 +267,11 @@ if (foundProduct) {
               )}
 
               <div className="main-actions mb-4">
-                <Button 
-                  className="add-to-cart-btn w-100 mb-3"
-                  onClick={handleAddToCart}
-                  disabled={product.stock === 0}
-                >
+                <Button className="add-to-cart-btn w-100 mb-3" onClick={handleAddToCart} disabled={product.stock === 0}>
                   <FaShoppingCart className="me-2" />
                   {product.stock > 0 ? 'Añadir al Carrito' : 'Agotado'}
                 </Button>
-                
-                <Button 
-                  variant="outline-secondary" 
-                  className="share-btn w-100"
-                  onClick={() => setShowShareModal(true)}
-                >
+                <Button variant="outline-secondary" className="share-btn w-100" onClick={() => setShowShareModal(true)}>
                   <FaShare className="me-2" />
                   Compartir
                 </Button>
@@ -299,23 +282,46 @@ if (foundProduct) {
                 <div className="payment-icons d-flex flex-wrap gap-2">
                   <img src="https://cdn.worldvectorlogo.com/logos/visa-10.svg" alt="Visa" className="payment-logo" />
                   <img src="https://www.coopacsancristobal.pe/wp-content/uploads/2024/11/yape-logo-png_seeklogo-504685.png" alt="Yape" className="payment-logo" />
-                  <img src="https://images.icon-icons.com/2972/PNG/512/whatsapp_logo_icon_186881.png" alt="WhatsApp Pago" className="payment-logo" />
                 </div>
               </div>
 
-              <div className="product-description">
-                <div className="section-title">DESCRIPCIÓN</div>
-                <p className="description-text">{product.description}</p>
-                
-                <div className="product-features">
-                  <div className="features-title">Características:</div>
-                  <ul className="features-list">
-                    <li>Producto artesanal de alta calidad</li>
-                    <li>Material resistente y duradero</li>
-                    <li>Diseño único y exclusivo</li>
-                    <li>Perfecto para decoración del hogar</li>
-                  </ul>
-                </div>
+              <div className="product-details-accordion">
+                <AccordionItem
+                  title="Descripción"
+                  isOpen={openAccordion === 'description'}
+                  onToggle={() => handleAccordionToggle('description')}
+                  content={
+                    <p className="description-text">{product.description}</p>
+                  }
+                />
+               
+                <AccordionItem
+                  title="Información de Envío"
+                  isOpen={openAccordion === 'shipping'}
+                  onToggle={() => handleAccordionToggle('shipping')}
+                  content={
+                    <div className="shipping-info">
+                      <div className="shipping-info-item">
+                        <FaShippingFast className="shipping-icon" />
+                        <div>
+                          <strong>Envío Estándar (Lima):</strong> 2-4 días hábiles.
+                        </div>
+                      </div>
+                      <div className="shipping-info-item">
+                        <FaBox className="shipping-icon" />
+                        <div>
+                          <strong>Envío a Provincias:</strong> 5-10 días hábiles (vía Olva/Shalom).
+                        </div>
+                      </div>
+                      <div className="shipping-info-item">
+                        <FaUndo className="shipping-icon" />
+                        <div>
+                          <strong>Política de Devolución:</strong> Aceptamos devoluciones hasta 7 días después de la entrega por defectos de fábrica.
+                        </div>
+                      </div>
+                    </div>
+                  }
+                />
               </div>
             </div>
           </Col>
@@ -327,10 +333,7 @@ if (foundProduct) {
             <Row>
               {relatedProducts.map((relatedProduct) => (
                 <Col key={relatedProduct.id} xs={6} md={3} className="mb-4">
-                  <div 
-                    className="related-product-card"
-                    onClick={() => navigate(`/producto/${relatedProduct.id}`)}
-                  >
+                  <div className="related-product-card" onClick={() => navigate(`/producto/${relatedProduct.id}`)}>
                     <img src={relatedProduct.image} alt={relatedProduct.name} className="img-fluid" />
                     <div className="related-product-info p-2">
                       <h6 className="related-product-name">{relatedProduct.name}</h6>
@@ -350,18 +353,9 @@ if (foundProduct) {
         </Modal.Header>
         <Modal.Body>
           <div className="share-buttons d-grid gap-2">
-            <Button variant="success" className="share-modal-btn" onClick={() => handleShare('whatsapp')}>
-              <FaWhatsapp className="me-2" />
-              WhatsApp
-            </Button>
-            <Button variant="primary" className="share-modal-btn" onClick={() => handleShare('facebook')}>
-              <FaFacebook className="me-2" />
-              Facebook
-            </Button>
-            <Button variant="info" className="share-modal-btn" onClick={() => handleShare('twitter')}>
-              <FaTwitter className="me-2" />
-              Twitter
-            </Button>
+            <Button variant="success" className="share-modal-btn" onClick={() => handleShare('whatsapp')}><FaWhatsapp className="me-2" /> WhatsApp</Button>
+            <Button variant="primary" className="share-modal-btn" onClick={() => handleShare('facebook')}><FaFacebook className="me-2" /> Facebook</Button>
+            <Button variant="info" className="share-modal-btn" onClick={() => handleShare('twitter')}><FaTwitter className="me-2" /> Twitter</Button>
           </div>
         </Modal.Body>
       </Modal>
