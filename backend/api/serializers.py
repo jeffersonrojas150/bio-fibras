@@ -1,6 +1,13 @@
 from rest_framework import serializers
 from django.contrib.auth.models import User
-from .models import Producto, Categoria, Material, ImagenProducto, Favorito
+from .models import (
+    Producto, 
+    Categoria, 
+    Material, 
+    ImagenProducto, 
+    Favorito,
+    Carrito
+    )
 
 class ProductoListSerializer(serializers.ModelSerializer):
     categoria = serializers.StringRelatedField()
@@ -106,3 +113,45 @@ class FavoritoSerializer(serializers.ModelSerializer):
         favorito, created = Favorito.objects.get_or_create(usuario=usuario, producto_id=producto_id)
         
         return favorito
+
+class CarritoSerializer(serializers.ModelSerializer):
+    producto = ProductoListSerializer(read_only=True)
+    producto_id = serializers.IntegerField(write_only=True)
+    subtotal = serializers.SerializerMethodField(read_only=True)
+    class Meta:
+        model = Carrito
+        fields = ['id', 'producto', 'producto_id', 'cantidad', 'subtotal', 'fecha_agregado']
+
+    def get_subtotal(self, obj):
+        precio = obj.producto.precio_oferta or obj.producto.precio_unitario
+        return obj.cantidad * precio
+
+    def validate(self, data):
+        producto = Producto.objects.get(id=data['producto_id'])
+        
+        if data['cantidad'] > producto.stock:
+            raise serializers.ValidationError(
+                f"La cantidad solicitada ({data['cantidad']}) supera el stock disponible ({producto.stock})."
+            )
+        return data
+
+    def create(self, validated_data):
+        usuario = self.context['request'].user
+        producto_id = validated_data['producto_id']
+        cantidad_a_anadir = validated_data['cantidad']
+
+        item_carrito, created = Carrito.objects.get_or_create(
+            usuario=usuario,
+            producto_id=producto_id,
+            defaults={'cantidad': 0}
+        )
+        
+        item_carrito.cantidad += cantidad_a_anadir
+        
+        if item_carrito.cantidad > item_carrito.producto.stock:
+             raise serializers.ValidationError(
+                f"Añadir {cantidad_a_anadir} unidades supera el stock disponible ({item_carrito.producto.stock})."
+            )
+
+        item_carrito.save()
+        return item_carrito

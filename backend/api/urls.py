@@ -11,11 +11,13 @@ from .views import (
     ProductosPorCategoriaView, 
     UserProfileView, 
     RegisterView,
-    FavoritoViewSet
-    )
+    FavoritoViewSet,
+    CarritoViewSet
+)
 
 router = routers.DefaultRouter()
 router.register(r'favoritos', FavoritoViewSet, basename='favoritos')
+router.register(r'carrito', CarritoViewSet, basename='carrito')
 
 urlpatterns = [
     path('auth/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
