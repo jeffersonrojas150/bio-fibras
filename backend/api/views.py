@@ -1,8 +1,8 @@
-from rest_framework import generics
+from rest_framework import generics, viewsets
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from django.contrib.auth.models import User
-from .models import Producto, Categoria
-from .serializers import ProductoListSerializer, ProductoDetailSerializer, CategoriaSerializer, UserSerializer, RegisterSerializer
+from .models import Producto, Categoria, Favorito
+from .serializers import ProductoListSerializer, ProductoDetailSerializer, CategoriaSerializer, UserSerializer, RegisterSerializer, FavoritoSerializer
 
 class ProductoListView(generics.ListAPIView):
     queryset = Producto.objects.filter(es_activo=True)
@@ -37,3 +37,11 @@ class RegisterView(generics.CreateAPIView):
     queryset = User.objects.all()
     permission_classes = [AllowAny]
     serializer_class = RegisterSerializer
+
+
+class FavoritoViewSet(viewsets.ModelViewSet):
+    serializer_class = FavoritoSerializer
+    permission_classes = [IsAuthenticated]
+    http_method_names = ['get', 'post', 'delete']
+    def get_queryset(self):
+        return Favorito.objects.filter(usuario=self.request.user)

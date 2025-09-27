@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from django.contrib.auth.models import User
-from .models import Producto, Categoria, Material, ImagenProducto
+from .models import Producto, Categoria, Material, ImagenProducto, Favorito
 
 class ProductoListSerializer(serializers.ModelSerializer):
     categoria = serializers.StringRelatedField()
@@ -67,7 +67,7 @@ class RegisterSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ['username', 'email', 'first_name', 'last_name', 'password', 'password2'] # <-- CAMPOS AÑADIDOS
+        fields = ['username', 'email', 'first_name', 'last_name', 'password', 'password2']
         extra_kwargs = {
             'password': {'write_only': True}
         }
@@ -88,3 +88,21 @@ class RegisterSerializer(serializers.ModelSerializer):
             last_name=validated_data.get('last_name', '')
         )
         return user
+
+class FavoritoSerializer(serializers.ModelSerializer):
+    producto = ProductoListSerializer(read_only=True)
+    
+    producto_id = serializers.IntegerField(write_only=True)
+
+    class Meta:
+        model = Favorito
+        fields = ['id', 'producto', 'producto_id', 'fecha_agregado']
+
+    def create(self, validated_data):
+        producto_id = validated_data.pop('producto_id')
+        
+        usuario = self.context['request'].user
+
+        favorito, created = Favorito.objects.get_or_create(usuario=usuario, producto_id=producto_id)
+        
+        return favorito
