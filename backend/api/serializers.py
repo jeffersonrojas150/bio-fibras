@@ -8,7 +8,8 @@ from .models import (
     Favorito,
     Carrito,
     Orden,
-    OrdenItem
+    OrdenItem,
+    Direccion
     )
 
 class ProductoListSerializer(serializers.ModelSerializer):
@@ -180,3 +181,16 @@ class OrdenSerializer(serializers.ModelSerializer):
             'estado_pago', 'estado_orden', 'cantidad_compra', 
             'fecha_creacion', 'items'
         ]
+
+class DireccionSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Direccion
+        fields = [
+            'id', 'usuario', 'nombres', 'apellidos', 'dni', 'telefono', 
+            'departamento', 'provincia', 'distrito', 'direccion_completo', 
+            'agencia_recojo', 'direccion_agencia', 'es_principal', 
+            'fecha_creacion'
+        ]
+        extra_kwargs = {
+            'usuario': {'read_only': True}
+        }

@@ -13,12 +13,14 @@ from .views import (
     RegisterView,
     FavoritoViewSet,
     CarritoViewSet,
-    OrdenCreateView
+    OrdenCreateView,
+    DireccionViewSet,
 )
 
 router = routers.DefaultRouter()
 router.register(r'favoritos', FavoritoViewSet, basename='favoritos')
 router.register(r'carrito', CarritoViewSet, basename='carrito')
+router.register(r'direcciones', DireccionViewSet, basename='direcciones')
 
 urlpatterns = [
     path('auth/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),

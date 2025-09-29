@@ -4,7 +4,16 @@ from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from django.db import transaction
 from django.contrib.auth.models import User
-from .models import Producto, Categoria, Favorito, Carrito, Direccion, Orden, OrdenItem
+from .models import (
+    Producto, 
+    Categoria, 
+    Favorito, 
+    Carrito, 
+    Direccion, 
+    Orden, 
+    OrdenItem,
+    Direccion
+    )
 from .serializers import (
     ProductoListSerializer, 
     ProductoDetailSerializer, 
@@ -14,6 +23,7 @@ from .serializers import (
     FavoritoSerializer, 
     CarritoSerializer,
     OrdenSerializer,
+    DireccionSerializer
     )
 
 class ProductoListView(generics.ListAPIView):
@@ -132,3 +142,13 @@ class OrdenCreateView(APIView):
         serializer = OrdenSerializer(nueva_orden)
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
+
+class DireccionViewSet(viewsets.ModelViewSet):
+    serializer_class = DireccionSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        return Direccion.objects.filter(usuario=self.request.user)
+
+    def perform_create(self, serializer):
+        serializer.save(usuario=self.request.user)
