@@ -153,11 +153,11 @@ class Orden(models.Model):
 
     # Opciones para los campos de estado (choices)
     class MetodoPago(models.TextChoices):
-        TARJETA = 'tarjeta', 'Tarjeta'
-        WHATSAPP = 'whatsapp', 'WhatsApp'
+        TRANSFERENCIA = 'transferencia', 'Transferencia Bancaria'
+        YAPE = 'yape', 'Yape'
 
     class EstadoPago(models.TextChoices):
-        PENDIENTE = 'pendiente', 'Pendiente'
+        PENDIENTE_COMPROBANTE = 'pendiente_comprobante', 'Pendiente de Comprobante'
         PAGADO = 'pagado', 'Pagado'
         CANCELADO = 'cancelado', 'Cancelado'
 
@@ -171,8 +171,8 @@ class Orden(models.Model):
     direccion = models.ForeignKey(Direccion, on_delete=models.SET_NULL, null=True, related_name='ordenes', verbose_name="Dirección de envío")
     
     total = models.DecimalField(max_digits=10, decimal_places=2, verbose_name="Monto total de la compra")
-    metodo_pago = models.CharField(max_length=50, choices=MetodoPago.choices, default=MetodoPago.WHATSAPP, verbose_name="Método de pago")
-    estado_pago = models.CharField(max_length=50, choices=EstadoPago.choices, default=EstadoPago.PENDIENTE, verbose_name="Estado del pago")
+    metodo_pago = models.CharField(max_length=50, choices=MetodoPago.choices, default=MetodoPago.TRANSFERENCIA, verbose_name="Método de pago")
+    estado_pago = models.CharField(max_length=50, choices=EstadoPago.choices, default=EstadoPago.PENDIENTE_COMPROBANTE, verbose_name="Estado del pago")
     estado_orden = models.CharField(max_length=50, choices=EstadoOrden.choices, default=EstadoOrden.PENDIENTE, verbose_name="Estado de la orden")
     
     cantidad_compra = models.PositiveIntegerField(verbose_name="Total de productos en la orden")
