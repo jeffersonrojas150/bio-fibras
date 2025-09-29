@@ -6,7 +6,9 @@ from .models import (
     Material, 
     ImagenProducto, 
     Favorito,
-    Carrito
+    Carrito,
+    Orden,
+    OrdenItem
     )
 
 class ProductoListSerializer(serializers.ModelSerializer):
@@ -155,3 +157,26 @@ class CarritoSerializer(serializers.ModelSerializer):
 
         item_carrito.save()
         return item_carrito
+
+class OrdenItemSerializer(serializers.ModelSerializer):
+    producto_nombre = serializers.SerializerMethodField()
+
+    class Meta:
+        model = OrdenItem
+        fields = ['id', 'producto_nombre', 'cantidad', 'precio_unitario', 'precio_total']
+
+    def get_producto_nombre(self, obj):
+        return obj.producto.nombre if obj.producto else "Producto Eliminado"
+
+class OrdenSerializer(serializers.ModelSerializer):
+    items = OrdenItemSerializer(many=True, read_only=True)
+    
+    usuario = serializers.StringRelatedField()
+
+    class Meta:
+        model = Orden
+        fields = [
+            'id', 'usuario', 'direccion', 'total', 'metodo_pago', 
+            'estado_pago', 'estado_orden', 'cantidad_compra', 
+            'fecha_creacion', 'items'
+        ]
