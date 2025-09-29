@@ -1,0 +1,382 @@
+/* src/pages/Orders/Orders.css */
+
+/* Página de confirmación del pedido */
+.order-confirmation-page {
+  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+  min-height: 100vh;
+  padding: 2rem 0;
+}
+
+.confirmation-header {
+  margin-bottom: 3rem;
+}
+
+.success-icon {
+  animation: bounceIn 0.8s ease-out;
+}
+
+@keyframes bounceIn {
+  0% {
+    opacity: 0;
+    transform: scale(0.3);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.1);
+  }
+  70% {
+    transform: scale(0.9);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.order-number .alert {
+  font-size: 1.2rem;
+  border: 2px solid #d1ecf1;
+  box-shadow: 0 4px 15px rgba(13, 202, 240, 0.2);
+}
+
+/* Cards del pedido */
+.order-details-card,
+.shipping-info-card,
+.order-status-card,
+.quick-actions-card,
+.contact-info-card {
+  border: none;
+  border-radius: 15px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  background: white;
+  margin-bottom: 2rem;
+  overflow: hidden;
+}
+
+.order-details-card .card-header,
+.shipping-info-card .card-header,
+.quick-actions-card .card-header {
+  background: linear-gradient(135deg, #C8860D 0%, #CB9851 100%);
+  color: white;
+  border: none;
+  padding: 1.5rem;
+  font-weight: 600;
+}
+
+/* Tabla de productos */
+.order-items-table {
+  margin-bottom: 0;
+}
+
+.order-items-table thead th {
+  background: #f8f9fa;
+  border-top: none;
+  font-weight: 600;
+  color: #2c3e32;
+  padding: 1rem;
+}
+
+.order-items-table tbody td {
+  padding: 1rem;
+  vertical-align: middle;
+  border-color: #f1f3f4;
+}
+
+.order-items-table tfoot td {
+  padding: 0.75rem 1rem;
+  border-color: #dee2e6;
+  font-weight: 500;
+}
+
+.order-items-table .table-success td {
+  background: rgba(34, 139, 34, 0.1);
+  color: #2c3e32;
+  font-weight: 600;
+  font-size: 1.1rem;
+}
+
+/* Estado del pedido */
+.order-status-card {
+  text-align: center;
+  background: linear-gradient(135deg, rgba(34, 139, 34, 0.05) 0%, rgba(215, 173, 68, 0.05) 100%);
+}
+
+.status-indicator {
+  padding: 1rem;
+}
+
+.status-text {
+  color: #228B22;
+  font-weight: 600;
+  margin-bottom: 1rem;
+}
+
+.status-description {
+  color: #6c757d;
+  margin-bottom: 0;
+}
+
+/* Acciones rápidas */
+.quick-actions-card .btn {
+  border-radius: 10px;
+  padding: 0.75rem 1rem;
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+
+.quick-actions-card .btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+.quick-actions-card .btn-outline-primary:hover {
+  background: #0d6efd;
+  border-color: #0d6efd;
+}
+
+.quick-actions-card .btn-outline-success:hover {
+  background: #198754;
+  border-color: #198754;
+}
+
+/* Información de envío */
+.shipping-address h6,
+.delivery-info h6 {
+  color: #2c3e32;
+  font-weight: 600;
+  margin-bottom: 1rem;
+}
+
+.shipping-address p,
+.delivery-info p {
+  margin-bottom: 0.5rem;
+  color: #495057;
+}
+
+.order-notes {
+  background: #f8f9fa;
+  border-left: 4px solid #d7ad44;
+}
+
+.order-notes h6 {
+  color: #2c3e32;
+  margin-bottom: 0.5rem;
+}
+
+/* Información de contacto */
+.contact-methods {
+  margin-bottom: 1rem;
+}
+
+.contact-method {
+  display: flex;
+  align-items: center;
+  margin-bottom: 0.75rem;
+  color: #495057;
+}
+
+.contact-method:last-child {
+  margin-bottom: 0;
+}
+
+/* Confirmación por email */
+.email-confirmation {
+  border-left: 4px solid #0dcaf0;
+  background: rgba(13, 202, 240, 0.1);
+  border-radius: 8px;
+}
+
+/* Responsive para móviles */
+@media (max-width: 768px) {
+  .order-confirmation-page {
+    padding: 1rem 0;
+  }
+
+  .confirmation-header {
+    margin-bottom: 2rem;
+  }
+
+  .success-icon {
+    margin-bottom: 2rem;
+  }
+
+  .success-icon svg {
+    width: 60px;
+    height: 60px;
+  }
+
+  .order-details-card .card-body,
+  .shipping-info-card .card-body,
+  .order-status-card .card-body,
+  .quick-actions-card .card-body,
+  .contact-info-card .card-body {
+    padding: 1.5rem;
+  }
+
+  .order-items-table {
+    font-size: 0.9rem;
+  }
+
+  .order-items-table thead th,
+  .order-items-table tbody td,
+  .order-items-table tfoot td {
+    padding: 0.75rem 0.5rem;
+  }
+
+  .item-image img {
+    width: 40px !important;
+    height: 40px !important;
+  }
+
+  .quick-actions-card .btn {
+    padding: 1rem;
+    font-size: 0.9rem;
+  }
+
+  .order-number .alert {
+    font-size: 1rem;
+    padding: 1rem;
+  }
+}
+
+@media (max-width: 576px) {
+  .order-items-table thead {
+    display: none;
+  }
+
+  .order-items-table tbody tr {
+    display: block;
+    border: 1px solid #dee2e6;
+    border-radius: 8px;
+    margin-bottom: 1rem;
+    padding: 1rem;
+    background: white;
+  }
+
+  .order-items-table tbody td {
+    display: block;
+    border: none;
+    padding: 0.25rem 0;
+    text-align: left !important;
+  }
+
+  .order-items-table tbody td:before {
+    content: attr(data-label) ": ";
+    font-weight: bold;
+    color: #2c3e32;
+  }
+
+  .order-items-table tfoot {
+    display: block;
+    background: #f8f9fa;
+    border-radius: 8px;
+    padding: 1rem;
+    margin-top: 1rem;
+  }
+
+  .order-items-table tfoot tr {
+    display: block;
+    margin-bottom: 0.5rem;
+  }
+
+  .order-items-table tfoot td {
+    display: block;
+    border: none;
+    padding: 0.25rem 0;
+    text-align: left !important;
+  }
+
+  .shipping-info-card .row {
+    margin-bottom: 1rem;
+  }
+
+  .confirmation-header h2 {
+    font-size: 1.8rem;
+  }
+
+  .confirmation-header .lead {
+    font-size: 1rem;
+  }
+}
+
+/* Animaciones adicionales */
+.order-details-card,
+.shipping-info-card,
+.order-status-card,
+.quick-actions-card,
+.contact-info-card {
+  animation: slideInUp 0.6s ease-out;
+}
+
+.order-details-card {
+  animation-delay: 0.1s;
+}
+
+.shipping-info-card {
+  animation-delay: 0.2s;
+}
+
+.order-status-card {
+  animation-delay: 0.3s;
+}
+
+.quick-actions-card {
+  animation-delay: 0.4s;
+}
+
+.contact-info-card {
+  animation-delay: 0.5s;
+}
+
+@keyframes slideInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Estados de loading */
+.loading-skeleton {
+  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+  background-size: 200% 100%;
+  animation: loading 1.5s infinite;
+}
+
+@keyframes loading {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+/* Mejoras de accesibilidad */
+.btn:focus,
+.form-control:focus,
+.form-select:focus {
+  box-shadow: 0 0 0 0.2rem rgba(215, 173, 68, 0.25);
+}
+
+/* Impresión */
+@media print {
+  .order-confirmation-page {
+    background: white;
+    padding: 0;
+  }
+
+  .quick-actions-card,
+  .contact-info-card {
+    display: none;
+  }
+
+  .order-details-card,
+  .shipping-info-card {
+    box-shadow: none;
+    border: 1px solid #dee2e6;
+  }
+}

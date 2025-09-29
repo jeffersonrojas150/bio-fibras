@@ -1,0 +1,346 @@
+/* Footer.css */
+
+.biofibras-footer {
+  background: linear-gradient(135deg, #A97E26 0%, #c99617 50%, #A97E26 100%);
+  color: #ffffff;
+  /* --- CAMBIO AQUÍ: Reducido el padding superior --- */
+  padding: 50px 0 20px; 
+  margin-top: auto;
+  position: relative;
+  overflow: hidden;
+}
+
+.biofibras-footer::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: url('data:image/svg+xml,<svg width="60" height="60" viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg"><g fill="none" fill-rule="evenodd"><g fill="%23ffffff" fill-opacity="0.03"><circle cx="30" cy="30" r="2"/></g></g></svg>') repeat;
+  pointer-events: none;
+}
+
+.footer-content {
+  position: relative;
+  z-index: 2;
+}
+
+/* Sección de marca */
+.footer-brand-section {
+  margin-bottom: 30px; /* Reducido para compactar */
+}
+
+.footer-brand-title {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #452A04;
+  margin-bottom: 15px;
+  letter-spacing: 1px;
+  text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.footer-brand-description {
+  font-size: 0.95rem;
+  line-height: 1.6;
+  color: #f8f9fa;
+  margin-bottom: 25px;
+  opacity: 0.9;
+}
+
+/* Redes sociales */
+.social-media-links {
+  display: flex;
+  gap: 15px;
+  flex-wrap: wrap;
+}
+
+.social-link {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 45px;
+  height: 45px;
+  border-radius: 50%;
+  color: #ffffff;
+  text-decoration: none;
+  font-size: 1.3rem;
+  transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  position: relative;
+  overflow: hidden;
+}
+
+.social-link::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 50%;
+  transform: scale(0);
+  transition: transform 0.3s ease;
+}
+
+.social-link:hover::before {
+  transform: scale(1);
+}
+
+.social-link:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+}
+
+.social-link.facebook:hover { background-color: #1877f2; }
+.social-link.youtube:hover { background-color: #ff0000; }
+.social-link.instagram:hover { 
+  background: linear-gradient(45deg, #f09433 0%,#e6683c 25%,#dc2743 50%,#cc2366 75%,#bc1888 100%);
+}
+.social-link.whatsapp:hover { background-color: #25d366; }
+.social-link.tiktok:hover { background-color: #000000; }
+
+/* Secciones de enlaces */
+.footer-links-section,
+.footer-contact-section,
+.footer-info-section {
+  margin-bottom: 30px; /* Reducido para compactar */
+}
+
+.footer-section-title {
+  font-size: 1.1rem;
+  font-weight: 700; /* Aumentado para más énfasis */
+  /* --- CAMBIO AQUÍ: Color del título --- */
+  color: #452A04; 
+  margin-bottom: 20px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  position: relative;
+  padding-bottom: 10px;
+  text-shadow: 1px 1px 1px rgba(255, 255, 255, 0.1);
+}
+
+.footer-section-title::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 30px;
+  height: 3px; /* Un poco más grueso */
+  /* --- CAMBIO AQUÍ: Color de la línea bajo el título --- */
+  background-color: #61440a; 
+  border-radius: 1px;
+}
+
+.footer-links-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.footer-links-list li {
+  margin-bottom: 12px;
+}
+
+.footer-link {
+  color: #f8f9fa;
+  text-decoration: none;
+  font-size: 0.9rem;
+  transition: all 0.3s ease;
+  position: relative;
+  display: inline-block;
+}
+
+.footer-link::before {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  width: 0;
+  height: 1px;
+  background-color: #ffffff;
+  transition: width 0.3s ease;
+}
+
+.footer-link:hover {
+  color: #ffffff;
+  transform: translateX(5px);
+}
+
+.footer-link:hover::before {
+  width: 100%;
+}
+
+/* Información de contacto */
+.contact-info {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.contact-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 0.9rem;
+}
+
+.contact-icon {
+  color: #ffffff;
+  font-size: 1rem;
+  width: 20px;
+  text-align: center;
+}
+
+.contact-link {
+  color: #f8f9fa;
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+.contact-link:hover {
+  color: #ffffff;
+}
+
+/* Línea divisoria */
+.footer-divider {
+  border: none;
+  height: 1px;
+  background: rgba(255, 255, 255, 0.2);
+  /* --- CAMBIO AQUÍ: Reducidos drásticamente los márgenes --- */
+  margin: 10px 0 20px;
+}
+
+/* Copyright */
+.footer-copyright {
+  /* --- CAMBIO AQUÍ: Eliminado el margen superior --- */
+  margin-top: 0;
+  font-size: 14px;
+}
+
+.copyright-text {
+  margin: 0;
+  font-size: 1rem;
+  color: #f8f9fa;
+  opacity: 0.8;
+}
+
+/* Responsive Design */
+@media (max-width: 991.98px) {
+  .biofibras-footer {
+    padding: 40px 0 20px;
+  }
+  
+  .footer-brand-title {
+    font-size: 1.8rem;
+  }
+  
+  .footer-brand-section {
+    margin-bottom: 35px;
+    text-align: center;
+  }
+  
+  .social-media-links {
+    justify-content: center;
+  }
+}
+
+@media (max-width: 767.98px) {
+  .biofibras-footer {
+    padding: 40px 0 20px;
+  }
+  
+  .footer-brand-title {
+    font-size: 1.6rem;
+  }
+  
+  .footer-links-section,
+  .footer-contact-section,
+  .footer-info-section {
+    margin-bottom: 30px;
+    text-align: center;
+  }
+  
+  .footer-section-title::after {
+    left: 50%;
+    transform: translateX(-50%);
+  }
+  
+  .contact-info {
+    align-items: center;
+  }
+  
+  .social-link {
+    width: 40px;
+    height: 40px;
+    font-size: 1.2rem;
+  }
+}
+
+@media (max-width: 575.98px) {
+  .biofibras-footer {
+    padding: 30px 0 15px;
+  }
+  
+  .footer-brand-title {
+    font-size: 1.4rem;
+  }
+  
+  .footer-brand-description {
+    font-size: 0.9rem;
+  }
+  
+  .social-media-links {
+    gap: 12px;
+  }
+  
+  .social-link {
+    width: 38px;
+    height: 38px;
+    font-size: 1.1rem;
+  }
+  
+  .footer-section-title {
+    font-size: 1rem;
+  }
+  
+  .footer-link,
+  .contact-item {
+    font-size: 0.85rem;
+  }
+  
+  .copyright-text {
+    font-size: 0.8rem;
+  }
+}
+
+/* Animaciones */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.footer-brand-section,
+.footer-links-section,
+.footer-contact-section,
+.footer-info-section {
+  animation: fadeInUp 0.6s ease-out;
+}
+
+.footer-links-section {
+  animation-delay: 0.1s;
+}
+
+.footer-contact-section {
+  animation-delay: 0.2s;
+}
+
+.footer-info-section {
+  animation-delay: 0.3s;
+}

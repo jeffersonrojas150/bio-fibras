@@ -1,1 +1,52 @@
 @import url('https://fonts.googleapis.com/css2?family=Raleway:wght@300;600;700&display=swap');
+/* Agregar estos estilos a tu App.css existente */
+/* Asegurar que Bootstrap Icons funcione correctamente */
+@import url("https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css");
+
+/* Asegurar que el footer esté siempre al fondo */
+.App {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+#page-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Estilos para páginas que necesiten que el footer esté al fondo */
+.page-container {
+  min-height: calc(100vh - 200px); /* Ajustar según la altura del header */
+  display: flex;
+  flex-direction: column;
+}
+
+.page-content {
+  flex: 1;
+}
+
+
+/* Responsive utilities para el footer */
+@media (max-width: 768px) {
+  .App {
+    min-height: 100vh;
+  }
+}
+
+/* Animación suave para transiciones de página */
+.page-transition {
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

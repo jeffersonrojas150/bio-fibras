@@ -41,7 +41,7 @@ const ProductDetail = () => {
   const [relatedProducts, setRelatedProducts] = useState([]);
   const [openAccordion, setOpenAccordion] = useState('description');
 
-  const adminWhatsappNumber = '931840727'; 
+  const adminWhatsappNumber = '910881837'; 
 
   useEffect(() => {
     if (!id) {
@@ -159,12 +159,7 @@ const ProductDetail = () => {
       )}
 
       <Container className="py-4 product-detail-custom-container">
-        <div className="d-flex justify-content-end align-items-center mb-4">
-          <Button variant="link" className="back-btn" onClick={() => navigate('/productos')}>
-            <FaArrowLeft className="me-2" />
-            Volver
-          </Button>
-        </div>
+        
 
         <Row className="product-detail-main-row">
           <Col lg={6} className="mb-4">
@@ -207,7 +202,7 @@ const ProductDetail = () => {
                   className="favorite-btn-detail"
                   onClick={toggleFavorite}
                 >
-                  {isFavorite ? <FaHeart className="text-danger" /> : <FaRegHeart />}
+                  {isFavorite ? <FaHeart className="text-warning" /> : <FaRegHeart />}
                 </Button>
               </div>
 
@@ -326,6 +321,12 @@ const ProductDetail = () => {
             </div>
           </Col>
         </Row>
+        <div className="d-flex justify-content-end align-items-center mb-4">
+          <Button variant="link" className="back-btn" onClick={() => navigate('/productos')}>
+            <FaArrowLeft className="me-2" />
+            Volver
+          </Button>
+        </div>
 
         {relatedProducts.length > 0 && (
           <div className="related-products-section">
