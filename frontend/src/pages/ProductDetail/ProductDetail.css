@@ -1,6 +1,7 @@
 /* Importar la fuente Raleway elegante */
 @import url('https://fonts.googleapis.com/css2?family=Raleway:wght@200;300;400;500;600&display=swap');
 
+/* === ESTILOS GENERALES DE LA PÁGINA === */
 .product-detail-page {
   background-color: #ffffff;
   font-family: 'Raleway', sans-serif;
@@ -25,12 +26,13 @@
 
 .product-detail-main-row {
   background-color: #ffffff;
-  border-radius: 12px;
-  box-shadow: 0 2px 20px rgba(0, 0, 0, 0.08);
-  padding: 40px;
-  margin-bottom: 30px;
+  border-radius: 10px; /* Mejorado */
+  box-shadow: 0 2px 15px rgba(0, 0, 0, 0.08); /* Mejorado */
+  padding: 30px; /* Mejorado */
+  margin-bottom: 25px; /* Mejorado */
 }
 
+/* === GALERÍA DE IMÁGENES DEL PRODUCTO === */
 .product-gallery {
   display: flex;
   flex-direction: column;
@@ -105,26 +107,27 @@
   object-fit: cover;
 }
 
+/* === PANEL DE INFORMACIÓN DEL PRODUCTO === */
 .product-info-panel {
-  padding-left: 30px;
+  padding-left: 25px; /* Mejorado */
 }
 
 .product-header {
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
-  margin-bottom: 15px;
+  margin-bottom: 12px; /* Mejorado */
   border-bottom: 1px solid #f0f0f0;
-  padding-bottom: 20px;
+  padding-bottom: 15px; /* Mejorado */
 }
 
 .product-title {
-  font-size: 2.5em;
-  font-weight: 300;
+  font-size: 1.8em; /* Mejorado */
+  font-weight: 400; /* Mejorado */
   color: #333333;
   margin-bottom: 0;
-  line-height: 1.2;
-  letter-spacing: -0.5px;
+  line-height: 1.1; /* Mejorado */
+  letter-spacing: -0.3px; /* Mejorado */
 }
 
 .favorite-btn-detail {
@@ -137,10 +140,11 @@
 }
 
 .favorite-btn-detail:hover {
-  color: #D2691E;
+  color: #35220295 !important;
   transform: scale(1.1);
 }
 
+/* --- Precios --- */
 .product-pricing-section {
   display: flex;
   align-items: baseline;
@@ -151,44 +155,45 @@
 .original-price-detail {
   text-decoration: line-through;
   color: #999999;
-  font-size: 1.3em;
+  font-size: 1.1em; /* Mejorado */
   font-weight: 200;
 }
 
 .current-price-detail {
-  font-size: 2.8em;
-  font-weight: 300;
+  font-size: 2.2em; /* Mejorado */
+  font-weight: 400; /* Mejorado */
   color: #333333;
-  letter-spacing: -1px;
+  letter-spacing: -0.5px; /* Mejorado */
 }
 
+/* --- Precio por Mayor --- */
 .wholesale-box {
   background: linear-gradient(135deg, #fff8e1 0%, #f3e5ab 100%);
   border: 1px solid #D2691E;
-  border-radius: 10px;
-  padding: 20px;
+  border-radius: 8px; /* Mejorado */
+  padding: 15px; /* Mejorado */
   text-align: center;
   box-shadow: 0 2px 10px rgba(210, 105, 30, 0.1);
 }
 
 .wholesale-header {
-  font-size: 0.85em;
+  font-size: 0.8em; /* Mejorado */
   font-weight: 500;
   color: #8B4513;
   text-transform: uppercase;
-  letter-spacing: 1px;
-  margin-bottom: 8px;
+  letter-spacing: 0.5px; /* Mejorado */
+  margin-bottom: 6px; /* Mejorado */
 }
 
 .wholesale-price-text {
-  font-size: 1.9em;
+  font-size: 1.6em; /* Mejorado */
   font-weight: 500;
   color: #8B4513;
   margin-bottom: 5px;
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 10px;
+  gap: 8px; /* Mejorado */
 }
 
 .wholesale-label {
@@ -206,11 +211,12 @@
   color: #515151;
 }
 
+/* --- Stock y Cantidad --- */
 .stock-info {
   background-color: #f8f9fa;
-  border-radius: 8px;
-  padding: 15px 20px;
-  border-left: 4px solid #036b0c;
+  border-radius: 6px; /* Mejorado */
+  padding: 12px 15px; /* Mejorado */
+  border-left: 3px solid #000200; /* Mejorado */
 }
 
 .stock-indicator {
@@ -220,7 +226,7 @@
 }
 
 .stock-text {
-  font-size: 1.1em;
+  font-size: 1em; /* Mejorado */
   color: #333333;
   margin-right: 10px;
 }
@@ -238,15 +244,15 @@
 
 .quantity-section {
   background-color: #fafafa;
-  border-radius: 8px;
-  padding: 12px;
+  border-radius: 6px; /* Mejorado */
+  padding: 10px; /* Mejorado */
 }
 
 .quantity-label {
-  font-size: 1.1em;
-  font-weight: 3500;
+  font-size: 1em; /* Mejorado */
+  font-weight: 400; /* Mejorado */
   color: #333333;
-  margin-bottom: 10px;
+  margin-bottom: 8px; /* Mejorado */
   display: block;
   text-align: center;
 }
@@ -264,8 +270,8 @@
   border: 1px solid #8B4513 !important;
   background-color: #ffffff !important;
   color: #8B4513 !important;
-  width: 45px;
-  height: 45px;
+  width: 35px; /* Mejorado */
+  height: 35px; /* Mejorado */
   display: flex;
   align-items: center;
   justify-content: center;
@@ -279,8 +285,8 @@
 .quantity-btn:disabled { opacity: 0.5; cursor: not-allowed; }
 
 .quantity-input {
-  width: 40px;
-  height: 45px;
+  width: 50px; /* Mejorado */
+  height: 40px; /* Mejorado */
   text-align: center;
   border: 1px solid #8B4513 !important;
   border-left: 1px solid #8B4513 !important;
@@ -288,24 +294,62 @@
   border-radius: 0;
   background-color: #ffffff;
   font-weight: 400!important;
-  font-size: 1.2em;
+  font-size: 1.1em; /* Mejorado */
 }
 
 .quantity-input:focus { box-shadow: none; border-color: #8B4513 !important; }
 
-.main-actions { margin-top: 50px; }
+/* --- Mensaje de Contacto por Stock --- */
+.stock-contact-message {
+  background: linear-gradient(135deg, #e8f5e8 0%, #f0f8f0 100%);
+  border: 1px solid #c3e6c3;
+  border-radius: 8px; /* Mejorado */
+  padding: 15px; /* Mejorado */
+  margin-top: 20px; /* Mejorado */
+  text-align: center;
+}
+
+.contact-text {
+  font-size: 0.9em; /* Mejorado */
+  font-weight: 300;
+  color: #2c5530;
+  margin-bottom: 10px; /* Mejorado */
+  line-height: 1.3; /* Mejorado */
+}
+
+.whatsapp-contact-btn {
+  background-color: #25d366 !important;
+  border-color: #42c672 !important;
+  color: white !important;
+  font-weight: 400;
+  padding: 8px 16px; /* Mejorado */
+  font-size: 0.9em; /* Mejorado */
+  border-radius: 20px; /* Mejorado */
+  transition: all 0.2s ease;
+}
+
+.whatsapp-contact-btn:hover {
+  background-color: #128c1c !important;
+  border-color: #000000 !important ;
+  transform: scale(1.05);
+}
+
+/* --- Botones Principales --- */
+.main-actions { 
+  margin-top: 25px; /* Mejorado */
+}
 
 .add-to-cart-btn {
   background-color: #C8860D !important;
   border-color: #C8860D !important;
   color: white !important;
-  font-size: 1.2em;
+  font-size: 1.1em; /* Mejorado */
   font-weight: 400;
-  padding: 15px 25px;
-  border-radius: 8px;
+  padding: 12px 20px; /* Mejorado */
+  border-radius: 6px; /* Mejorado */
   transition: all 0.3s ease;
   text-transform: uppercase;
-  letter-spacing: 0.5px;
+  letter-spacing: 0.3px; /* Mejorado */
 }
 
 .add-to-cart-btn:hover {
@@ -327,10 +371,10 @@
   background-color: transparent !important;
   border: 1px solid #9b6501 !important;
   color: #986300 !important;
-  font-size: 1.1em;
+  font-size: 1em; /* Mejorado */
   font-weight: 300;
-  padding: 12px 25px;
-  border-radius: 8px;
+  padding: 10px 20px; /* Mejorado */
+  border-radius: 6px; /* Mejorado */
   transition: all 0.3s ease;
 }
 
@@ -341,60 +385,24 @@
   box-shadow: 0 4px 15px rgba(238, 183, 56, 0.289);
 }
 
-.stock-contact-message {
-  background: linear-gradient(135deg, #e8f5e8 0%, #f0f8f0 100%);
-  border: 1px solid #c3e6c3;
-  border-radius: 10px;
-  padding: 20px;
-  margin-top: 25px;
-  text-align: center;
-}
-
-.contact-text {
-  font-size: 0.95em;
-  font-weight: 300;
-  color: #2c5530;
-  border-color: #128c1c ;
-  margin-bottom: 12px;
-  line-height: 1.4;
-}
-
-.whatsapp-contact-btn {
-  background-color: #25d366 !important;
-  border-color: #42c672 !important;
-  color: white !important;
-  font-weight: 400;
-  padding: 10px 20px;
-  font-size: 0.95em;
-  border-radius: 25px;
-  transition: all 0.2s ease;
-}
-
-.whatsapp-contact-btn:hover {
-  background-color: #128c1c !important;
-  border-color: #000000 !important ;
-  transform: scale(1.05);
-}
-
+/* --- Métodos de Pago y Secciones Adicionales --- */
 .section-title {
-  font-size: 1.1em;
+  font-size: 1em; /* Mejorado */
   font-weight: 400;
   color: #333333;
   text-transform: uppercase;
-  letter-spacing: 1px;
-  margin-bottom: 12px;
-  padding-bottom: 8px;
- 
+  letter-spacing: 0.5px; /* Mejorado */
+  margin-bottom: 10px; /* Mejorado */
+  padding-bottom: 6px; /* Mejorado */
 }
 
 .payment-logo {
-  max-height: 35px;
-  max-width: 60px;
+  max-height: 30px; /* Mejorado */
+  max-width: 50px; /* Mejorado */
   object-fit: contain;
   filter: grayscale(20%);
   transition: all 0.3s ease;
   border-radius: 4px;
-  
 }
 
 .payment-logo:hover {
@@ -403,41 +411,7 @@
   border-bottom: 2px solid #f0f0f0;
 }
 
-.description-text {
-  font-size: 1.05em;
-  font-weight: 300;
-  color: #666666;
-  line-height: 1.7;
-}
-
-.features-list {
-  list-style: none;
-  padding-left: 0;
-  margin-bottom: 0;
-}
-
-.features-list li {
-  font-size: 0.95em;
-  font-weight: 300;
-  color: #666666;
-  margin-bottom: 10px;
-  position: relative;
-  padding-left: 25px;
-  line-height: 1.5;
-}
-
-.features-list li::before {
-  content: '✓';
-  color: #28a745;
-  font-weight: 600;
-  font-size: 1.1em;
-  position: absolute;
-  left: 0;
-  top: 0;
-}
-
-
-/* === CAMBIO: ESTILOS PARA EL NUEVO ACORDEÓN DE DETALLES === */
+/* === ACORDEÓN DE DETALLES DEL PRODUCTO === */
 .product-details-accordion {
   margin-top: 20px;
   border-top: 1px solid #b48113;
@@ -451,7 +425,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 20px 10px;
+  padding: 15px 10px; /* Mejorado */
   cursor: pointer;
   transition: background-color 0.2s ease;
 }
@@ -468,15 +442,15 @@
 }
 
 .accordion-title {
-  font-size: 1.1em;
+  font-size: 1em; /* Mejorado */
   font-weight: 400;
   margin: 0;
   text-transform: uppercase;
-  letter-spacing: 0.5px;
+  letter-spacing: 0.3px; /* Mejorado */
 }
 
 .accordion-icon {
-  font-size: 1.6em;
+  font-size: 1.4em; /* Mejorado */
   font-weight: 400;
   color: #8B4513;
   transition: transform 0.3s ease;
@@ -489,19 +463,22 @@
   padding-left: 10px;
   padding-right: 10px;
   border-top: 1px solid #b48113;
-   
 }
 
 .accordion-content.open {
-  max-height: 500px; /* Un valor alto para asegurar que todo el contenido entre */
+  max-height: 500px;
   padding-bottom: 20px;
-  
-  
 }
 
 .accordion-content-inner {
   padding-top: 10px;
-  
+}
+
+.description-text {
+  font-size: 1.05em;
+  font-weight: 300;
+  color: #666666;
+  line-height: 1.7;
 }
 
 .shipping-info {
@@ -524,7 +501,7 @@
   flex-shrink: 0;
 }
 
-/* === PRODUCTOS RELACIONADOS === */
+/* === SECCIÓN DE PRODUCTOS RELACIONADOS === */
 .related-products-section {
   background-color: #fafafa;
   border-radius: 12px;
@@ -573,6 +550,7 @@
 .related-product-name { font-size: 1em; font-weight: 400; color: #333333; margin-bottom: 8px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .related-price { font-size: 1.1em; font-weight: 500; color: #8B4513; margin-bottom: 0; }
 
+/* === ESTILOS DE COMPONENTES ADICIONALES (MODAL, ALERTA) === */
 .modal-title { font-size: 1.3em; font-weight: 400; color: #333333; }
 .share-modal-btn { font-weight: 400; padding: 12px 20px; border-radius: 8px; transition: all 0.2s ease; }
 
@@ -595,39 +573,40 @@
 @keyframes fadeInDown { from { opacity: 0; transform: translate3d(-50%, -100%, 0); } to { opacity: 1; transform: translate3d(-50%, 0, 0); } }
 .animate__fadeInDown { animation-name: fadeInDown; }
 
-/* === MEDIA QUERIES === */
+/* === MEDIA QUERIES MEJORADAS Y RESPONSIVIDAD === */
 @media (max-width: 991.98px) {
-  .product-detail-main-row { padding: 25px; }
-  .product-info-panel { padding-left: 0; margin-top: 30px; }
-  .product-title { font-size: 2em; }
-  .current-price-detail { font-size: 2.2em; }
-  .wholesale-price-text { font-size: 1.6em; }
-  .quantity-control-group { width: 100%; justify-content: center; }
-  .main-actions .btn { font-size: 1.1em; padding: 14px 20px; }
-  .payment-icons { justify-content: center; }
+  .product-detail-main-row { padding: 20px; }
+  .product-info-panel { padding-left: 0; margin-top: 20px; }
+  .product-title { font-size: 1.6em; }
+  .current-price-detail { font-size: 2em; }
+  .wholesale-price-text { font-size: 1.4em; }
+  .main-actions .btn { font-size: 1em; padding: 12px 18px; }
 }
 
 @media (max-width: 767.98px) {
-  .product-detail-main-row { padding: 20px; }
-  .product-title { font-size: 1.8em; }
-  .current-price-detail { font-size: 2em; }
-  .wholesale-box { padding: 15px; }
-  .wholesale-price-text { font-size: 1.4em; flex-direction: column; gap: 5px; }
-  .related-title { font-size: 1.6em; }
-  .related-products-section { padding: 25px; }
-  .stock-contact-message { padding: 15px; }
-  .floating-alert { left: 10px; right: 10px; transform: none; min-width: auto; }
+  .product-detail-main-row { padding: 15px; }
+  .product-title { font-size: 1.5em; }
+  .current-price-detail { font-size: 1.8em; }
+  .wholesale-box { padding: 12px; }
+  .wholesale-price-text { font-size: 1.3em; flex-direction: column; gap: 4px; }
+  .related-title { font-size: 1.5em; }
+  .related-products-section { padding: 20px; }
+  .stock-contact-message { padding: 12px; }
+  .main-actions { margin-top: 20px; }
 }
 
 @media (max-width: 575.98px) {
-  .product-header { flex-direction: column; align-items: flex-start; gap: 15px; }
+  .product-header { flex-direction: column; align-items: flex-start; gap: 10px; }
   .favorite-btn-detail { align-self: flex-end; color: #000000; }
-  .product-pricing-section { flex-direction: column; align-items: flex-start; gap: 8px; }
-  .thumbnail { width: 60px; height: 60px; }
-  .quantity-btn { width: 40px; height: 40px; }
-  .quantity-input { width: 60px; height: 40px; }
+  .product-pricing-section { flex-direction: column; align-items: flex-start; gap: 6px; }
+  .thumbnail { width: 55px; height: 55px; }
+  .quantity-btn { width: 35px; height: 35px; }
+  .quantity-input { width: 50px; height: 35px; }
+  .accordion-header { padding: 12px 8px; }
+  .floating-alert { left: 10px; right: 10px; transform: none; min-width: auto; }
 }
 
+/* === CLASES Y RESETEOS GLOBALES === */
 * { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
 .btn:focus, .form-control:focus { box-shadow: 0 0 0 2px rgba(139, 69, 19, 0.25); outline: none; }
 ::selection { background-color: rgba(139, 69, 19, 0.2); color: #333333; }

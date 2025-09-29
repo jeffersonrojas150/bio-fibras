@@ -5,6 +5,9 @@ import { FaTimes, FaShoppingCart, FaTrash, FaMinus, FaPlus } from 'react-icons/f
 import { useCart } from '../../context/cartContext';
 import './Cart.css';
 
+// Paso 1: Importar el hook useNavigate de react-router-dom
+import { useNavigate } from 'react-router-dom';
+
 // Componente para el icono del carrito en el header
 export const CartIcon = () => {
   const { getTotalItems, toggleCart } = useCart();
@@ -126,14 +129,17 @@ const CartItem = ({ item }) => {
 // Componente principal del carrito (sidebar)
 const Cart = () => {
   const { cartItems, isCartOpen, toggleCart, getTotalItems, getTotalPrice, clearCart } = useCart();
+  
+  // Paso 2: Inicializar el hook para obtener la función de navegación
+  const navigate = useNavigate();
+
   const totalItems = getTotalItems();
   const totalPrice = getTotalPrice();
 
   const handleCheckout = () => {
-    console.log('Proceder al checkout');
-    // Aquí puedes agregar la lógica de checkout
-    alert(`Proceder al pago de S/ ${totalPrice.toFixed(2)}`);
-    toggleCart();
+    // ¡Ahora 'navigate' existe y funcionará!
+    navigate('/checkout');
+    toggleCart(); // Cierra el carrito después de navegar
   };
 
   const handleClearCart = () => {
@@ -144,7 +150,6 @@ const Cart = () => {
 
   return (
     <>
-      {/* Overlay */}
       <div 
         className={`cart-overlay ${isCartOpen ? 'active' : ''}`}
         onClick={toggleCart}
@@ -162,7 +167,7 @@ const Cart = () => {
             <FaShoppingCart />
             <span>Tu Carrito</span>
             {totalItems > 0 && (
-              <Badge bg="primary" pill className="ms-2">
+              <Badge bg="" pill className="ms-2" style={{ color: '#000',backgroundColor:'#d7ad44',borderColor:'#8b6914' }}>
                 {totalItems}
               </Badge>
             )}
@@ -182,15 +187,16 @@ const Cart = () => {
               <p>Descubre nuestros productos ecológicos y sostenibles</p>
               <Button 
                 variant="primary" 
-                onClick={toggleCart}
-                href="/productos"
+                onClick={() => {
+                  toggleCart();
+                  navigate('/productos'); // También puedes usar navigate aquí
+                }}
               >
                 Explorar Productos
               </Button>
             </div>
           ) : (
             <div className="cart-content">
-              {/* Botón limpiar carrito (solo si hay más de 2 items) */}
               {cartItems.length > 2 && (
                 <div className="cart-actions">
                   <Button 
@@ -205,14 +211,12 @@ const Cart = () => {
                 </div>
               )}
 
-              {/* Lista de items */}
               <div className="cart-items">
                 {cartItems.map((item) => (
                   <CartItem key={item.id} item={item} />
                 ))}
               </div>
 
-              {/* Total y checkout */}
               <div className="cart-footer">
                 <div className="cart-summary">
                   <div className="summary-row">

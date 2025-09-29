@@ -1,0 +1,310 @@
+/* src/components/Checkout/YapePayment.css */
+
+/* Estilos específicos para el método de pago Yape */
+.yape-payment-container {
+  background: linear-gradient(135deg, #6e1b71 0%, #8b2f8f 100%);
+  border-radius: 15px;
+  padding: 2rem;
+  margin: 1.5rem 0;
+  box-shadow: 0 8px 25px rgba(110, 27, 113, 0.3);
+  position: relative;
+  overflow: hidden;
+  border: 2px solid rgba(255, 255, 255, 0.1);
+}
+
+.yape-payment-container::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  right: -50%;
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+.yape-header {
+  text-align: center;
+  margin-bottom: 1.5rem;
+  position: relative;
+  z-index: 2;
+}
+
+.yape-header h6 {
+  color: white;
+  font-weight: 700;
+  font-size: 1.3rem;
+  margin-bottom: 0.5rem;
+  text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+}
+
+.yape-header p {
+  color: rgba(255,255,255,0.9);
+  font-size: 1rem;
+  margin-bottom: 0;
+}
+
+.yape-qr-section {
+  background: white;
+  border-radius: 20px;
+  padding: 2rem;
+  margin: 1.5rem 0;
+  box-shadow: 0 8px 30px rgba(0,0,0,0.15);
+  text-align: center;
+  position: relative;
+  z-index: 2;
+}
+
+.yape-qr-code {
+  width: 240px;
+  height: 240px;
+  max-width: 100%;
+  border-radius: 15px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+  margin: 1rem auto;
+  display: block;
+  transition: transform 0.3s ease;
+  border: 3px solid #f8f9fa;
+  object-fit: contain;
+}
+
+.yape-qr-code:hover {
+  transform: scale(1.05);
+  cursor: pointer;
+}
+
+.yape-contact-info {
+  margin-top: 1.5rem;
+  padding-top: 1.5rem;
+  border-top: 2px solid #f1f3f4;
+}
+
+.yape-contact-name {
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: #2c3e32;
+  margin-bottom: 0.5rem;
+}
+
+.yape-contact-phone {
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: #6e1b71;
+  margin-bottom: 0;
+}
+
+.yape-instructions {
+  background: rgba(255,255,255,0.95);
+  border-radius: 15px;
+  padding: 1.5rem;
+  margin-top: 1.5rem;
+  border-left: 5px solid #ffc107;
+  position: relative;
+  z-index: 2;
+}
+
+.yape-instructions h6 {
+  color: #2c3e32;
+  font-weight: 700;
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+  font-size: 1.1rem;
+}
+
+.yape-instructions .warning-icon {
+  margin-right: 0.5rem;
+  color: #ffc107;
+}
+
+.yape-instructions p {
+  color: #495057;
+  margin-bottom: 0.75rem;
+  line-height: 1.6;
+}
+
+.yape-instructions .highlight {
+  background: rgba(255, 193, 7, 0.2);
+  padding: 0.2rem 0.4rem;
+  border-radius: 4px;
+  font-weight: 600;
+  color: #2c3e32;
+}
+
+/* Estilos para el paso a paso */
+.yape-steps {
+  margin-top: 1rem;
+}
+
+.yape-step {
+  display: flex;
+  align-items: flex-start;
+  margin-bottom: 1rem;
+  padding: 0.75rem;
+  background: rgba(110, 27, 113, 0.05);
+  border-radius: 8px;
+  border-left: 3px solid #6e1b71;
+}
+
+.yape-step-number {
+  background: #6e1b71;
+  color: white;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  font-size: 0.8rem;
+  margin-right: 1rem;
+  flex-shrink: 0;
+}
+
+.yape-step-text {
+  flex: 1;
+  color: #000000;
+  font-size: 0.95rem;
+  line-height: 1.4;
+}
+
+/* Opciones de contacto */
+.contact-options {
+  background: rgba(0, 0, 0, 0.05);
+  border-radius: 8px;
+  padding: 1rem;
+  border: 1px solid rgba(0, 0, 0, 0.2);
+}
+
+.contact-option {
+  display: flex;
+  align-items: center;
+  margin-bottom: 0.5rem;
+  font-size: 0.9rem;
+  color: #2c3e32;
+}
+
+.contact-option:last-child {
+  margin-bottom: 0;
+}
+
+/* Responsive para móviles */
+@media (max-width: 768px) {
+  .yape-payment-container {
+    padding: 1.5rem;
+    margin: 1rem 0;
+    border-radius: 12px;
+  }
+
+  .yape-qr-section {
+    padding: 1.5rem;
+    margin: 1rem 0;
+  }
+
+  .yape-qr-code {
+    width: 180px;
+    height: 180px;
+  }
+
+  .yape-header h6 {
+    font-size: 1.2rem;
+  }
+
+  .yape-contact-name {
+    font-size: 1.2rem;
+  }
+
+  .yape-contact-phone {
+    font-size: 1.1rem;
+  }
+
+  .yape-instructions {
+    padding: 1.25rem;
+    margin-top: 1rem;
+  }
+
+  .yape-step {
+    padding: 0.5rem;
+    margin-bottom: 0.75rem;
+  }
+
+  .yape-step-number {
+    width: 20px;
+    height: 20px;
+    font-size: 0.7rem;
+    margin-right: 0.75rem;
+  }
+
+  .yape-step-text {
+    font-size: 0.9rem;
+  }
+}
+
+@media (max-width: 576px) {
+  .yape-payment-container {
+    padding: 1rem;
+    margin: 0.5rem 0;
+  }
+
+  .yape-qr-section {
+    padding: 1rem;
+  }
+
+  .yape-qr-code {
+    width: 160px;
+    height: 160px;
+  }
+
+  .yape-header h6 {
+    font-size: 1.1rem;
+  }
+
+  .yape-header p {
+    font-size: 0.9rem;
+  }
+
+  .yape-contact-name {
+    font-size: 1.1rem;
+  }
+
+  .yape-contact-phone {
+    font-size: 1rem;
+  }
+
+  .yape-instructions {
+    padding: 1rem;
+  }
+
+  .yape-instructions h6 {
+    font-size: 1rem;
+  }
+}
+
+/* Animaciones */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.yape-payment-container {
+  animation: fadeInUp 0.6s ease-out;
+}
+
+/* Mejoras de accesibilidad */
+.yape-qr-code:focus {
+  outline: 3px solid #6e1b71;
+  outline-offset: 2px;
+}
+
+/* Estados de hover mejorados */
+.yape-step:hover {
+  background: rgba(110, 27, 113, 0.1);
+  transform: translateX(2px);
+  transition: all 0.3s ease;
+}
