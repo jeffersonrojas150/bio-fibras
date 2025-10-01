@@ -24,6 +24,8 @@ class ProductoListSerializer(serializers.ModelSerializer):
             'slug',
             'precio_unitario',
             'precio_oferta',
+            'precio_mayor',
+            'cantidad_minima_mayor',
             'categoria',
             'imagen_principal',
         ]
@@ -181,7 +183,7 @@ class OrdenSerializer(serializers.ModelSerializer):
             'estado_pago', 'estado_orden', 'cantidad_compra', 
             'fecha_creacion', 'items'
         ]
-        
+
         read_only_fields = ['total', 'cantidad_compra']
 
 class DireccionSerializer(serializers.ModelSerializer):
