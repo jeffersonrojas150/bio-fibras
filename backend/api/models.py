@@ -1,5 +1,6 @@
 from django.db import models
 from django.conf import settings
+import time, random
 
 # =================================================================
 # 🏷️ TABLA: CATEGORIA
@@ -167,6 +168,8 @@ class Orden(models.Model):
         ENTREGADO = 'entregado', 'Entregado'
 
     # ID_ordenes es creado automáticamente por Django
+    numero_orden = models.CharField(max_length=20, unique=True, editable=False, verbose_name="Número de Orden")
+
     usuario = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True, related_name='ordenes', verbose_name="Usuario")
     direccion = models.ForeignKey(Direccion, on_delete=models.SET_NULL, null=True, related_name='ordenes', verbose_name="Dirección de envío")
     
@@ -181,8 +184,15 @@ class Orden(models.Model):
     fecha_creacion = models.DateTimeField(auto_now_add=True, verbose_name="Fecha de creación")
     fecha_actualizacion = models.DateTimeField(auto_now=True, verbose_name="Última actualización")
 
+    def save(self, *args, **kwargs):
+        if not self.pk:
+            timestamp = int(time.time() * 1000)
+            aleatorio = random.randint(10, 99)
+            self.numero_orden = f"{timestamp}{aleatorio}"
+        super().save(*args, **kwargs)
+
     def __str__(self):
-        return f"Orden #{self.id} de {self.usuario.username if self.usuario else 'Usuario Eliminado'}"
+        return f"Orden #{self.numero_orden} de {self.usuario.username if self.usuario else 'Usuario Eliminado'}"
 
 # =================================================================
 # 📦 TABLA: ORDEN_ITEMS

@@ -1,4 +1,4 @@
-from rest_framework import generics, viewsets, status
+from rest_framework import generics, viewsets, status, serializers
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated, AllowAny
@@ -78,70 +78,6 @@ class CarritoViewSet(viewsets.ModelViewSet):
     def perform_create(self, serializer):
         serializer.save(usuario=self.request.user)
 
-class OrdenCreateView(APIView):
-    permission_classes = [IsAuthenticated]
-
-    @transaction.atomic
-    def post(self, request):
-        usuario = request.user
-        items_carrito = Carrito.objects.filter(usuario=usuario)
-        
-        if not items_carrito.exists():
-            return Response({"error": "Tu carrito está vacío."}, status=status.HTTP_400_BAD_REQUEST)
-
-        direccion_id = request.data.get('direccion_id')
-        metodo_pago = request.data.get('metodo_pago')
-
-        if not direccion_id or not metodo_pago:
-            return Response({"error": "La dirección de envío y el método de pago son requeridos."}, status=status.HTTP_400_BAD_REQUEST)
-        
-        try:
-            direccion = Direccion.objects.get(id=direccion_id, usuario=usuario)
-        except Direccion.DoesNotExist:
-            return Response({"error": "La dirección especificada no es válida o no te pertenece."}, status=status.HTTP_400_BAD_REQUEST)
-
-        total_orden = 0
-        cantidad_total_items = 0
-        
-        for item in items_carrito:
-            producto = item.producto
-            if item.cantidad > producto.stock:
-                return Response(
-                    {"error": f"Stock insuficiente para '{producto.nombre}'. Disponible: {producto.stock}, Solicitado: {item.cantidad}."},
-                    status=status.HTTP_400_BAD_REQUEST
-                )
-            precio = producto.precio_oferta or producto.precio_unitario
-            total_orden += item.cantidad * precio
-            cantidad_total_items += item.cantidad
-        
-        nueva_orden = Orden.objects.create(
-            usuario=usuario,
-            direccion=direccion,
-            total=total_orden,
-            metodo_pago=metodo_pago,
-            cantidad_compra=cantidad_total_items
-        )
-
-        for item in items_carrito:
-            producto = item.producto
-            precio = producto.precio_oferta or producto.precio_unitario
-            
-            OrdenItem.objects.create(
-                orden=nueva_orden,
-                producto=producto,
-                cantidad=item.cantidad,
-                precio_unitario=precio,
-                precio_total=item.cantidad * precio
-            )
-            
-            producto.stock -= item.cantidad
-            producto.save()
-            
-        items_carrito.delete()
-        
-        serializer = OrdenSerializer(nueva_orden)
-        return Response(serializer.data, status=status.HTTP_201_CREATED)
-
 
 class DireccionViewSet(viewsets.ModelViewSet):
     serializer_class = DireccionSerializer
@@ -152,3 +88,91 @@ class DireccionViewSet(viewsets.ModelViewSet):
 
     def perform_create(self, serializer):
         serializer.save(usuario=self.request.user)
+
+
+class OrdenListCreateView(generics.ListCreateAPIView):
+    """
+    Vista para que un usuario pueda:
+    - Listar sus propias órdenes (GET)
+    - Crear una nueva orden (POST - Checkout)
+    """
+    serializer_class = OrdenSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        """
+        Para el método GET (Listar), asegura que el usuario
+        solo vea sus propias órdenes.
+        """
+        return Orden.objects.filter(usuario=self.request.user).order_by('-fecha_creacion')
+
+    @transaction.atomic
+    def perform_create(self, serializer):
+        """
+        Para el método POST (Crear), ejecuta la lógica del checkout.
+        Sobreescribimos perform_create en lugar de create para
+        aprovechar la gestión de la vista genérica.
+        """
+        usuario = self.request.user
+        items_carrito = Carrito.objects.filter(usuario=usuario)
+        
+        if not items_carrito.exists():
+            # DRF maneja esto mejor si lanzamos una excepción de validación
+            raise serializers.ValidationError({"error": "Tu carrito está vacío."})
+
+        direccion_id = self.request.data.get('direccion_id')
+        metodo_pago = self.request.data.get('metodo_pago')
+
+        if not direccion_id or not metodo_pago:
+            raise serializers.ValidationError({"error": "La dirección de envío y el método de pago son requeridos."})
+        
+        try:
+            direccion = Direccion.objects.get(id=direccion_id, usuario=usuario)
+        except Direccion.DoesNotExist:
+            raise serializers.ValidationError({"error": "La dirección especificada no es válida o no te pertenece."})
+
+        total_orden = 0
+        cantidad_total_items = 0
+        
+        for item in items_carrito:
+            # Revalidación de stock
+            if item.cantidad > item.producto.stock:
+                raise serializers.ValidationError(
+                    {"error": f"Stock insuficiente para '{item.producto.nombre}'. Disponible: {item.producto.stock}"}
+                )
+            precio = item.producto.precio_oferta or item.producto.precio_unitario
+            total_orden += item.cantidad * precio
+            cantidad_total_items += item.cantidad
+        
+        # Guardamos la orden principal a través del serializer
+        nueva_orden = serializer.save(
+            usuario=usuario,
+            direccion=direccion,
+            total=total_orden,
+            metodo_pago=metodo_pago,
+            cantidad_compra=cantidad_total_items
+        )
+
+        # Creamos los items y actualizamos stock
+        for item in items_carrito:
+            precio = item.producto.precio_oferta or item.producto.precio_unitario
+            OrdenItem.objects.create(
+                orden=nueva_orden,
+                producto=item.producto,
+                cantidad=item.cantidad,
+                precio_unitario=precio,
+                precio_total=item.cantidad * precio
+            )
+            item.producto.stock -= item.cantidad
+            item.producto.save()
+            
+        # Limpiamos el carrito
+        items_carrito.delete()
+
+class OrdenDetailView(generics.RetrieveAPIView):
+    serializer_class = OrdenSerializer
+    permission_classes = [IsAuthenticated]
+    
+    def get_queryset(self):
+        return Orden.objects.filter(usuario=self.request.user)
+

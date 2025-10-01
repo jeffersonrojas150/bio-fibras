@@ -177,10 +177,12 @@ class OrdenSerializer(serializers.ModelSerializer):
     class Meta:
         model = Orden
         fields = [
-            'id', 'usuario', 'direccion', 'total', 'metodo_pago', 
+            'id', 'usuario', 'direccion', 'total', 'metodo_pago', 'numero_orden',
             'estado_pago', 'estado_orden', 'cantidad_compra', 
             'fecha_creacion', 'items'
         ]
+        
+        read_only_fields = ['total', 'cantidad_compra']
 
 class DireccionSerializer(serializers.ModelSerializer):
     class Meta:

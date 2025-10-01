@@ -13,8 +13,9 @@ from .views import (
     RegisterView,
     FavoritoViewSet,
     CarritoViewSet,
-    OrdenCreateView,
     DireccionViewSet,
+    OrdenListCreateView,
+    OrdenDetailView,
 )
 
 router = routers.DefaultRouter()
@@ -33,7 +34,8 @@ urlpatterns = [
     path('categorias/', CategoriaListView.as_view(), name='lista-categorias'),
     path('categorias/<slug:slug>/productos/', ProductosPorCategoriaView.as_view(), name='productos-por-categoria'),
 
-    path('ordenes/', OrdenCreateView.as_view(), name='crear-orden'),
+    path('ordenes/', OrdenListCreateView.as_view(), name='listar-crear-ordenes'),
+    path('ordenes/<int:pk>/', OrdenDetailView.as_view(), name='detalle-orden'),
 
     path('', include(router.urls)),
 ]
