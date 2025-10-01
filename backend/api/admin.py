@@ -98,19 +98,34 @@ class OrdenAdmin(admin.ModelAdmin):
         'estado_pago', 
         'estado_orden'
     )
+
+    list_editable = ('estado_pago', 'estado_orden')
     
     list_filter = ('estado_pago', 'estado_orden', 'metodo_pago', 'fecha_creacion')
     
     search_fields = ('numero_orden', 'usuario__username')
 
+    fieldsets = (
+        ('Información del Pedido', {
+            'fields': ('numero_orden', 'fecha_creacion', 'total', 'metodo_pago')
+        }),
+        ('Estado Actual', {
+            'fields': ('estado_pago', 'estado_orden', 'comprobante_envio')
+        }),
+        ('Información del Cliente', {
+            'fields': ('get_usuario_info',)
+        }),
+        ('Dirección de Envío', {
+            'fields': (
+                'get_direccion_completa', 
+                'get_contacto_cliente'
+            )
+        }),
+    )
+
     readonly_fields = (
-        'numero_orden', 
-        'usuario', 
-        'total', 
-        'metodo_pago',
-        'cantidad_compra',
-        'fecha_creacion',
-        'fecha_actualizacion'
+        'numero_orden', 'fecha_creacion', 'total', 'metodo_pago',
+        'get_usuario_info', 'get_direccion_completa', 'get_contacto_cliente'
     )
     
     def has_add_permission(self, request):
@@ -118,3 +133,29 @@ class OrdenAdmin(admin.ModelAdmin):
 
     def has_delete_permission(self, request, obj=None):
         return False
+    
+    def get_usuario_info(self, obj):
+        if obj.usuario:
+            nombre_completo = obj.usuario.get_full_name()
+            return f"{nombre_completo} ({obj.usuario.username})"
+        return "Usuario Eliminado"
+    get_usuario_info.short_description = 'Cliente'
+
+    def get_direccion_completa(self, obj):
+        if obj.direccion:
+            return (
+                f"{obj.direccion.direccion_completo}, "
+                f"{obj.direccion.distrito}, {obj.direccion.provincia}, "
+                f"{obj.direccion.departamento}"
+            )
+        return "N/A"
+    get_direccion_completa.short_description = 'Dirección Completa'
+
+    def get_contacto_cliente(self, obj):
+        if obj.direccion:
+            return (
+                f"Recibe: {obj.direccion.nombres} {obj.direccion.apellidos} | "
+                f"DNI: {obj.direccion.dni} | Teléfono: {obj.direccion.telefono}"
+            )
+        return "N/A"
+    get_contacto_cliente.short_description = 'Datos de Contacto'
