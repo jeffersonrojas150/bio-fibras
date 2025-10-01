@@ -6,7 +6,7 @@
    Barra de Anuncios
    ------------------------------------------ */
 .top-announcement-carousel {
-  background: linear-gradient(135deg, #CB9851 0%, #C8860D 50%, #CB9851 100%);
+  background: linear-gradient(135deg, #C8860D 0%, #C8860D 50%, #C8860D 100%);
   color: white;
   font-size: 14px;
   font-weight: 200;
@@ -17,7 +17,7 @@
   align-items: center;
   position: sticky; /* Hacemos que la barra sea "pegajosa" */
   top: 0; /* La pegamos en la parte superior de la ventana */
-  z-index: 1051; 
+  z-index: 10; 
 }
 
 .carousel-track {
@@ -76,9 +76,9 @@
   transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
   background: white !important;
   border-bottom: 1px solid rgba(0,0,0,0.05);
-   position: sticky; /* También hacemos "pegajoso" el header */
+  position: sticky; /* También hacemos "pegajoso" el header */
   top: 28x; /* Lo pegamos justo debajo de la barra de anuncios (que mide 30px) */
-  z-index: 1050;
+  z-index: 10;
 }
 
 .brand-container {

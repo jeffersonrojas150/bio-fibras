@@ -50,6 +50,7 @@
   border-radius: 12px;
   padding: 1.5rem;
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.07);
+  z-index: 90 !important;
 }
 
 .filters-header {
@@ -270,6 +271,7 @@ box-shadow: 0 0 0 0.25rem rgba(200, 134, 13, 0.25) !important; /* Sombra/resplan
 .mobile-filters-offcanvas .filters-container {
   box-shadow: none;
   padding: 0;
+  z-index: 100 !important;
 }
 
 .mobile-filters-offcanvas .close-filters-btn {

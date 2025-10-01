@@ -1,7 +1,7 @@
 /* Footer.css */
 
 .biofibras-footer {
-  background: linear-gradient(135deg, #A97E26 0%, #c99617 50%, #A97E26 100%);
+  background: linear-gradient(135deg, #C8860D 25%, #C8860D 50%, #C8860D 100%);
   color: #ffffff;
   /* --- CAMBIO AQUÍ: Reducido el padding superior --- */
   padding: 50px 0 20px; 
@@ -28,7 +28,7 @@
 
 /* Sección de marca */
 .footer-brand-section {
-  margin-bottom: 30px; /* Reducido para compactar */
+  margin-bottom: 20px; /* Reducido para compactar */
 }
 
 .footer-brand-title {
@@ -125,10 +125,10 @@
   position: absolute;
   bottom: 0;
   left: 0;
-  width: 30px;
+ 
   height: 3px; /* Un poco más grueso */
   /* --- CAMBIO AQUÍ: Color de la línea bajo el título --- */
-  background-color: #61440a; 
+  background-color: #fffefb; 
   border-radius: 1px;
 }
 
