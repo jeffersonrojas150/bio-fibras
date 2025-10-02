@@ -1,15 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { Container, Row, Col, Button, Form, Badge, Modal, Alert } from 'react-bootstrap';
+import { Container, Row, Col, Button, Form, Badge, Modal, Alert, Spinner } from 'react-bootstrap';
 import { FaHeart, FaRegHeart, FaShoppingCart, FaArrowLeft, FaMinus, FaPlus, FaShare, FaWhatsapp, FaFacebook, FaTwitter, FaBox, FaShippingFast, FaUndo } from 'react-icons/fa';
 
-// Paso 1: Importar el hook del contexto del carrito
+// Paso 1: Importar hooks y cliente de API
 import { useCart } from '../../context/cartContext';
-
-import { productsData } from '../../mocks/productsData'; 
+import apiClient from '../../api'; // Asegúrate que la ruta a tu cliente API sea correcta
 import './ProductDetail.css';
 
-// Componente de Acordeón reutilizable para mantener el código limpio
+// Componente de Acordeón reutilizable (sin cambios)
 const AccordionItem = ({ title, content, isOpen, onToggle, icon }) => (
   <div className="accordion-item">
     <div className="accordion-header" onClick={onToggle}>
@@ -26,13 +25,17 @@ const AccordionItem = ({ title, content, isOpen, onToggle, icon }) => (
 );
 
 const ProductDetail = () => {
-  const { id } = useParams();
+  // Se usa 'slug' para coincidir con la URL de la API (ej: /productos/nombre-del-producto)
+  const { slug } = useParams();
   const navigate = useNavigate();
-  
-  // Paso 2: Usar el hook del carrito para obtener la función addToCart
   const { addToCart } = useCart();
 
+  // Estados para manejar el producto, la carga y los errores desde la API
   const [product, setProduct] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  
+  // Estados existentes para la interacción del usuario
   const [quantity, setQuantity] = useState(1);
   const [selectedImage, setSelectedImage] = useState(0);
   const [isFavorite, setIsFavorite] = useState(false);
@@ -43,36 +46,59 @@ const ProductDetail = () => {
 
   const adminWhatsappNumber = '910881837'; 
 
+  // useEffect reescrito para obtener datos de la API
   useEffect(() => {
-    if (!id) {
+    const fetchProductData = async () => {
+      if (!slug) {
         navigate('/productos');
         return;
-    }
+      }
+      setLoading(true);
+      setError(null);
+      try {
+        // Llamada a la API para obtener los detalles del producto por su slug
+        const response = await apiClient.get(`/productos/${slug}/`);
+        const productData = response.data;
+        
+        // Transformamos los datos de la API al formato que nuestro componente espera
+        const formattedProduct = {
+          id: productData.id,
+          name: productData.nombre,
+          description: productData.descripcion,
+          price: productData.precio_oferta ? parseFloat(productData.precio_oferta) : parseFloat(productData.precio_unitario),
+          originalPrice: productData.precio_oferta ? parseFloat(productData.precio_unitario) : null,
+          // Adaptado para precio mayorista
+          wholesalePrice: productData.precio_mayor ? {
+            pricePerUnit: parseFloat(productData.precio_mayor),
+            minUnits: productData.cantidad_minima_mayor || 1
+          } : null,
+          stock: productData.stock,
+          images: productData.imagenes.length > 0 ? productData.imagenes.map(img => img.imagen) : ['/path/to/placeholder.png'], // Usa un placeholder si no hay imágenes
+          category: productData.categoria,
+        };
 
-    const foundProduct = productsData.find(p => p.id === parseInt(id));
-    if (foundProduct) {
-      const images = (foundProduct.images && foundProduct.images.length > 0)
-        ? foundProduct.images
-        : [foundProduct.image, foundProduct.image, foundProduct.image];
+        setProduct(formattedProduct);
+        
+        // Comprobar si es favorito desde localStorage
+        const storedFavorites = JSON.parse(localStorage.getItem('favorites') || '[]');
+        setIsFavorite(storedFavorites.includes(formattedProduct.id));
 
-      setProduct({
-        ...foundProduct,
-        images,
-        stock: foundProduct.stock || Math.floor(Math.random() * 20) + 5
-      });
-      
-      const related = productsData
-        .filter(p => p.category === foundProduct.category && p.id !== foundProduct.id)
-        .slice(0, 4);
-      setRelatedProducts(related);
+        // TODO: Implementar la obtención de productos relacionados desde la API.
+        // Se necesitaría un endpoint como `/productos/relacionados/{categoria}/`
+        // Por ahora, `relatedProducts` quedará vacío.
+        // fetchRelatedProducts(formattedProduct.category, formattedProduct.id);
 
-      const storedFavorites = JSON.parse(localStorage.getItem('favorites') || '[]');
-      setIsFavorite(storedFavorites.includes(parseInt(id)));
-    } else {
-        navigate('/productos');
-    }
-  }, [id, navigate]);
-  
+      } catch (err) {
+        console.error("Error al cargar el producto:", err);
+        setError("No se pudo encontrar el producto. Puede que haya sido eliminado o la URL sea incorrecta.");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchProductData();
+  }, [slug, navigate]);
+
   const handleAccordionToggle = (key) => {
     setOpenAccordion(openAccordion === key ? null : key);
   };
@@ -82,24 +108,22 @@ const ProductDetail = () => {
     setQuantity(newQuantity);
   };
 
-  // Paso 3: Actualizar la función para usar el contexto
   const handleAddToCart = () => {
-    // Llama a la función del contexto para añadir el producto y la cantidad
     addToCart(product, quantity);
-    
-    // Muestra la alerta de confirmación
     setShowAddedAlert(true);
     setTimeout(() => setShowAddedAlert(false), 3000);
   };
 
   const toggleFavorite = () => {
+    // TODO: En una aplicación real, esto debería ser una llamada a la API
+    // para guardar los favoritos del usuario en su cuenta.
     const storedFavorites = JSON.parse(localStorage.getItem('favorites') || '[]');
     let newFavorites;
 
     if (isFavorite) {
-      newFavorites = storedFavorites.filter(favId => favId !== parseInt(id));
+      newFavorites = storedFavorites.filter(favId => favId !== product.id);
     } else {
-      newFavorites = [...storedFavorites, parseInt(id)];
+      newFavorites = [...storedFavorites, product.id];
     }
     localStorage.setItem('favorites', JSON.stringify(newFavorites));
     setIsFavorite(!isFavorite);
@@ -132,21 +156,33 @@ const ProductDetail = () => {
     const encodedMessage = encodeURIComponent(message);
     window.open(`https://wa.me/${adminWhatsappNumber}?text=${encodedMessage}`, '_blank');
   };
-
-  if (!product) {
+  
+  // Renderizado condicional para estados de carga y error
+  if (loading) {
     return (
-      <div className="product-detail-page">
-        <Container className="py-5 text-center">
-          <h2>Cargando producto...</h2>
-          <Button variant="primary" onClick={() => navigate('/productos')}>
-            Volver a productos
-          </Button>
-        </Container>
+      <div className="product-detail-page text-center py-5">
+        <Spinner animation="border" variant="primary" />
+        <h2 className="mt-3">Cargando producto...</h2>
       </div>
     );
   }
 
-  const finalPrice = product.price;
+  if (error) {
+    return (
+      <div className="product-detail-page text-center py-5">
+        <Alert variant="danger">{error}</Alert>
+        <Button variant="primary" onClick={() => navigate('/productos')}>
+          <FaArrowLeft className="me-2" /> Volver a la tienda
+        </Button>
+      </div>
+    );
+  }
+
+  if (!product) {
+    // Este caso previene un renderizado vacío si algo sale mal.
+    return null;
+  }
+
   const savings = product.originalPrice ? product.originalPrice - product.price : 0;
   const discountPercent = product.originalPrice ? Math.round((savings / product.originalPrice) * 100) : 0;
 
@@ -159,8 +195,6 @@ const ProductDetail = () => {
       )}
 
       <Container className="py-4 product-detail-custom-container">
-        
-
         <Row className="product-detail-main-row">
           <Col lg={6} className="mb-4">
             <div className="product-gallery">
@@ -210,7 +244,7 @@ const ProductDetail = () => {
                 {product.originalPrice && (
                   <span className="original-price-detail">S/ {product.originalPrice.toFixed(2)}</span>
                 )}
-                <span className="current-price-detail">S/ {finalPrice.toFixed(2)}</span>
+                <span className="current-price-detail">S/ {product.price.toFixed(2)}</span>
               </div>
 
               {product.wholesalePrice && (
@@ -285,9 +319,7 @@ const ProductDetail = () => {
                   title="Descripción"
                   isOpen={openAccordion === 'description'}
                   onToggle={() => handleAccordionToggle('description')}
-                  content={
-                    <p className="description-text">{product.description}</p>
-                  }
+                  content={<p className="description-text">{product.description}</p>}
                 />
                
                 <AccordionItem
@@ -298,21 +330,15 @@ const ProductDetail = () => {
                     <div className="shipping-info">
                       <div className="shipping-info-item">
                         <FaShippingFast className="shipping-icon" />
-                        <div>
-                          <strong>Envío Estándar (Lima):</strong> 2-4 días hábiles.
-                        </div>
+                        <div><strong>Envío Estándar (Lima):</strong> 2-4 días hábiles.</div>
                       </div>
                       <div className="shipping-info-item">
                         <FaBox className="shipping-icon" />
-                        <div>
-                          <strong>Envío a Provincias:</strong> 5-10 días hábiles (vía Olva/Shalom).
-                        </div>
+                        <div><strong>Envío a Provincias:</strong> 5-10 días hábiles (vía Olva/Shalom).</div>
                       </div>
                       <div className="shipping-info-item">
                         <FaUndo className="shipping-icon" />
-                        <div>
-                          <strong>Política de Devolución:</strong> Aceptamos devoluciones hasta 7 días después de la entrega por defectos de fábrica.
-                        </div>
+                        <div><strong>Política de Devolución:</strong> Aceptamos devoluciones hasta 7 días después de la entrega por defectos de fábrica.</div>
                       </div>
                     </div>
                   }
@@ -334,7 +360,7 @@ const ProductDetail = () => {
             <Row>
               {relatedProducts.map((relatedProduct) => (
                 <Col key={relatedProduct.id} xs={6} md={3} className="mb-4">
-                  <div className="related-product-card" onClick={() => navigate(`/producto/${relatedProduct.id}`)}>
+                  <div className="related-product-card" onClick={() => navigate(`/producto/${relatedProduct.slug}`)}>
                     <img src={relatedProduct.image} alt={relatedProduct.name} className="img-fluid" />
                     <div className="related-product-info p-2">
                       <h6 className="related-product-name">{relatedProduct.name}</h6>
