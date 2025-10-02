@@ -7,9 +7,12 @@ import './Header.css';
 
 import { CartIcon } from '../../Cart/Cart';
 import { productsData } from '../../../mocks/productsData';
+import UserMenu from '../UserMenu/UserMenu'; // 👈 Importar UserMenu
+import { useAuth } from '../../../context/authContext'; // 👈 Importar useAuth
 
 const Header = () => {
   const location = useLocation();
+  const { isAuthenticated } = useAuth(); // 👈 Obtener estado de autenticación
   const [isSearchVisible, setIsSearchVisible] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
   const [searchResults, setSearchResults] = useState([]);
@@ -87,14 +90,12 @@ const Header = () => {
     return location.pathname.startsWith(path);
   };
 
-  // Función para cerrar el menú al hacer clic en un enlace
   const handleMobileLinkClick = () => {
     setIsMenuOpen(false);
   };
 
   return (
     <>
-     
       <header className="header-sticky-container">
         <div className="top-announcement-carousel">
           <div className="carousel-track">
@@ -123,26 +124,23 @@ const Header = () => {
               <span className="brand-name">BIOFIBRAS</span>
             </Navbar.Brand>
             
-            
             <div className="d-flex align-items-center ms-auto order-lg-3">
-              {/* Iconos que NO se esconden */}
               <Nav className="right-nav flex-row">
                 <button type="button" className="nav-icon-link btn-reset" onClick={() => setIsSearchVisible(true)}>
                   <i className="bi bi-search nav-icon"></i>
                 </button>
-                <Nav.Link as={Link} to="/login" className="nav-icon-link">
-                  <i className="bi bi-person-circle nav-icon"></i>
-                </Nav.Link>
+                
+                {/* 👇 Reemplazar el Nav.Link con UserMenu */}
+                <UserMenu />
+                
                 <Nav.Link as={Link} to="#favoritos" className="nav-icon-link">
                   <i className="bi bi-heart nav-icon"></i>
                 </Nav.Link>
                 <CartIcon />
               </Nav>
-              {/* El botón "sandwich" solo aparece en móvil */}
               <Navbar.Toggle aria-controls="responsive-navbar-nav" className="ms-2 border-0" />
             </div>
 
-            {/* Enlaces que SÍ se esconden en el menú móvil */}
             <Navbar.Collapse id="responsive-navbar-nav" className="order-lg-2">
               <Nav className="center-nav mx-auto">
                 <Nav.Link as={Link} to="/" className={`nav-link-custom ${isNavLinkActive('/') ? 'active' : ''}`}>INICIO</Nav.Link>
@@ -155,7 +153,6 @@ const Header = () => {
           </Container>
           
           <div className={`enhanced-search-overlay ${isSearchVisible ? 'active' : ''}`}>
-            
             <Container className="h-100">
                 <div className="d-flex align-items-center justify-content-center h-100">
                     <Form onSubmit={handleSearchSubmit} className="w-100" style={{ maxWidth: '700px', position: 'relative' }}>
@@ -195,7 +192,7 @@ const Header = () => {
         </Navbar>
       </header>
 
-      {/* Overlay y Panel del Menú Móvil  */}
+      {/* Overlay y Panel del Menú Móvil */}
       <div 
         className={`mobile-menu-overlay ${isMenuOpen ? 'active' : ''}`} 
         onClick={() => setIsMenuOpen(false)} 
@@ -211,16 +208,31 @@ const Header = () => {
             </Button>
         </div>
         
-        <div className="mobile-menu-auth">
-            <Button as={Link} to="/login" variant="dark" className="auth-btn" onClick={handleMobileLinkClick}>Iniciar Sesión</Button>
-            <Button as={Link} to="/registro" variant="outline-dark" className="auth-btn" onClick={handleMobileLinkClick}>Registrarse</Button>
-        </div>
+        {/* 👇 Mostrar botones de autenticación solo si NO está autenticado */}
+        {!isAuthenticated ? (
+          <div className="mobile-menu-auth">
+              <Button as={Link} to="/login" variant="dark" className="auth-btn" onClick={handleMobileLinkClick}>Iniciar Sesión</Button>
+              <Button as={Link} to="/registro" variant="outline-dark" className="auth-btn" onClick={handleMobileLinkClick}>Registrarse</Button>
+          </div>
+        ) : (
+          <div className="mobile-menu-user-info">
+              <div className="mobile-user-avatar">
+                <i className="bi bi-person-circle"></i>
+              </div>
+              <p className="mobile-user-greeting">¡Bienvenido a Biofibras!</p>
+          </div>
+        )}
 
-        {/* Usamos Link y agregamos onClick para cerrar el menú */}
         <Nav className="flex-column mobile-menu-nav">
           <Nav.Link as={Link} to="/" onClick={handleMobileLinkClick}><i className="bi bi-house-door-fill"></i> Inicio</Nav.Link>
           <Nav.Link as={Link} to="/productos" onClick={handleMobileLinkClick}><i className="bi bi-basket-fill"></i> Productos</Nav.Link>
           <Nav.Link as={Link} to="/categorias" onClick={handleMobileLinkClick}><i className="bi bi-grid-fill"></i> Categorías</Nav.Link>
+          
+          {/* 👇 Mostrar "Mis Órdenes" solo si está autenticado */}
+          {isAuthenticated && (
+            <Nav.Link as={Link} to="/mis-ordenes" onClick={handleMobileLinkClick}><i className="bi bi-box-seam-fill"></i> Mis Órdenes</Nav.Link>
+          )}
+          
           <Nav.Link as={Link} to="/nosotros" onClick={handleMobileLinkClick}><i className="bi bi-people-fill"></i> Sobre Nosotros</Nav.Link>
           <Nav.Link as={Link} to="/contacto" onClick={handleMobileLinkClick}><i className="bi bi-envelope-fill"></i> Contacto</Nav.Link>
         </Nav>
