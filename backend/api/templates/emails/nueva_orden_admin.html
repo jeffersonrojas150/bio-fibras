@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Nueva Venta</title>
+</head>
+<body style="font-family: Arial, sans-serif; margin: 0; padding: 20px; background-color: #f4f4f4;">
+    <table width="100%" border="0" cellspacing="0" cellpadding="0">
+        <tr>
+            <td align="center">
+                <table width="600" border="0" cellspacing="0" cellpadding="0" style="background-color: #ffffff; border-radius: 8px;">
+                    <tr>
+                        <td align="center" style="padding: 20px; background-color: #2c5e3f; color: #ffffff; border-top-left-radius: 8px; border-top-right-radius: 8px;">
+                            <h1 style="margin: 0;">¡Nueva Venta Registrada!</h1>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 30px 20px;">
+                            <h2 style="color: #333333;">Hola Jairo,</h2>
+                            <p style="color: #555555; line-height: 1.6;">Se ha generado un nuevo pedido en la tienda Bio-Fibras. Aquí están los detalles:</p>
+                            <hr>
+                            <p><strong>Número de Orden:</strong> #{{ orden.numero_orden }}</p>
+                            <p><strong>Cliente:</strong> {{ usuario.first_name }} {{ usuario.last_name }} ({{ usuario.username }})</p>
+                            <p><strong>Monto Total:</strong> S/ {{ orden.total }}</p>
+                            <hr>
+                            <p style="text-align: center; margin-top: 30px;">
+                                <a href="{{ admin_url }}" style="background-color: #4CAF50; color: white; padding: 15px 25px; text-align: center; text-decoration: none; display: inline-block; border-radius: 5px; font-size: 16px;">
+                                    Ver Pedido en el Panel
+                                </a>
+                            </p>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+    </table>
+</body>
+</html>

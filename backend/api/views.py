@@ -26,7 +26,7 @@ from .serializers import (
     DireccionSerializer
     )
 
-from .email_service import enviar_correo_confirmacion_orden
+from .email_service import enviar_correo_confirmacion_orden, enviar_correo_nueva_orden_admin
 
 class ProductoListView(generics.ListAPIView):
     queryset = Producto.objects.filter(es_activo=True)
@@ -119,7 +119,6 @@ class OrdenListCreateView(generics.ListCreateAPIView):
         items_carrito = Carrito.objects.filter(usuario=usuario)
         
         if not items_carrito.exists():
-            # DRF maneja esto mejor si lanzamos una excepción de validación
             raise serializers.ValidationError({"error": "Tu carrito está vacío."})
 
         direccion_id = self.request.data.get('direccion_id')
@@ -137,7 +136,6 @@ class OrdenListCreateView(generics.ListCreateAPIView):
         cantidad_total_items = 0
         
         for item in items_carrito:
-            # Revalidación de stock
             if item.cantidad > item.producto.stock:
                 raise serializers.ValidationError(
                     {"error": f"Stock insuficiente para '{item.producto.nombre}'. Disponible: {item.producto.stock}"}
@@ -146,7 +144,6 @@ class OrdenListCreateView(generics.ListCreateAPIView):
             total_orden += item.cantidad * precio
             cantidad_total_items += item.cantidad
         
-        # Guardamos la orden principal a través del serializer
         nueva_orden = serializer.save(
             usuario=usuario,
             direccion=direccion,
@@ -155,7 +152,6 @@ class OrdenListCreateView(generics.ListCreateAPIView):
             cantidad_compra=cantidad_total_items
         )
 
-        # Creamos los items y actualizamos stock
         for item in items_carrito:
             precio = item.producto.precio_oferta or item.producto.precio_unitario
             OrdenItem.objects.create(
@@ -170,6 +166,7 @@ class OrdenListCreateView(generics.ListCreateAPIView):
             
         items_carrito.delete()
         enviar_correo_confirmacion_orden(nueva_orden)
+        enviar_correo_nueva_orden_admin(nueva_orden, self.request)
 
 class OrdenDetailView(generics.RetrieveAPIView):
     serializer_class = OrdenSerializer
