@@ -1,4 +1,4 @@
-from rest_framework import generics, viewsets, status, serializers
+from rest_framework import generics, viewsets, status, serializers, filters
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated, AllowAny
@@ -37,6 +37,8 @@ from .email_service import enviar_correo_confirmacion_orden, enviar_correo_nueva
 class ProductoListView(generics.ListAPIView):
     queryset = Producto.objects.filter(es_activo=True)
     serializer_class = ProductoListSerializer
+    filter_backends = [filters.SearchFilter]
+    search_fields = ['nombre', 'descripcion', 'materiales__nombre', 'categoria__nombre']
     
 class ProductoDetailView(generics.RetrieveAPIView):
     queryset = Producto.objects.filter(es_activo=True)
