@@ -71,3 +71,35 @@ def enviar_correo_nueva_orden_admin(orden, request):
     except Exception as e:
         print(f"ERROR al enviar correo de notificación al admin para la orden #{orden.numero_orden}: {e}")
         return False
+
+def enviar_correo_actualizacion_estado(orden):
+    """
+    Envía un correo de notificación al cliente cuando el estado de su orden cambia.
+    """
+    try:
+        asunto = f"Actualización de tu pedido #{orden.numero_orden}"
+        
+        contexto = {
+            'orden': orden,
+            'usuario': orden.usuario,
+        }
+        
+        mensaje_texto = render_to_string('emails/actualizacion_estado.txt', contexto)
+        mensaje_html = render_to_string('emails/actualizacion_estado.html', contexto)
+
+        destinatario = orden.usuario.email
+        
+        send_mail(
+            asunto,
+            mensaje_texto,
+            settings.DEFAULT_FROM_EMAIL,
+            [destinatario],
+            fail_silently=False,
+            html_message=mensaje_html
+        )
+        print(f"Correo de actualización de estado enviado para la orden #{orden.numero_orden}")
+        return True
+
+    except Exception as e:
+        print(f"ERROR al enviar correo de actualización de estado para #{orden.numero_orden}: {e}")
+        return False

@@ -1,0 +1,20 @@
+Hola {{ usuario.first_name|default:usuario.username }},
+
+¡Buenas noticias! Ha habido una actualización en el estado de tu pedido en Bio-Fibras.
+
+========================================
+DETALLES DE TU PEDIDO
+========================================
+Número de Orden: {{ orden.numero_orden }}
+
+Nuevo Estado del Pago: {{ orden.get_estado_pago_display }}
+Nuevo Estado del Envío: {{ orden.get_estado_orden_display }}
+
+========================================
+
+Puedes revisar los detalles de tu pedido en cualquier momento desde tu cuenta en nuestra web.
+
+Gracias por tu paciencia.
+
+Atentamente,
+El equipo de Bio-Fibras
