@@ -1,0 +1,30 @@
+Hola {{ usuario.first_name|default:usuario.username }},
+
+¡Gracias por tu compra en Bio-Fibras! Hemos recibido tu pedido y lo estamos procesando.
+
+========================================
+RESUMEN DE TU PEDIDO
+========================================
+Número de Orden: {{ orden.numero_orden }}
+Fecha del Pedido: {{ orden.fecha_creacion|date:"d/m/Y" }}
+Total: S/ {{ orden.total }}
+
+========================================
+PRODUCTOS
+========================================
+{% for item in items %}
+- {{ item.producto.nombre }} (x{{ item.cantidad }}) - S/ {{ item.precio_total }}
+{% endfor %}
+
+========================================
+!NO TE OLVIDES!
+========================================
+Recuerda que tu pedido está pendiente de pago. Por favor, realiza la transferencia o Yape por el monto total de S/ {{ orden.total }} y envíanos el comprobante respondiendo a este correo o a nuestro número de WhatsApp 910 881 837.
+
+Una vez verificado tu pago, procederemos con el envío.
+
+Gracias por confiar en nosotros.
+
+Atentamente,
+
+Bio-Fibras
