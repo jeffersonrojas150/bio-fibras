@@ -1,19 +1,15 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useLocation, Link } from 'react-router-dom'; 
 import { Navbar, Nav, Container, Form, InputGroup, Button } from 'react-bootstrap';
 
 import logo from '../../../assets/logo.png'; 
 import './Header.css';
 
-// Paso 1: Importar el nuevo componente del carrito
 import { CartIcon } from '../../Cart/Cart';
-
 import { productsData } from '../../../mocks/productsData';
 
 const Header = () => {
-  // Hook de React Router para obtener la URL actual
   const location = useLocation();
-
   const [isSearchVisible, setIsSearchVisible] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
   const [searchResults, setSearchResults] = useState([]);
@@ -91,105 +87,115 @@ const Header = () => {
     return location.pathname.startsWith(path);
   };
 
+  // Función para cerrar el menú al hacer clic en un enlace
+  const handleMobileLinkClick = () => {
+    setIsMenuOpen(false);
+  };
+
   return (
     <>
-      <div className="top-announcement-carousel">
-        <div className="carousel-track">
-          {announcements.map((announcement, index) => (
-            <div
-              key={index}
-              className={`announcement-slide ${index === currentAnnouncementIndex ? 'active' : ''}`}
-            >
-              <span className="announcement-icon">{announcement.icon}</span>
-              {announcement.text}
-            </div>
-          ))}
+     
+      <header className="header-sticky-container">
+        <div className="top-announcement-carousel">
+          <div className="carousel-track">
+            {announcements.map((announcement, index) => (
+              <div
+                key={index}
+                className={`announcement-slide ${index === currentAnnouncementIndex ? 'active' : ''}`}
+              >
+                <span className="announcement-icon">{announcement.icon}</span>
+                {announcement.text}
+              </div>
+            ))}
+          </div>
         </div>
-      </div>
 
-      <Navbar 
-        bg="white" 
-        expand="lg" 
-        className={`main-navbar shadow-sm ${isSearchVisible ? 'search-active' : ''}`} 
-        sticky="top"
-        onToggle={(expanded) => setIsMenuOpen(expanded)}
-        expanded={isMenuOpen}
-      >
-        <Container>
-          <Navbar.Brand href="/" className="brand-container">
-            <img src={logo} height="45" className="logo-image" alt="Biofibra logo" />
-            <span className="brand-name">BIOFIBRAS</span>
-          </Navbar.Brand>
-
-          <Navbar.Toggle aria-controls="responsive-navbar-nav" />
-
-          <Navbar.Collapse id="responsive-navbar-nav" className="d-none d-lg-flex">
-            <Nav className="center-nav mx-auto">
-              <Nav.Link href="/" className={`nav-link-custom ${isNavLinkActive('/') ? 'active' : ''}`}>INICIO</Nav.Link>
-              <Nav.Link href="/productos" className={`nav-link-custom ${isNavLinkActive('/productos') ? 'active' : ''}`}>PRODUCTOS</Nav.Link>
-              <Nav.Link href="/categorias" className={`nav-link-custom ${isNavLinkActive('/categorias') ? 'active' : ''}`}>CATEGORIAS</Nav.Link>
-              <Nav.Link href="/nosotros" className={`nav-link-custom ${isNavLinkActive('/nosotros') ? 'active' : ''}`}>SOBRE NOSOSTROS</Nav.Link>
-              <Nav.Link href="/contacto" className={`nav-link-custom ${isNavLinkActive('/contacto') ? 'active' : ''}`}>CONTACTO</Nav.Link>
-            </Nav>
-
-            <Nav className="right-nav ms-lg-auto">
-              <button type="button" className="nav-icon-link btn-reset" onClick={() => setIsSearchVisible(true)}>
-                <i className="bi bi-search nav-icon"></i>
-              </button>
-              <Nav.Link href="/login" className="nav-icon-link">
-                <i className="bi bi-person-circle nav-icon"></i>
-              </Nav.Link>
-              <Nav.Link href="#favoritos" className="nav-icon-link">
-                <i className="bi bi-heart nav-icon"></i>
-              </Nav.Link>
-              
-              {/* Paso 2: Usar el componente CartIcon aquí */}
-              <CartIcon />
-              
-            </Nav>
-          </Navbar.Collapse>
-        </Container>
-        
-        <div className={`enhanced-search-overlay ${isSearchVisible ? 'active' : ''}`}>
-          <Container className="h-100">
-            <div className="d-flex align-items-center justify-content-center h-100">
-                <Form onSubmit={handleSearchSubmit} className="w-100" style={{ maxWidth: '700px', position: 'relative' }}>
-                    <InputGroup className="enhanced-search-group">
-                        <Form.Control
-                            ref={searchInputRef}
-                            type="search"
-                            placeholder="Buscar lámparas, espejos, tapetes..."
-                            className="enhanced-search-input"
-                            value={searchTerm}
-                            onChange={(e) => handleSearch(e.target.value)}
-                        />
-                        <Button type="submit" className="enhanced-search-btn">
-                            <i className="bi bi-search"></i>
-                        </Button>
-                    </InputGroup>
-                    {searchResults.length > 0 && (
-                        <div className="search-results-dropdown">
-                           {searchResults.map(product => (
-                               <div key={product.id} className="result-item" onClick={() => handleProductClick(product)}>
-                                   <img src={product.image} alt={product.name} className="result-image" />
-                                   <div className="result-info">
-                                       <span className="result-name">{product.name}</span>
-                                       <span className="result-category">{product.category}</span>
-                                   </div>
-                               </div>
-                           ))}
-                        </div>
-                    )}
-                </Form>
-                 <Button variant="link" className="close-search-btn" onClick={closeSearch}>
-                    <i className="bi bi-x-lg"></i>
-                </Button>
+        <Navbar 
+          bg="white" 
+          expand="lg" 
+          className={`main-navbar shadow-sm ${isSearchVisible ? 'search-active' : ''}`}
+          onToggle={(expanded) => setIsMenuOpen(expanded)}
+          expanded={isMenuOpen}
+        >
+          <Container>
+            <Navbar.Brand as={Link} to="/" className="brand-container">
+              <img src={logo} height="45" className="logo-image" alt="Biofibra logo" />
+              <span className="brand-name">BIOFIBRAS</span>
+            </Navbar.Brand>
+            
+            
+            <div className="d-flex align-items-center ms-auto order-lg-3">
+              {/* Iconos que NO se esconden */}
+              <Nav className="right-nav flex-row">
+                <button type="button" className="nav-icon-link btn-reset" onClick={() => setIsSearchVisible(true)}>
+                  <i className="bi bi-search nav-icon"></i>
+                </button>
+                <Nav.Link as={Link} to="/login" className="nav-icon-link">
+                  <i className="bi bi-person-circle nav-icon"></i>
+                </Nav.Link>
+                <Nav.Link as={Link} to="#favoritos" className="nav-icon-link">
+                  <i className="bi bi-heart nav-icon"></i>
+                </Nav.Link>
+                <CartIcon />
+              </Nav>
+              {/* El botón "sandwich" solo aparece en móvil */}
+              <Navbar.Toggle aria-controls="responsive-navbar-nav" className="ms-2 border-0" />
             </div>
+
+            {/* Enlaces que SÍ se esconden en el menú móvil */}
+            <Navbar.Collapse id="responsive-navbar-nav" className="order-lg-2">
+              <Nav className="center-nav mx-auto">
+                <Nav.Link as={Link} to="/" className={`nav-link-custom ${isNavLinkActive('/') ? 'active' : ''}`}>INICIO</Nav.Link>
+                <Nav.Link as={Link} to="/productos" className={`nav-link-custom ${isNavLinkActive('/productos') ? 'active' : ''}`}>PRODUCTOS</Nav.Link>
+                <Nav.Link as={Link} to="/categorias" className={`nav-link-custom ${isNavLinkActive('/categorias') ? 'active' : ''}`}>CATEGORIAS</Nav.Link>
+                <Nav.Link as={Link} to="/nosotros" className={`nav-link-custom ${isNavLinkActive('/nosotros') ? 'active' : ''}`}>SOBRE NOSOSTROS</Nav.Link>
+                <Nav.Link as={Link} to="/contacto" className={`nav-link-custom ${isNavLinkActive('/contacto') ? 'active' : ''}`}>CONTACTO</Nav.Link>
+              </Nav>
+            </Navbar.Collapse>
           </Container>
-        </div>
-      </Navbar>
+          
+          <div className={`enhanced-search-overlay ${isSearchVisible ? 'active' : ''}`}>
+            
+            <Container className="h-100">
+                <div className="d-flex align-items-center justify-content-center h-100">
+                    <Form onSubmit={handleSearchSubmit} className="w-100" style={{ maxWidth: '700px', position: 'relative' }}>
+                        <InputGroup className="enhanced-search-group">
+                            <Form.Control
+                                ref={searchInputRef}
+                                type="search"
+                                placeholder="Buscar lámparas, espejos, tapetes..."
+                                className="enhanced-search-input"
+                                value={searchTerm}
+                                onChange={(e) => handleSearch(e.target.value)}
+                            />
+                            <Button type="submit" className="enhanced-search-btn">
+                                <i className="bi bi-search"></i>
+                            </Button>
+                        </InputGroup>
+                        {searchResults.length > 0 && (
+                            <div className="search-results-dropdown">
+                            {searchResults.map(product => (
+                                <div key={product.id} className="result-item" onClick={() => handleProductClick(product)}>
+                                    <img src={product.image} alt={product.name} className="result-image" />
+                                    <div className="result-info">
+                                        <span className="result-name">{product.name}</span>
+                                        <span className="result-category">{product.category}</span>
+                                    </div>
+                                </div>
+                            ))}
+                            </div>
+                        )}
+                    </Form>
+                    <Button variant="link" className="close-search-btn" onClick={closeSearch}>
+                        <i className="bi bi-x-lg"></i>
+                    </Button>
+                </div>
+            </Container>
+          </div>
+        </Navbar>
+      </header>
 
-      {/* Overlay y Panel del Menú Móvil */}
+      {/* Overlay y Panel del Menú Móvil  */}
       <div 
         className={`mobile-menu-overlay ${isMenuOpen ? 'active' : ''}`} 
         onClick={() => setIsMenuOpen(false)} 
@@ -206,16 +212,17 @@ const Header = () => {
         </div>
         
         <div className="mobile-menu-auth">
-            <Button variant="dark" className="auth-btn">Iniciar Sesión</Button>
-            <Button variant="outline-dark" className="auth-btn">Registrarse</Button>
+            <Button as={Link} to="/login" variant="dark" className="auth-btn" onClick={handleMobileLinkClick}>Iniciar Sesión</Button>
+            <Button as={Link} to="/registro" variant="outline-dark" className="auth-btn" onClick={handleMobileLinkClick}>Registrarse</Button>
         </div>
 
+        {/* Usamos Link y agregamos onClick para cerrar el menú */}
         <Nav className="flex-column mobile-menu-nav">
-          <Nav.Link href="/"><i className="bi bi-house-door-fill"></i> Inicio</Nav.Link>
-          <Nav.Link href="/productos"><i className="bi bi-basket-fill"></i> Productos</Nav.Link>
-          <Nav.Link href="/categorias"><i className="bi bi-grid-fill"></i> Categorías</Nav.Link>
-          <Nav.Link href="#nosotros"><i className="bi bi-people-fill"></i> Sobre Nosotros</Nav.Link>
-          <Nav.Link href="#contacto"><i className="bi bi-envelope-fill"></i> Contacto</Nav.Link>
+          <Nav.Link as={Link} to="/" onClick={handleMobileLinkClick}><i className="bi bi-house-door-fill"></i> Inicio</Nav.Link>
+          <Nav.Link as={Link} to="/productos" onClick={handleMobileLinkClick}><i className="bi bi-basket-fill"></i> Productos</Nav.Link>
+          <Nav.Link as={Link} to="/categorias" onClick={handleMobileLinkClick}><i className="bi bi-grid-fill"></i> Categorías</Nav.Link>
+          <Nav.Link as={Link} to="/nosotros" onClick={handleMobileLinkClick}><i className="bi bi-people-fill"></i> Sobre Nosotros</Nav.Link>
+          <Nav.Link as={Link} to="/contacto" onClick={handleMobileLinkClick}><i className="bi bi-envelope-fill"></i> Contacto</Nav.Link>
         </Nav>
 
         <div className="mobile-menu-footer">

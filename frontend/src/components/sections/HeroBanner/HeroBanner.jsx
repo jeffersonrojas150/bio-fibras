@@ -1,6 +1,6 @@
-import React from 'react';
 import { Container, Row, Col, Button } from 'react-bootstrap';
-import { FaArrowRight } from 'react-icons/fa';
+
+import { Link } from 'react-router-dom';
 import './HeroBanner.css';
 
 const HeroBanner = () => {
@@ -25,11 +25,22 @@ const HeroBanner = () => {
                 vegetales
               </p>
               
+              
               <div className="hero-buttons">
-                <Button variant="outline-light" className="btn-outline-custom">
+                <Button 
+                  as={Link} 
+                  to="/productos" 
+                  variant="outline-light" 
+                  className="btn-outline-custom"
+                >
                   Ver productos
                 </Button>
-                <Button variant="outline-light" className="btn-outline-custom">
+                <Button 
+                  as={Link} 
+                  to="/categorias" 
+                  variant="outline-light" 
+                  className="btn-outline-custom"
+                >
                   Ver categorías
                 </Button>
               </div>
@@ -37,20 +48,6 @@ const HeroBanner = () => {
           </Col>
         </Row>
       </Container>
-      
-      {/* Sección inferior con enlace a productos 
-      <div className="hero-bottom">
-        <Container>
-          <Row>
-            <Col className="text-center">
-              <a href="#productos" className="featured-link">
-                <span>Nuestros productos más vendidos</span>
-                <FaArrowRight className="arrow-icon" />
-              </a>
-            </Col>
-          </Row>
-        </Container>
-      </div>*/}
     </section>
   );
 };
