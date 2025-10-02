@@ -43,7 +43,7 @@
 }
 
 /* Logo y Nombre */
-.brand-container { display: flex !important; align-items: center; gap: 8px; }
+.brand-container { display: flex !important; align-items: center; gap: 0px; }
 .logo-image { height: 40px; }
 .brand-name { font-family: var(--font-body), sans-serif; font-size: 24px; font-weight: 800; color: #2c5530; letter-spacing: -0.5px; }
 
@@ -70,7 +70,7 @@
 
 
 /* ==========================================
-   ESTADO DE BÚSQUEDA ACTIVA (LA MAGIA OCURRE AQUÍ)
+   ESTADO DE BÚSQUEDA ACTIVA
    ========================================== */
 
 /* 1. Ocultamos el contenido normal del header */
@@ -163,6 +163,7 @@
 @media (min-width: 992px) {
   .right-nav { gap: 15px; }
   .nav-icon-link { padding: 8px 10px !important; }
+  .logo-image { height: 60px; }
 }
 
 /* Estilos para Tablet y Móvil */
@@ -172,6 +173,7 @@
   .right-nav { gap: 8px; }
   .nav-icon-link { padding: 6px !important; width: 38px; height: 38px; }
   .nav-icon { font-size: 22px; }
+  .logo-image { height: 65px; }
 }
 
 /* Estilos para Móvil Pequeño */
@@ -200,7 +202,7 @@
 .mobile-menu-header .logo-image { height: 35px; }
 .mobile-close-btn { color: #333 !important; font-size: 24px; padding: 5px !important; text-decoration: none !important; background: none !important; border: none !important; box-shadow: none !important; }
 .mobile-menu-auth { padding: 20px; display: flex; flex-direction: column; gap: 12px; border-bottom: 1px solid #eee; }
-.auth-btn { width: 100% !important; font-weight: 600 !important; padding: 12px !important; border-radius: 8px !important; font-size: 14px !important; border: 2px solid #333 !important; }
+.auth-btn { width: 100% !important; font-weight: 600 !important; padding: 12px !important; border-radius: 2px !important; font-size: 14px !important; border: 2px solid #333 !important; }
 .mobile-menu-nav { padding: 0; flex-grow: 1; }
 .mobile-menu-nav .nav-link { color: #333 !important; font-size: 16px; font-weight: 500; padding: 18px 25px !important; display: flex !important; align-items: center; gap: 15px; border-bottom: 1px solid #f8f9fa; }
 .mobile-menu-nav .nav-link:hover { background-color: #f8f9fa !important; color: #C8860D !important; }
@@ -209,3 +211,70 @@
 .social-icons { display: flex; justify-content: center; gap: 15px; }
 .social-icons a { color: #333; font-size: 22px; text-decoration: none; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; border-radius: 50%; background: #f8f9fa; }
 body.body-menu-open { overflow: hidden; }
+
+
+
+/* Info del usuario en menú móvil */
+.mobile-menu-user-info {
+  padding: 20px;
+  text-align: center;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  margin-bottom: 1rem;
+}
+
+.mobile-user-avatar {
+  width: 60px;
+  height: 60px;
+  margin: 0 auto 12px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+}
+
+.mobile-user-avatar i {
+  font-size: 36px;
+  color: white;
+}
+
+.mobile-user-greeting {
+  font-size: 14px;
+  margin: 0;
+  font-weight: 500;
+}
+
+/* Mejorar el botón reset para el icono de búsqueda */
+.btn-reset {
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.btn-reset:focus {
+  outline: none;
+  box-shadow: none;
+}
+
+/* Asegurar que UserMenu esté alineado con los demás iconos */
+.right-nav {
+  gap: 0.5rem;
+  align-items: center;
+}
+
+/* Responsive para el menú móvil */
+@media (max-width: 991.98px) {
+  .mobile-menu-panel {
+    width: 300px;
+  }
+  
+  .mobile-menu-user-info {
+    border-radius: 0;
+  }
+}
