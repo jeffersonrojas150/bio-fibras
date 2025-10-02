@@ -1,6 +1,3 @@
-/* ==========================================
-   HERO BANNER STYLES - BIOFIBRA
-   ========================================== */
 
 .hero-banner {
   position: relative;
@@ -11,7 +8,7 @@
   overflow: hidden;
 }
 
-/* Imagen de fondo - Usando imagen de cestas como en tu diseño */
+/* Imagen de fondo */
 .hero-background {
   position: absolute;
   top: 0;
@@ -115,12 +112,12 @@
 /* Botón outline */
 .btn-outline-custom {
   border: 2px solid rgba(255, 255, 255, 0.9);
-  padding: 12px 32px;
-  font-size: 15px;
-  font-weight: 600;
+  padding: 15px 15px !important;
+  font-size: 15px !important;
+  font-weight: 500 !important;
   letter-spacing: 0.5px;
-  border-radius: 50px;
-  transition: all 0.3s ease;
+  border-radius: 0px !important;
+  transition: all 0.3s ease ;
   color: white;
   background: transparent;
 }
