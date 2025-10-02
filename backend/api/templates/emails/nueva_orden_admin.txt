@@ -1,0 +1,20 @@
+¡Se ha recibido un nuevo pedido en Bio-Fibras!
+
+========================================
+DETALLES DEL PEDIDO
+========================================
+Número de Orden: {{ orden.numero_orden }}
+Cliente: {{ usuario.first_name }} {{ usuario.last_name }} ({{ usuario.username }})
+Monto Total: S/ {{ orden.total }}
+Cantidad de Productos: {{ orden.cantidad_compra }}
+
+========================================
+ACCIÓN REQUERIDA
+========================================
+Por favor, gestiona el pedido desde el panel de administración.
+
+Puedes acceder directamente a la orden aquí:
+{{ admin_url }}
+
+Atentamente,
+Tu Sistema Bio-Fibras

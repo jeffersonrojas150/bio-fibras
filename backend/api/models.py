@@ -1,6 +1,7 @@
 from django.db import models
 from django.conf import settings
 import time, random
+from .email_service import enviar_correo_actualizacion_estado
 
 # =================================================================
 # 🏷️ TABLA: CATEGORIA
@@ -185,11 +186,24 @@ class Orden(models.Model):
     fecha_actualizacion = models.DateTimeField(auto_now=True, verbose_name="Última actualización")
 
     def save(self, *args, **kwargs):
-        if not self.pk:
+        is_new = self._state.adding
+
+        if not is_new:
+            estado_anterior = Orden.objects.get(pk=self.pk)
+            estado_pago_anterior = estado_anterior.estado_pago
+            estado_orden_anterior = estado_anterior.estado_orden
+        
+        if is_new:
             timestamp = int(time.time() * 1000)
             aleatorio = random.randint(10, 99)
             self.numero_orden = f"{timestamp}{aleatorio}"
+
         super().save(*args, **kwargs)
+
+        if not is_new:
+            if (self.estado_pago != estado_pago_anterior or self.estado_orden != estado_orden_anterior):
+                print("¡El estado de la orden ha cambiado! Enviando correo...")
+                enviar_correo_actualizacion_estado(self)
 
     def __str__(self):
         return f"Orden #{self.numero_orden} de {self.usuario.username if self.usuario else 'Usuario Eliminado'}"
