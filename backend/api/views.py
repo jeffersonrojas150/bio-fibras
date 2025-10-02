@@ -26,6 +26,8 @@ from .serializers import (
     DireccionSerializer
     )
 
+from .email_service import enviar_correo_confirmacion_orden
+
 class ProductoListView(generics.ListAPIView):
     queryset = Producto.objects.filter(es_activo=True)
     serializer_class = ProductoListSerializer
@@ -166,8 +168,8 @@ class OrdenListCreateView(generics.ListCreateAPIView):
             item.producto.stock -= item.cantidad
             item.producto.save()
             
-        # Limpiamos el carrito
         items_carrito.delete()
+        enviar_correo_confirmacion_orden(nueva_orden)
 
 class OrdenDetailView(generics.RetrieveAPIView):
     serializer_class = OrdenSerializer
