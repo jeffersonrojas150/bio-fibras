@@ -1,14 +1,46 @@
 import React, { useState, useEffect } from 'react';
-import { Container, Row, Col, Card, Button, Form, Badge, Offcanvas } from 'react-bootstrap';
+import { Container, Row, Col, Card, Button, Form, Badge, Offcanvas, Spinner, Alert } from 'react-bootstrap';
 import { FaHeart, FaRegHeart, FaShoppingCart, FaFilter, FaTimes } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
 
 import './Products.css';
-import { productsData } from '../../mocks/productsData';
+import apiClient from '../../api';
 import CustomSortDropdown from './CustomSortDropdown';
 
+
+// ==============================================================================
+// COMPONENTE AUXILIAR PARA RENDERIZAR LOS PRECIOS DE FORMA LIMPIA
+// Este componente se encarga de toda la lógica de qué precio mostrar y cómo.
+// ==============================================================================
+const ProductPriceDisplay = ({ product }) => {
+  return (
+    <>
+      <div className="product-price">
+        {/* Si hay un `originalPrice` (lo que significa que hay una oferta), lo mostramos tachado. */}
+        {product.originalPrice && (
+          <span className="original-price">S/ {product.originalPrice.toFixed(2)}</span>
+        )}
+        {/* Siempre mostramos el precio principal (`price`), que será la oferta o el precio unitario. */}
+        <span className="current-price">S/ {product.price.toFixed(2)}</span>
+      </div>
+
+      {/* Si el producto tiene un precio y cantidad al por mayor, mostramos la información. */}
+      {product.wholesalePrice && product.wholesaleMinQuantity && (
+        <div className="wholesale-price-info">
+          A partir de {product.wholesaleMinQuantity} unid. a <strong>S/ {product.wholesalePrice.toFixed(2)} c/u</strong>
+        </div>
+      )}
+    </>
+  );
+};
+
+
 const Products = () => {
-  const [products, setProducts] = useState([]);
+  // === ESTADOS ===
+  const [products, setProducts] = useState([]); 
+  const [categories, setCategories] = useState([]); 
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   const [filteredProducts, setFilteredProducts] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategories, setSelectedCategories] = useState(new Set());
@@ -16,21 +48,16 @@ const Products = () => {
   const [sortBy, setSortBy] = useState('name');
   const [showFilters, setShowFilters] = useState(false);
   const [favorites, setFavorites] = useState(new Set());
+  
   const navigate = useNavigate();
 
-  const categories = [
-    { value: 'lámparas', label: 'Lámparas' },
-    { value: 'espejos Rústicos', label: 'Espejos Rústicos' },
-    { value: 'tapetes', label: 'Tapetes' },
-    { value: 'decoración', label: 'Decoración' }
-  ];
-
+  // === CONSTANTES DE CONFIGURACIÓN ===
   const priceRanges = [
     { value: '0-50', label: 'Hasta S/ 50' },
     { value: '50-100', label: 'S/ 50 - S/ 100' },
     { value: '100-150', label: 'S/ 100 - S/ 150' },
     { value: '150-200', label: 'S/ 150 - S/ 200' },
-    { value: '200-9999', label: 'Más de S/ 200' } // Corregido para que el filtro funcione
+    { value: '200-99999', label: 'Más de S/ 200' }
   ];
 
   const sortOptions = [
@@ -38,77 +65,128 @@ const Products = () => {
     { value: 'name-desc', label: 'Nombre Z-A' },
     { value: 'price-low', label: 'Precio: Menor a Mayor' },
     { value: 'price-high', label: 'Precio: Mayor a Menor' },
-    
   ];
 
+  // === EFECTO PARA OBTENER DATOS DE LA API AL CARGAR ===
   useEffect(() => {
-    setProducts(productsData);
-    setFilteredProducts(productsData);
+    const fetchData = async () => {
+      try {
+        setLoading(true);
+        setError(null);
+        
+        const [productsResponse, categoriesResponse] = await Promise.all([
+          apiClient.get('/productos/'),
+          apiClient.get('/categorias/')
+        ]);
+
+        // ==============================================================================
+        // TRANSFORMACIÓN DE DATOS ACTUALIZADA
+        // Aquí procesamos los datos de la API para que coincidan con lo que necesitamos mostrar.
+        // ==============================================================================
+        const transformedProducts = productsResponse.data.results.map(product => {
+          const hasOffer = product.precio_oferta && parseFloat(product.precio_oferta) > 0;
+          
+          return {
+            id: product.id,
+            name: product.nombre,
+            slug: product.slug,
+            // `price` es el precio principal a mostrar. Si hay oferta, es el `precio_oferta`. Si no, el `precio_unitario`.
+            price: hasOffer ? parseFloat(product.precio_oferta) : parseFloat(product.precio_unitario),
+            // `originalPrice` solo existe si hay una oferta, y es el `precio_unitario` que se mostrará tachado.
+            originalPrice: hasOffer ? parseFloat(product.precio_unitario) : null,
+            // NUEVOS CAMPOS para el precio por mayor.
+            wholesalePrice: product.precio_mayor ? parseFloat(product.precio_mayor) : null,
+            wholesaleMinQuantity: product.cantidad_minima_mayor || null,
+            image: product.imagen_principal,
+            category: product.categoria,
+            inStock: true, // Asumimos que hay stock.
+          };
+        });
+
+        setProducts(transformedProducts);
+        setFilteredProducts(transformedProducts);
+
+        // La transformación de categorías no cambia.
+        const transformedCategories = (categoriesResponse.data.results || categoriesResponse.data).map(cat => ({
+            value: cat.slug,
+            label: cat.nombre,
+        }));
+        setCategories(transformedCategories);
+
+      } catch (err) {
+        setError('Hubo un problema al cargar los productos. Por favor, intenta de nuevo más tarde.');
+        console.error("Error al obtener datos de la API:", err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
   }, []);
 
+  // === EFECTO PARA FILTRAR Y ORDENAR PRODUCTOS CUANDO CAMBIAN LOS FILTROS ===
   useEffect(() => {
-    filterProducts();
-  }, [searchTerm, selectedCategories, selectedPriceRanges, sortBy, products]);
-
-  const filterProducts = () => {
-    let filtered = [...products];
-    if (searchTerm) {
-      filtered = filtered.filter(product =>
-        product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        product.description.toLowerCase().includes(searchTerm.toLowerCase())
-      );
-    }
-    if (selectedCategories.size > 0) {
-      filtered = filtered.filter(product => selectedCategories.has(product.category));
-    }
-    if (selectedPriceRanges.size > 0) {
-      filtered = filtered.filter(product => {
-        return Array.from(selectedPriceRanges).some(range => {
-          const [min, max] = range.split('-').map(Number);
-          return product.price >= min && product.price <= max;
-        });
-      });
-    }
-    filtered.sort((a, b) => {
-      switch (sortBy) {
-        case 'price-low': return a.price - b.price;
-        case 'price-high': return b.price - a.price;
-        case 'name-desc': return b.name.localeCompare(a.name);
-        case 'newest': return new Date(b.addedDate) - new Date(a.addedDate); // Suponiendo que tengas una fecha
-        case 'name':
-        default: return a.name.localeCompare(b.name);
+    const filterProducts = () => {
+      let filtered = [...products];
+      if (searchTerm) {
+        filtered = filtered.filter(product =>
+          product.name.toLowerCase().includes(searchTerm.toLowerCase())
+        );
       }
-    });
-    setFilteredProducts(filtered);
-  };
+      if (selectedCategories.size > 0) {
+        const categoryNames = new Set(
+            categories
+                .filter(c => selectedCategories.has(c.value))
+                .map(c => c.label)
+        );
+        filtered = filtered.filter(product => categoryNames.has(product.category));
+      }
+      if (selectedPriceRanges.size > 0) {
+        filtered = filtered.filter(product => {
+          return Array.from(selectedPriceRanges).some(range => {
+            const [min, max] = range.split('-').map(Number);
+            return product.price >= min && product.price <= max;
+          });
+        });
+      }
+      filtered.sort((a, b) => {
+        switch (sortBy) {
+          case 'price-low': return a.price - b.price;
+          case 'price-high': return b.price - a.price;
+          case 'name-desc': return b.name.localeCompare(a.name);
+          case 'name':
+          default: return a.name.localeCompare(b.name);
+        }
+      });
+      setFilteredProducts(filtered);
+    };
+    
+    if (!loading) {
+      filterProducts();
+    }
+  }, [searchTerm, selectedCategories, selectedPriceRanges, sortBy, products, categories, loading]);
   
-  const handleProductClick = (productId) => {
-    navigate(`/producto/${productId}`); 
-  };
-  
-  // CORRECCIÓN 1: Se añade e.stopPropagation() para evitar que el clic navegue a otra página.
+  // === MANEJADORES DE EVENTOS ===
+  const handleProductClick = (slug) => navigate(`/producto/${slug}`);
   const toggleFavorite = (e, productId) => {
-    e.stopPropagation(); // ¡Esta es la clave! Detiene el evento de clic para que no se propague al contenedor padre.
+    e.stopPropagation();
     const newFavorites = new Set(favorites);
     if (newFavorites.has(productId)) newFavorites.delete(productId);
     else newFavorites.add(productId);
     setFavorites(newFavorites);
   };
-
   const handleCategoryChange = (categoryValue) => {
     const newSelectedCategories = new Set(selectedCategories);
     if (newSelectedCategories.has(categoryValue)) newSelectedCategories.delete(categoryValue);
     else newSelectedCategories.add(categoryValue);
     setSelectedCategories(newSelectedCategories);
   };
-
   const handlePriceRangeChange = (rangeValue) => {
     const newSelectedPriceRanges = new Set(selectedPriceRanges);
     if (newSelectedPriceRanges.has(rangeValue)) newSelectedPriceRanges.delete(rangeValue);
     else newSelectedPriceRanges.add(rangeValue);
     setSelectedPriceRanges(newSelectedPriceRanges);
   };
-
   const clearFilters = () => {
     setSearchTerm('');
     setSelectedCategories(new Set());
@@ -118,6 +196,7 @@ const Products = () => {
 
   const hasActiveFilters = searchTerm || selectedCategories.size > 0 || selectedPriceRanges.size > 0;
 
+  // === COMPONENTES DE RENDERIZADO ===
   const FilterSidebar = ({ isMobile = false }) => (
     <div className="filters-container">
       <div className="filters-header">
@@ -128,7 +207,6 @@ const Products = () => {
           hasActiveFilters && <Button variant="link" className="clear-filters-btn" onClick={clearFilters}>Limpiar Filtros</Button>
         )}
       </div>
-
       <div className="filter-section">
         <h4 className='hola'><span role="img" aria-label="leaf" className="bi bi-grid-fill"></span> Categorías</h4>
         <div className="checkbox-group">
@@ -137,7 +215,6 @@ const Products = () => {
           ))}
         </div>
       </div>
-
       <div className="filter-section">
         <h4 className='hola'><span role="img" aria-label="money"className="bi bi-grid-fill"></span> Precio</h4>
         <div className="checkbox-group">
@@ -149,6 +226,69 @@ const Products = () => {
     </div>
   );
 
+  const renderContent = () => {
+    if (loading) {
+      return (
+        <div className="text-center py-5">
+          <Spinner animation="border" role="status" variant="primary">
+            <span className="visually-hidden">Cargando productos...</span>
+          </Spinner>
+          <p className="mt-2">Cargando productos...</p>
+        </div>
+      );
+    }
+    if (error) {
+      return <Alert variant="danger">{error}</Alert>;
+    }
+    if (filteredProducts.length > 0) {
+      return (
+        <Row className="products-grid grid">
+          {filteredProducts.map((product) => (
+            <Col key={product.id} xs={6} md={4} className="mb-4">
+              <Card className="product-card h-100">
+                <div className="product-image-container" onClick={() => handleProductClick(product.slug)} style={{cursor: 'pointer'}}>
+                  <Card.Img variant="top" src={product.image} alt={product.name} />
+                  <div className="product-badges">
+                    {!product.inStock && <Badge bg="secondary">Agotado</Badge>}
+                    {product.originalPrice && <Badge bg="warning" text="dark">-{Math.round((1 - product.price / product.originalPrice) * 100)}%</Badge>}
+                  </div>
+                  <button className={`favorite-btn ${favorites.has(product.id) ? 'favorited' : ''}`} onClick={(e) => toggleFavorite(e, product.id)}>
+                    {favorites.has(product.id) ? <FaHeart /> : <FaRegHeart />}
+                  </button>
+                </div>
+                <Card.Body className="d-flex flex-column">
+                  <Card.Title className="product-title">{product.name}</Card.Title>
+                  
+                  {/* ============================================================ */}
+                  {/* AQUÍ USAMOS NUESTRO COMPONENTE DE PRECIOS                   */}
+                  {/* Esto mantiene el código principal de la tarjeta limpio.     */}
+                  {/* ============================================================ */}
+                  <ProductPriceDisplay product={product} />
+
+                  <Button variant="primary" className="add-to-cart-btn mt-auto" disabled={!product.inStock} onClick={() => handleProductClick(product.slug)}>
+                    <FaShoppingCart className="me-2" />
+                    {product.inStock ? 'Ver Producto' : 'Agotado'}
+                  </Button>
+                </Card.Body>
+              </Card>
+            </Col>
+          ))}
+        </Row>
+      );
+    } else {
+      return (
+        <div className="no-products">
+          <div className="no-products-content">
+            <h4>No se encontraron productos</h4>
+            <p>Prueba ajustando los filtros o limpiándolos para ver todos nuestros productos.</p>
+            <Button variant="primary" className="btn-mustard" onClick={clearFilters}>Limpiar Filtros</Button>
+          </div>
+        </div>
+      );
+    }
+  };
+
+  // === JSX PRINCIPAL DEL COMPONENTE ===
   return (
     <div className="products-page">
       <Container fluid className="products-container">
@@ -156,7 +296,9 @@ const Products = () => {
           <div className="products-header">
             <div className="title-section">
               <h1 className="products-main-title">Nuestros Productos</h1>
-              <p className="products-count">{filteredProducts.length} producto{filteredProducts.length !== 1 ? 's' : ''} encontrado{filteredProducts.length !== 1 ? 's' : ''}</p>
+              {!loading && !error && (
+                <p className="products-count">{filteredProducts.length} producto{filteredProducts.length !== 1 ? 's' : ''} encontrado{filteredProducts.length !== 1 ? 's' : ''}</p>
+              )}
             </div>
           </div>
         </Container>
@@ -183,56 +325,16 @@ const Products = () => {
                   </div>
                 </div>
               </div>
-              {filteredProducts.length > 0 ? (
-                <Row className="products-grid grid">
-                  {filteredProducts.map((product) => (
-                    <Col key={product.id} xs={6} md={4} className="mb-4"> {/* Ajustado para mejor responsividad */}
-                      <Card className="product-card h-100">
-                        <div className="product-image-container" onClick={() => handleProductClick(product.id)} style={{cursor: 'pointer'}}>
-                          <Card.Img variant="top" src={product.image} alt={product.name} />
-                          <div className="product-badges">
-                            {!product.inStock && <Badge bg="secondary">Agotado</Badge>}
-                            {product.originalPrice && <Badge bg="warning" text="dark">-{Math.round((1 - product.price / product.originalPrice) * 100)}%</Badge>}
-                          </div>
-                          {/* CORRECCIÓN 2: Se pasa el evento (e) a la función y se añade clase dinámica */}
-                          <button className={`favorite-btn ${favorites.has(product.id) ? 'favorited' : ''}`} onClick={(e) => toggleFavorite(e, product.id)}>
-                            {favorites.has(product.id) ? <FaHeart /> : <FaRegHeart />}
-                          </button>
-                        </div>
-                        <Card.Body className="d-flex flex-column">
-                          <Card.Title className="product-title">{product.name}</Card.Title>
-                          <div className="product-price">
-                            {product.originalPrice && <span className="original-price">S/ {product.originalPrice.toFixed(2)}</span>}
-                            <span className="current-price">S/ {product.price.toFixed(2)}</span>
-                          </div>
-                          <Button variant="primary" className="add-to-cart-btn mt-auto" disabled={!product.inStock} onClick={() => handleProductClick(product.id)}>
-                            <FaShoppingCart className="me-2" />
-                            {product.inStock ? 'Ver Producto' : 'Agotado'}
-                          </Button>
-                        </Card.Body>
-                      </Card>
-                    </Col>
-                  ))}
-                </Row>
-              ) : (
-                <div className="no-products">
-                  <div className="no-products-content">
-                    <h4>No se encontraron productos</h4>
-                    <p>Prueba ajustando los filtros o limpiándolos para ver todos nuestros productos.</p>
-                    <Button variant="primary" className="btn-mustard" onClick={clearFilters}>Limpiar Filtros</Button>
-                  </div>
-                </div>
-              )}
+              {renderContent()}
             </Col>
           </Row>
         </Container>
       </Container>
-      {/* CORRECCIÓN 3: Offcanvas modificado (sin header y con nueva clase CSS) */}
+      
       <Offcanvas show={showFilters} onHide={() => setShowFilters(false)} placement="start" className="mobile-filters-offcanvas">
         <Offcanvas.Body>
           <FilterSidebar isMobile={true} />
           <div className="mobile-filter-actions">
-            {/* CORRECCIÓN 4: Se aplican nuevas clases para los botones color mostaza */}
             <Button className="w-100 mb-2 btn-mustard" onClick={() => setShowFilters(false)}>Aplicar Filtros</Button>
             <Button variant="outline-secondary" className="w-100 btn-mustard-outline" onClick={() => { clearFilters(); }}>Limpiar Filtros</Button>
           </div>

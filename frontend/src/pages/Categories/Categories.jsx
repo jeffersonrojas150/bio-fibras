@@ -1,142 +1,89 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { Container, Spinner, Alert } from 'react-bootstrap';
+import apiClient from '../../api'; // <-- Asegúrate de que esta ruta sea correcta
 import './Categories.css';
 
-// Mock data para el ejemplo - reemplaza con tu import real
-const productsData = [
-  {
-    id: 1,
-    name: 'Lámpara Ovalada Grande',
-    price: 120.00,
-    originalPrice: 150.00,
-    image: 'https://m.media-amazon.com/images/I/51GpE2kVZvL._UF894,1000_QL80_.jpg',
-    category: 'lámparas',
-    description: 'Lámpara artesanal tejida a mano con fibras naturales de alta calidad',
-    isNew: true,
-    inStock: true,
-    wholesalePrice: {
-      minUnits: 6,
-      pricePerUnit: 105.00
-    }
-  },
-  {
-    id: 2,
-    name: 'Lámpara Ovalada Colorida',
-    price: 120.00,
-    image: 'https://m.media-amazon.com/images/I/51GpE2kVZvL._UF894,1000_QL80_.jpg',
-    category: 'lámparas',
-    description: 'Lámpara con diseño vibrante en colores naranja y turquesa',
-    isNew: false,
-    inStock: true,
-    wholesalePrice: {
-      minUnits: 6,
-      pricePerUnit: 105.00
-    }
-  },
-  {
-    id: 4,
-    name: 'Espejos Rústico Mediano',
-    price: 85.00,
-    originalPrice: 100.00,
-    image: 'https://m.media-amazon.com/images/I/51GpE2kVZvL._UF894,1000_QL80_.jpg',
-    category: 'espejos-rústicos',
-    description: 'Canasta decorativa para organización del hogar',
-    isNew: false,
-    inStock: true,
-    wholesalePrice: {
-      minUnits: 6,
-      pricePerUnit: 75.00
-    }
-  },
-  {
-    id: 5,
-    name: 'Tapete Geométrico',
-    price: 65.00,
-    image: 'https://m.media-amazon.com/images/I/51GpE2kVZvL._UF894,1000_QL80_.jpg',
-    category: 'tapetes',
-    description: 'Tapete con diseño geométrico en zigzag',
-    isNew: true,
-    inStock: true,
-    wholesalePrice: {
-      minUnits: 10,
-      pricePerUnit: 55.00
-    }
-  },
-  {
-    id: 6,
-    name: 'Lámpara Pequeña',
-    price: 95.00,
-    image: 'https://m.media-amazon.com/images/I/51GpE2kVZvL._UF894,1000_QL80_.jpg',
-    category: 'lámparas',
-    description: 'Lámpara compacta perfecta para espacios reducidos',
-    isNew: false,
-    inStock: true,
-    wholesalePrice: {
-      minUnits: 6,
-      pricePerUnit: 80.00
-    }
-  },
-  {
-    id: 7,
-    name: 'Cojín Artesanal',
-    price: 45.00,
-    image: 'https://m.media-amazon.com/images/I/51GpE2kVZvL._UF894,1000_QL80_.jpg',
-    category: 'decoración',
-    description: 'Cojín tejido a mano con motivos tradicionales',
-    isNew: true,
-    inStock: true,
-    wholesalePrice: {
-      minUnits: 12,
-      pricePerUnit: 40.00
-    }
-  },
-  {
-    id: 8,
-    name: 'Espejo Decorativo',
-    price: 180.00,
-    image: 'https://m.media-amazon.com/images/I/51GpE2kVZvL._UF894,1000_QL80_.jpg',
-    category: 'decoración',
-    description: 'Espejo con marco de fibra natural',
-    isNew: false,
-    inStock: true,
-    wholesalePrice: {
-      minUnits: 4,
-      pricePerUnit: 160.00
-    }
-  }
-];
-
 const Categories = () => {
-  // Función para obtener categorías únicas
-  const getUniqueCategories = () => {
-    const categoriesMap = new Map();
-    
-    productsData.forEach(product => {
-      const categoryKey = product.category.toLowerCase();
-      if (!categoriesMap.has(categoryKey)) {
-        categoriesMap.set(categoryKey, {
-          id: categoryKey,
-          name: getCategoryDisplayName(product.category),
-          image: product.image,
-          slug: categoryKey
-        });
+  // === PASO 1: DEFINIR ESTADOS ===
+  // Estado para almacenar las categorías que vienen de la API
+  const [categories, setCategories] = useState([]);
+  // Estado para mostrar un indicador de carga mientras se obtienen los datos
+  const [loading, setLoading] = useState(true);
+  // Estado para manejar cualquier error que ocurra durante la llamada a la API
+  const [error, setError] = useState(null);
+
+  // Hook de react-router-dom para manejar la navegación
+  const navigate = useNavigate();
+
+  // === PASO 2: OBTENER DATOS DE LA API ===
+  useEffect(() => {
+    // Definimos una función asíncrona para hacer la llamada a la API
+    const fetchCategories = async () => {
+      try {
+        setLoading(true);
+        setError(null);
+
+        // Hacemos la petición GET al endpoint de categorías
+        const response = await apiClient.get('/categorias/');
+        
+        // La API de Django puede paginar los resultados, por lo que accedemos a `response.data.results`
+        // Si no está paginado, `response.data` sería el array. Usamos un fallback por si acaso.
+        const apiCategories = response.data.results || response.data;
+        
+        // Mapeamos los datos de la API al formato que nuestro componente necesita
+        const transformedCategories = apiCategories.map(cat => ({
+          id: cat.slug, // Usamos el slug como un ID único para la key de React
+          name: cat.nombre,
+          image: cat.imagen_url, // El serializer ya nos da la URL completa de la imagen
+          slug: cat.slug,
+        }));
+
+        setCategories(transformedCategories);
+
+      } catch (err) {
+        console.error("Error al cargar las categorías:", err);
+        setError("No se pudieron cargar las categorías. Por favor, intenta de nuevo más tarde.");
+      } finally {
+        // Una vez terminada la operación (con éxito o error), dejamos de cargar
+        setLoading(false);
       }
-    });
-    
-    return Array.from(categoriesMap.values());
-  };
-
-  // Función para formatear el nombre de la categoría para mostrar
-  const getCategoryDisplayName = (category) => {
-    const categoryNames = {
-      'lámparas': 'Lámparas',
-      'espejos-rústicos': 'Espejos Rústicos',
-      'tapetes': 'Tapetes',
-      'decoración': 'Decoración'
     };
-    return categoryNames[category.toLowerCase()] || category;
+
+    // Llamamos a la función para que se ejecute cuando el componente se monte
+    fetchCategories();
+  }, []); // El array vacío `[]` asegura que este efecto se ejecute solo una vez
+
+  // === PASO 3: MANEJAR LA NAVEGACIÓN ===
+  const handleCategoryClick = (slug) => {
+    // Navegamos a la página de productos, pasando el slug de la categoría en la URL
+    // Esto requiere que tengas una ruta configurada en App.js para manejar esto
+    console.log(`Navegando a la categoría con slug: ${slug}`);
+    navigate(`/productos/categoria/${slug}`);
   };
 
-  const categories = getUniqueCategories();
+  // === PASO 4: RENDERIZADO CONDICIONAL ===
+
+  // Si está cargando, mostramos un spinner
+  if (loading) {
+    return (
+      <div className="categories-page text-center py-5">
+        <Spinner animation="border" variant="primary" />
+        <h2 className="mt-3">Cargando categorías...</h2>
+      </div>
+    );
+  }
+
+  // Si hubo un error, mostramos un mensaje de alerta
+  if (error) {
+    return (
+      <div className="categories-page py-5">
+        <Container>
+          <Alert variant="danger">{error}</Alert>
+        </Container>
+      </div>
+    );
+  }
 
   return (
     <div className="categories-page">
@@ -151,11 +98,7 @@ const Categories = () => {
             <div
               key={category.id}
               className="category-card"
-              onClick={() => {
-                // Aquí puedes manejar la navegación
-                console.log(`Navegando a categoría: ${category.slug}`);
-                // Ejemplo: window.location.href = `/categoria/${category.slug}`;
-              }}
+              onClick={() => handleCategoryClick(category.slug)}
             >
               <div className="category-image-container">
                 <img
