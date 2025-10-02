@@ -1,4 +1,5 @@
 from rest_framework import generics, viewsets, status, serializers, filters
+from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated, AllowAny
@@ -8,6 +9,7 @@ from django.contrib.auth.tokens import PasswordResetTokenGenerator
 from django.utils.http import urlsafe_base64_encode
 from django.utils.encoding import force_bytes
 from django.core.exceptions import ValidationError
+from .filters import ProductoFilter
 from .models import (
     Producto, 
     Categoria, 
@@ -37,7 +39,9 @@ from .email_service import enviar_correo_confirmacion_orden, enviar_correo_nueva
 class ProductoListView(generics.ListAPIView):
     queryset = Producto.objects.filter(es_activo=True)
     serializer_class = ProductoListSerializer
-    filter_backends = [filters.SearchFilter]
+
+    filter_backends = [filters.SearchFilter, DjangoFilterBackend]
+    filterset_class = ProductoFilter
     search_fields = ['nombre', 'descripcion', 'materiales__nombre', 'categoria__nombre']
     
 class ProductoDetailView(generics.RetrieveAPIView):
