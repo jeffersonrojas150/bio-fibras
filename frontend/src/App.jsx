@@ -18,7 +18,7 @@ import OrderConfirmation from './pages/Orders/OrderConfirmation';
 import { OrderProvider } from './context/orderContext';
 import { AuthProvider } from './context/authContext'; 
 import MyOrders from './pages/Orders/MyOrders'; 
-
+import { FavoritesProvider } from './context/favoritesContext';
 import './App.css';
 
 function App() {
@@ -26,6 +26,7 @@ function App() {
     <div className="App">
       {/*  Envolver todo con AuthProvider */}
       <AuthProvider>
+        <FavoritesProvider>
         <CartProvider>
           <OrderProvider>
             <Router>
@@ -70,7 +71,8 @@ function App() {
             </Router>
           </OrderProvider>
         </CartProvider>
-      </AuthProvider>
+      </FavoritesProvider>
+    </AuthProvider>
     </div>
   );
 }

@@ -43,7 +43,7 @@
 }
 
 /* Logo y Nombre */
-.brand-container { display: flex !important; align-items: center; gap: 0px; }
+.brand-container { display: flex !important; align-items: center; gap: 0px !important; }
 .logo-image { height: 40px; }
 .brand-name { font-family: var(--font-body), sans-serif; font-size: 24px; font-weight: 800; color: #2c5530; letter-spacing: -0.5px; }
 
