@@ -10,6 +10,10 @@ from django.utils.http import urlsafe_base64_encode
 from django.utils.encoding import force_bytes
 from django.core.exceptions import ValidationError
 from .filters import ProductoFilter
+from allauth.socialaccount.providers.google.views import GoogleOAuth2Adapter
+from allauth.socialaccount.providers.oauth2.client import OAuth2Client
+from dj_rest_auth.registration.views import SocialLoginView
+from rest_framework_simplejwt.tokens import RefreshToken
 from .models import (
     Producto, 
     Categoria, 
@@ -252,3 +256,22 @@ class PasswordResetConfirmView(generics.GenericAPIView):
             {"detail": "Tu contraseña ha sido restablecida exitosamente."},
             status=status.HTTP_200_OK
         )
+
+
+class GoogleLogin(SocialLoginView):
+    adapter_class = GoogleOAuth2Adapter
+    client_class = OAuth2Client
+    callback_url = "http://127.0.0.1:8000/api/auth/google/callback/"
+
+    def post(self, request, *args, **kwargs):
+        response = super().post(request, *args, **kwargs)
+        
+        if hasattr(self, 'user') and self.user:
+            refresh = RefreshToken.for_user(self.user)
+            
+            return Response({
+                'refresh': str(refresh),
+                'access': str(refresh.access_token),
+            }, status=status.HTTP_200_OK)
+        
+        return response
