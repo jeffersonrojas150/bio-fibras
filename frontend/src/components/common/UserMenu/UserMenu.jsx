@@ -10,21 +10,14 @@ const UserMenu = () => {
   const { user, isAuthenticated, logout } = useAuth();
   const navigate = useNavigate();
 
-  // Cerrar el menú al hacer clic fuera
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (menuRef.current && !menuRef.current.contains(event.target)) {
         setIsOpen(false);
       }
     };
-
-    if (isOpen) {
-      document.addEventListener('mousedown', handleClickOutside);
-    }
-
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
-    };
+    if (isOpen) document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
   }, [isOpen]);
 
   const handleLogout = () => {
@@ -33,9 +26,12 @@ const UserMenu = () => {
     navigate('/');
   };
 
-  const toggleMenu = () => {
-    setIsOpen(!isOpen);
-  };
+  const toggleMenu = () => setIsOpen(!isOpen);
+
+ 
+  const userFullName = user 
+    ? `${user.first_name || ''} ${user.last_name || ''}`.trim() 
+    : '';
 
   return (
     <div className="user-menu-container" ref={menuRef}>
@@ -49,24 +45,25 @@ const UserMenu = () => {
 
       {isOpen && (
         <div className="user-menu-dropdown">
-          {isAuthenticated ? (
+          {isAuthenticated && user ? (
             // Usuario autenticado
             <>
               <div className="user-menu-header">
                 <div className="user-avatar">
-                  {user?.avatar ? (
-                    <img src={user.avatar} alt={user.name} />
+                  {user.avatar ? (
+                    <img src={user.avatar} alt={userFullName} />
                   ) : (
                     <i className="bi bi-person-circle"></i>
                   )}
                 </div>
                 <div className="user-info">
+                  
                   <p className="user-greeting">¡Bienvenido a Biofibras!</p>
-                  <p className="user-name">{user?.name || 'Usuario'}</p>
+                  
+                  
+                  <p className="user-name">{userFullName || user.username}</p>
                 </div>
               </div>
-
-              <div className="user-menu-divider"></div>
 
               <ul className="user-menu-list">
                 <li>
@@ -77,26 +74,6 @@ const UserMenu = () => {
                   >
                     <i className="bi bi-box-seam"></i>
                     <span>Mis Órdenes</span>
-                  </Link>
-                </li>
-                <li>
-                  <Link 
-                    to="/mi-perfil" 
-                    className="user-menu-item"
-                    onClick={() => setIsOpen(false)}
-                  >
-                    <i className="bi bi-person"></i>
-                    <span>Mi Perfil</span>
-                  </Link>
-                </li>
-                <li>
-                  <Link 
-                    to="/favoritos" 
-                    className="user-menu-item"
-                    onClick={() => setIsOpen(false)}
-                  >
-                    <i className="bi bi-heart"></i>
-                    <span>Favoritos</span>
                   </Link>
                 </li>
               </ul>
@@ -116,7 +93,7 @@ const UserMenu = () => {
             <>
               <div className="user-menu-guest">
                 <p className="guest-message">¡Bienvenido a Biofibras!</p>
-                <p className="guest-submessage">Inicia sesión para acceder a tu cuenta</p>
+                <p className="guest-submessage">Inicia sesión para una mejor experiencia</p>
               </div>
 
               <div className="user-menu-buttons">
@@ -135,31 +112,6 @@ const UserMenu = () => {
                   Registrarse
                 </Link>
               </div>
-
-              <div className="user-menu-divider"></div>
-
-              <ul className="user-menu-list">
-                <li>
-                  <Link 
-                    to="/productos" 
-                    className="user-menu-item"
-                    onClick={() => setIsOpen(false)}
-                  >
-                    <i className="bi bi-basket"></i>
-                    <span>Ver Productos</span>
-                  </Link>
-                </li>
-                <li>
-                  <Link 
-                    to="/contacto" 
-                    className="user-menu-item"
-                    onClick={() => setIsOpen(false)}
-                  >
-                    <i className="bi bi-envelope"></i>
-                    <span>Contacto</span>
-                  </Link>
-                </li>
-              </ul>
             </>
           )}
         </div>

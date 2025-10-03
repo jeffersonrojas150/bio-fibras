@@ -216,11 +216,11 @@ body.body-menu-open { overflow: hidden; }
 
 /* Info del usuario en menú móvil */
 .mobile-menu-user-info {
-  padding: 20px;
+  padding: 10px;
   text-align: center;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  color: white;
-  margin-bottom: 1rem;
+  background: linear-gradient(135deg, #C8860D 0%, #a16c0a 100%) !important;
+  color: rgb(255, 255, 255);
+  margin-bottom: 0rem;
 }
 
 .mobile-user-avatar {
@@ -241,9 +241,10 @@ body.body-menu-open { overflow: hidden; }
 }
 
 .mobile-user-greeting {
-  font-size: 14px;
+  font-size: 18px;
   margin: 0;
   font-weight: 500;
+  color: #ffffff;
 }
 
 /* Mejorar el botón reset para el icono de búsqueda */
@@ -277,4 +278,31 @@ body.body-menu-open { overflow: hidden; }
   .mobile-menu-user-info {
     border-radius: 0;
   }
+}
+
+/* Estilos adicionales para Header.css */
+
+.mobile-menu-user-info .mobile-user-name {
+  font-size: 18px;
+  font-weight: 600;
+  margin-top: 0px;
+  color: #000;
+}
+
+.mobile-logout-btn {
+  color: #e53e3e !important;
+  font-weight: 500;
+  width: 100%;
+  text-align: left;
+  background: none;
+  border: none;
+}
+
+.mobile-logout-btn:hover {
+  background-color: #fff5f5 !important;
+  color: #c53030 !important;
+}
+
+.mobile-logout-btn i {
+  color: #e53e3e !important;
 }

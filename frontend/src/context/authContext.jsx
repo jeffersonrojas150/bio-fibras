@@ -1,5 +1,6 @@
 // src/context/authContext.jsx
 import React, { createContext, useState, useContext, useEffect } from 'react';
+import apiClient from '../api'; 
 
 const AuthContext = createContext();
 
@@ -16,83 +17,90 @@ export const AuthProvider = ({ children }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [loading, setLoading] = useState(true);
 
-  // Verificar si hay un usuario guardado al cargar
+  // Verificar si hay un token válido al cargar la app
   useEffect(() => {
-    const savedUser = localStorage.getItem('user');
-    if (savedUser) {
-      try {
-        const userData = JSON.parse(savedUser);
-        setUser(userData);
-        setIsAuthenticated(true);
-      } catch (error) {
-        console.error('Error al cargar usuario:', error);
-        localStorage.removeItem('user');
+    const checkLoggedIn = async () => {
+      const token = localStorage.getItem('access_token');
+      if (token) {
+        try {
+          // Si hay token, intentamos obtener el perfil del usuario
+          const response = await apiClient.get('/auth/perfil/');
+          setUser(response.data);
+          setIsAuthenticated(true);
+        } catch (error) {
+          // Si el token es inválido/expirado, limpiamos
+          console.error('Sesión inválida, limpiando...', error);
+          logout();
+        }
       }
-    }
-    setLoading(false);
+      setLoading(false);
+    };
+
+    checkLoggedIn();
   }, []);
 
-  // Función de login (aquí conectarás tu API)
+  //  Función de login conectada a la API
   const login = async (email, password) => {
     try {
-      // TODO: Aquí irá tu llamada a la API
-      // const response = await fetch('tu-api/login', { ... });
-      
-      // Por ahora, simulamos un login exitoso
-      const mockUser = {
-        id: 1,
-        name: 'Juan Pérez',
-        email: email,
-        avatar: null
-      };
+      // Django JWT espera 'username' y 'password'. Usamos el email como username.
+      const response = await apiClient.post('/auth/token/', {
+        username: email, 
+        password: password,
+      });
 
-      setUser(mockUser);
-      setIsAuthenticated(true);
-      localStorage.setItem('user', JSON.stringify(mockUser));
+      // Guardamos los tokens
+      localStorage.setItem('access_token', response.data.access);
+      localStorage.setItem('refresh_token', response.data.refresh);
       
-      return { success: true };
+      // Obtenemos el perfil del usuario
+      const userProfileResponse = await apiClient.get('/auth/perfil/');
+      const userData = userProfileResponse.data;
+
+      setUser(userData);
+      setIsAuthenticated(true);
+      localStorage.setItem('user', JSON.stringify(userData)); // Guardamos datos del usuario
+
     } catch (error) {
-      console.error('Error en login:', error);
-      return { success: false, error: 'Error al iniciar sesión' };
+      console.error('Error en login:', error.response?.data || error);
+      // Lanzamos el error para que el componente del formulario lo pueda manejar
+      throw error; 
     }
   };
 
-  // Función de registro (aquí conectarás tu API)
+  //  Función de registro conectada a la API
   const register = async (userData) => {
     try {
-      // TODO: Aquí irá tu llamada a la API
-      // const response = await fetch('tu-api/register', { ... });
-      
-      // Por ahora, simulamos un registro exitoso
-      const mockUser = {
-        id: Date.now(),
-        name: userData.name,
+      // Mapeamos los nombres de los campos del formulario a los que espera la API de Django
+      const apiData = {
+        username: userData.username,
         email: userData.email,
-        avatar: null
+        password: userData.password,
+        password2: userData.confirmPassword, // El serializer espera password2
+        first_name: userData.firstName,
+        last_name: userData.lastName
       };
-
-      setUser(mockUser);
-      setIsAuthenticated(true);
-      localStorage.setItem('user', JSON.stringify(mockUser));
       
-      return { success: true };
+      await apiClient.post('/auth/registro/', apiData);
+
     } catch (error) {
-      console.error('Error en registro:', error);
-      return { success: false, error: 'Error al registrarse' };
+      console.error('Error en registro:', error.response?.data || error);
+      throw error; // Lanzamos el error para que el formulario lo maneje
     }
   };
 
-  // Función de logout
+  // Función de logout mejorada para limpiar tokens
   const logout = () => {
     setUser(null);
     setIsAuthenticated(false);
     localStorage.removeItem('user');
+    localStorage.removeItem('access_token');
+    localStorage.removeItem('refresh_token');
   };
 
-  // Actualizar datos del usuario
-  const updateUser = (userData) => {
-    setUser(userData);
-    localStorage.setItem('user', JSON.stringify(userData));
+    // Función para actualizar los datos del usuario
+  const updateUser = (newUserData) => {
+    setUser(newUserData);
+    localStorage.setItem('user', JSON.stringify(newUserData));
   };
 
   const value = {
@@ -102,7 +110,7 @@ export const AuthProvider = ({ children }) => {
     login,
     register,
     logout,
-    updateUser
+    updateUser,
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

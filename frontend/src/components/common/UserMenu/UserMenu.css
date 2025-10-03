@@ -17,12 +17,13 @@
   position: absolute;
   top: calc(100% + 12px);
   right: 0;
-  width: 320px;
+  width: 300px; /* Un poco más angosto para elegancia */
   background: white;
-  border-radius: 2px;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+  border-radius: 8px; /* Bordes más suaves */
+  border: 1px solid #f0f0f0;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
   z-index: 1000;
-  animation: slideDown 0.3s ease;
+  animation: slideDown 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
   overflow: hidden;
 }
 
@@ -40,11 +41,12 @@
 /* Header del menú (usuario autenticado) */
 .user-menu-header {
   padding: 20px;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  color: white;
+ background: #c17f0e;
+  color: rgb(0, 0, 0);
   display: flex;
   align-items: center;
   gap: 15px;
+  font-size: 10px;
 }
 
 .user-avatar {
@@ -57,6 +59,7 @@
   justify-content: center;
   overflow: hidden;
   border: 2px solid rgba(255, 255, 255, 0.3);
+  flex-shrink: 0;
 }
 
 .user-avatar img {
@@ -67,7 +70,7 @@
 
 .user-avatar i {
   font-size: 30px;
-  color: white;
+  color: rgb(255, 255, 255);
 }
 
 .user-info {
@@ -75,30 +78,34 @@
 }
 
 .user-greeting {
-  font-size: 12px;
+  font-size: 13px;
   margin: 0;
   opacity: 0.9;
-  font-weight: 500;
+  font-weight: 400;
 }
 
 .user-name {
   font-size: 16px;
   font-weight: 600;
-  margin: 4px 0 0 0;
+  margin: 2px 0 0 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 /* Menú de invitado */
 .user-menu-guest {
   padding: 24px 20px;
   text-align: center;
-  background: linear-gradient(135deg, #faf9f5 0%, #76a374 100%);
+  background: #c17f0e;
+  border-bottom: 1px solid #eee;
 }
 
 .guest-message {
-  font-size: 18px;
+  font-size: 16px;
   font-weight: 600;
-  color: #0b4209;
-  margin: 0 0 8px 0;
+  color: #ffffff; /* Verde oscuro de la marca */
+  margin: 0 0 4px 0;
 }
 
 .guest-submessage {
@@ -121,9 +128,9 @@
 .user-menu-item {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 15px;
   padding: 12px 20px;
-  color: #ddaa11;
+  color: #0e3005;
   text-decoration: none;
   transition: all 0.2s ease;
   cursor: pointer;
@@ -131,18 +138,22 @@
   background: none;
   width: 100%;
   text-align: left;
-  font-size: 14px;
+  font-size: 15px;
 }
 
 .user-menu-item:hover {
-  background: #f7fafc;
-  color: #000000;
+  background: #f8f9fa;
+  color: #C8860D; /* Color mostaza al pasar el mouse */
 }
 
 .user-menu-item i {
   font-size: 18px;
   width: 20px;
   text-align: center;
+  color: #113e05;
+}
+.user-menu-item:hover i{
+  color: #c17f0e;
 }
 
 .user-menu-item span {
@@ -152,50 +163,38 @@
 
 /* Botón de cerrar sesión */
 .user-menu-logout {
-  color: #e53e3e;
+  color: #0e3005;
 }
-
 .user-menu-logout:hover {
   background: #fff5f5;
+  color: #c53030;
+}
+.user-menu-logout i {
+  color: #044711;
+}
+.user-menu-logout:hover i {
   color: #c53030;
 }
 
 /* Divisor */
 .user-menu-divider {
   height: 1px;
-  background: #e2e8f0;
-  margin: 8px 0;
+  background: #f0f0f0;
+  margin: 0;
 }
 
 /* Responsive */
 @media (max-width: 576px) {
+  /* Hacemos que el contenedor del icono ya no sea el punto de referencia para el menú. */
+  .user-menu-container {
+    position: static;
+  }
+
   .user-menu-dropdown {
-    width: 280px;
-    right: -10px;
-  }
-
-  .user-menu-header {
-    padding: 16px;
-  }
-
-  .user-avatar {
-    width: 45px;
-    height: 45px;
-  }
-
-  .user-greeting {
-    font-size: 11px;
-  }
-
-  .user-name {
-    font-size: 14px;
-  }
-
-  .user-menu-guest {
-    padding: 20px 16px;
-  }
-
-  .user-menu-buttons {
-    padding: 16px;
+   
+    width: calc(100% - 30px); /* Ocupa casi todo el ancho del contenedor, con un margen */
+    max-width: 320px;
+    right: 15px; /* Lo alineamos a 15px del borde derecho de la página */
+    top: calc(100% + 5px); 
   }
 }
