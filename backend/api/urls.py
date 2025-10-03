@@ -16,6 +16,8 @@ from .views import (
     DireccionViewSet,
     OrdenListCreateView,
     OrdenDetailView,
+    PasswordResetRequestView,
+    PasswordResetConfirmView,
 )
 
 router = routers.DefaultRouter()
@@ -28,6 +30,9 @@ urlpatterns = [
     path('auth/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
     path('auth/perfil/', UserProfileView.as_view(), name='perfil-usuario'),
     path('auth/registro/', RegisterView.as_view(), name='registro-usuario'),
+
+    path('auth/password-reset-request/', PasswordResetRequestView.as_view(), name='password-reset-request'),
+    path('auth/password-reset-confirm/<uidb64>/<token>/', PasswordResetConfirmView.as_view(), name='password-reset-confirm'),
 
     path('productos/', ProductoListView.as_view(), name='lista-productos'),
     path('productos/<slug:slug>/', ProductoDetailView.as_view(), name='detalle-producto'),

@@ -198,3 +198,25 @@ class DireccionSerializer(serializers.ModelSerializer):
         extra_kwargs = {
             'usuario': {'read_only': True}
         }
+
+class PasswordResetRequestSerializer(serializers.Serializer):
+    email = serializers.EmailField()
+
+    class Meta:
+        fields = ['email']
+
+class PasswordResetConfirmSerializer(serializers.Serializer):
+    """
+    Serializer para la confirmación del restablecimiento de contraseña.
+    Valida que las dos contraseñas coincidan.
+    """
+    password = serializers.CharField(write_only=True, min_length=8)
+    password2 = serializers.CharField(write_only=True, label="Confirm Password")
+
+    class Meta:
+        fields = ['password', 'password2']
+
+    def validate(self, data):
+        if data['password'] != data['password2']:
+            raise serializers.ValidationError({"password": "Las contraseñas no coinciden."})
+        return data

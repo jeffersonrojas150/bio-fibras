@@ -1,9 +1,19 @@
-from rest_framework import generics, viewsets, status, serializers
+from rest_framework import generics, viewsets, status, serializers, filters
+from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from django.db import transaction
 from django.contrib.auth.models import User
+from django.contrib.auth.tokens import PasswordResetTokenGenerator
+from django.utils.http import urlsafe_base64_encode
+from django.utils.encoding import force_bytes
+from django.core.exceptions import ValidationError
+from .filters import ProductoFilter
+from allauth.socialaccount.providers.google.views import GoogleOAuth2Adapter
+from allauth.socialaccount.providers.oauth2.client import OAuth2Client
+from dj_rest_auth.registration.views import SocialLoginView
+from rest_framework_simplejwt.tokens import RefreshToken
 from .models import (
     Producto, 
     Categoria, 
@@ -23,14 +33,20 @@ from .serializers import (
     FavoritoSerializer, 
     CarritoSerializer,
     OrdenSerializer,
-    DireccionSerializer
+    DireccionSerializer,
+    PasswordResetRequestSerializer,
+    PasswordResetConfirmSerializer,
     )
 
-from .email_service import enviar_correo_confirmacion_orden, enviar_correo_nueva_orden_admin
+from .email_service import enviar_correo_confirmacion_orden, enviar_correo_nueva_orden_admin, enviar_correo_password_reset
 
 class ProductoListView(generics.ListAPIView):
     queryset = Producto.objects.filter(es_activo=True)
     serializer_class = ProductoListSerializer
+
+    filter_backends = [filters.SearchFilter, DjangoFilterBackend]
+    filterset_class = ProductoFilter
+    search_fields = ['nombre', 'descripcion', 'materiales__nombre', 'categoria__nombre']
     
 class ProductoDetailView(generics.RetrieveAPIView):
     queryset = Producto.objects.filter(es_activo=True)
@@ -175,3 +191,87 @@ class OrdenDetailView(generics.RetrieveAPIView):
     def get_queryset(self):
         return Orden.objects.filter(usuario=self.request.user)
 
+
+class PasswordResetRequestView(generics.GenericAPIView):
+    permission_classes = [AllowAny]
+    serializer_class = PasswordResetRequestSerializer
+
+    def post(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        email = serializer.validated_data['email']
+
+        try:
+            user = User.objects.get(email=email)
+        except User.DoesNotExist:
+            return Response(
+                {"detail": "Si existe una cuenta con este correo, se ha enviado un enlace para restablecer la contraseña."},
+                status=status.HTTP_200_OK
+            )
+
+        token_generator = PasswordResetTokenGenerator()
+        uid = urlsafe_base64_encode(force_bytes(user.pk))
+        token = token_generator.make_token(user)
+
+        enviar_correo_password_reset(request, user, token, uid)
+
+        return Response(
+            {"detail": "Si existe una cuenta con este correo, se ha enviado un enlace para restablecer la contraseña."},
+            status=status.HTTP_200_OK
+        )
+
+class PasswordResetConfirmView(generics.GenericAPIView):
+    """
+    Vista para confirmar y establecer una nueva contraseña.
+    Recibe uid, token, y la nueva contraseña.
+    """
+    permission_classes = [AllowAny]
+    serializer_class = PasswordResetConfirmSerializer
+
+    def post(self, request, uidb64, token, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        password = serializer.validated_data['password']
+
+        try:
+            uid = urlsafe_base64_decode(uidb64).decode()
+            user = User.objects.get(pk=uid)
+        except (TypeError, ValueError, OverflowError, User.DoesNotExist, ValidationError):
+            return Response(
+                {"error": "El enlace de restablecimiento es inválido o ha expirado."},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
+        token_generator = PasswordResetTokenGenerator()
+        if not token_generator.check_token(user, token):
+            return Response(
+                {"error": "El enlace de restablecimiento es inválido o ha expirado."},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
+        user.set_password(password)
+        user.save()
+
+        return Response(
+            {"detail": "Tu contraseña ha sido restablecida exitosamente."},
+            status=status.HTTP_200_OK
+        )
+
+
+class GoogleLogin(SocialLoginView):
+    adapter_class = GoogleOAuth2Adapter
+    client_class = OAuth2Client
+    callback_url = "http://127.0.0.1:8000/api/auth/google/callback/"
+
+    def post(self, request, *args, **kwargs):
+        response = super().post(request, *args, **kwargs)
+        
+        if hasattr(self, 'user') and self.user:
+            refresh = RefreshToken.for_user(self.user)
+            
+            return Response({
+                'refresh': str(refresh),
+                'access': str(refresh.access_token),
+            }, status=status.HTTP_200_OK)
+        
+        return response

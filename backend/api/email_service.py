@@ -103,3 +103,34 @@ def enviar_correo_actualizacion_estado(orden):
     except Exception as e:
         print(f"ERROR al enviar correo de actualización de estado para #{orden.numero_orden}: {e}")
         return False
+
+def enviar_correo_password_reset(request, usuario, token, uid):
+    """
+    Envía un correo al usuario con el enlace para restablecer su contraseña.
+    """
+    try:
+        url_frontend = f"http://localhost:5173/reset-password/{uid}/{token}/"
+
+        asunto = "Restablece tu contraseña en Bio-Fibras"
+        contexto = {
+            'usuario': usuario,
+            'reset_url': url_frontend
+        }
+
+        mensaje_texto = render_to_string('emails/password_reset.txt', contexto)
+        mensaje_html = render_to_string('emails/password_reset.html', contexto)
+
+        send_mail(
+            asunto,
+            mensaje_texto,
+            settings.DEFAULT_FROM_EMAIL,
+            [usuario.email],
+            fail_silently=False,
+            html_message=mensaje_html
+        )
+        print(f"Correo de restablecimiento de contraseña enviado a {usuario.email}")
+        return True
+
+    except Exception as e:
+        print(f"ERROR al enviar correo de restablecimiento a {usuario.email}: {e}")
+        return False
