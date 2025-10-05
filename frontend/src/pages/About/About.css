@@ -88,18 +88,37 @@
   font-weight: 800;
   margin-bottom: 1rem;
   text-shadow: 0 4px 10px rgba(0,0,0,0.4);
+  animation: pulse 2s infinite; 
+}
+
+@keyframes pulse {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05); 
+  }
 }
 
 .about__title--highlight {
-  color:#15803d;
+  font-size: 6rem;
+  font-weight: 200;
+  color: #096912;
+  
 }
+
+
+
+
 
 .about__subtitle {
   font-size: clamp(1rem, 4vw, 1.5rem);
   color: rgba(0, 0, 0, 0.9);
   max-width: 600px;
   margin: 0 auto;
+ 
 }
+
 
 /* ============================================
    SECCIÓN HISTORIA
@@ -339,10 +358,32 @@
   .about__founder-grid {
     grid-template-columns: 300px 1fr;
   }
+
+
 }
 
 @media (min-width: 1024px) {
   .about__story-card {
     grid-template-columns: 400px 1fr;
+  }
+ 
+
+}
+@media (max-width: 768px) {
+  .about__title--highlight {
+    font-size: 4rem;  
+  }
+}
+
+
+@media (max-width: 480px) {
+  .about__title--highlight {
+    font-size: 4rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .about__title--highlight {
+    font-size: 4rem;
   }
 }

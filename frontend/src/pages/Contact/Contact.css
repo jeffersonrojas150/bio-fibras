@@ -1,35 +1,164 @@
 /* src/pages/Contact/Contact.css */
 
-.contact-page {
-  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
-  min-height: calc(100vh - 120px); /* Ajusta según la altura de tu header/footer */
-  padding: 4rem 0;
+/* Variables de color (puedes moverlas a tu CSS global) */
+:root {
+  --mustard-color: #c78b01;
+  --dark-green: #2c3e32;
+  --gray-text: #6c757d;
+  --light-bg: #f8f9fa;
+  --off-white-bg: #e9ecef;
 }
 
-.contact-form-container {
+.contact-page {
+  background:#ffffff;
+  min-height: calc(100vh - 120px); /* Ajusta según tu header/footer */
+  padding: 4rem 0;
+  font-family: 'Poppins', sans-serif; /* Usamos una fuente más moderna */
+}
+
+/* Encabezado de la página */
+.contact-header {
+  margin-bottom: 3rem;
+}
+
+.contact-header-icon {
+  font-size: 5rem;
+  color: var(--mustard-color);
+  margin-bottom: 0rem;
+  animation: pulse 2s infinite; 
+}
+
+@keyframes pulse {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05); 
+  }
+}
+.contact-page-title {
+   font-size: 3.3rem;
+  font-weight: 300;
+  color: #096912;
+  
+}
+
+
+.contact-page-subtitle {
+  color:#737373;
+  max-width: 800px;
+  margin: 0.5rem auto 0;
+  font-size: 20px;
+}
+
+/* Contenedor principal de 2 columnas */
+.contact-main-content {
+  align-items: flex-start; /* Alinea los items al inicio */
+}
+
+/* Columna de Información de Contacto */
+.contact-info-wrapper {
+  background: #ffffff;
+  padding: 2.5rem;
+  border-radius: 20px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
+  height: 100%;
+}
+
+.contact-info-title, .contact-social-title {
+   font-size: 2rem;
+  font-weight: 400;
+  color: #096912;
+  margin-bottom: 1rem;
+}
+
+.contact-info-intro {
+  color: var(--gray-text);
+  margin-bottom: 2rem;
+  font-size: 0.95rem;
+  line-height: 1.6;
+}
+
+.contact-info-list {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 2.5rem 0;
+}
+
+.contact-info-list li {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.contact-info-icon {
+  font-size: 1.25rem;
+  color: var(--mustard-color);
+  margin-top: 5px;
+  flex-shrink: 0;
+}
+
+.contact-info-list li div {
+  display: flex;
+  flex-direction: column;
+}
+
+.contact-info-list li strong {
+  font-weight: 600;
+  color: var(--dark-green);
+}
+
+.contact-info-list li a,
+.contact-info-list li span {
+  font-size: 0.95rem;
+  color: var(--gray-text);
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+.contact-info-list li a:hover {
+  color: var(--mustard-color);
+}
+
+.contact-social-icons {
+  display: flex;
+  gap: 1.5rem;
+}
+
+.contact-social-icons a {
+  font-size: 1.75rem;
+  color: var(--dark-green);
+  transition: color 0.3s ease, transform 0.3s ease;
+}
+
+.contact-social-icons a:hover {
+  color: var(--mustard-color);
+  transform: translateY(-3px);
+}
+
+/* Columna del Formulario */
+.contact-form-wrapper {
   background: white;
   padding: 3rem;
   border-radius: 20px;
   box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+  margin-bottom: auto;
+ 
+
 }
 
-.contact-header .header-icon {
-  font-size: 3rem;
-  color: var(--mustard-color);
+
+
+.contact-info-title1{
+  font-size: 2rem;
+  font-weight: 400;
+  color: #096912;
   margin-bottom: 1rem;
+  
 }
 
-.contact-header .page-title {
-  font-weight: 700;
-  color: #2c3e32;
-}
-
-.contact-header .page-subtitle {
-  color: #6c757d;
-  max-width: 500px;
-  margin: 0.5rem auto 2.5rem;
-}
-
+/* Estilos de formulario */
 .form-label {
   font-weight: 600;
   color: #495057;
@@ -39,11 +168,12 @@
   border-radius: 8px;
   border: 2px solid #e9ecef;
   padding: 0.8rem 1rem;
+  transition: border-color 0.3s, box-shadow 0.3s;
 }
 
 .form-control:focus {
   border-color: var(--mustard-color);
-  box-shadow: 0 0 0 0.25rem rgba(200, 134, 13, 0.25);
+  box-shadow: 0 0 0 0.25rem rgba(199, 139, 1, 0.25);
 }
 
 .form-control.is-invalid {
@@ -54,31 +184,33 @@
   padding: 0.8rem 2.5rem;
   font-size: 1.1rem;
   border-radius: 50px;
+  border-color: #9f6507 !important;
 }
 
 /* Estilos para el mensaje de éxito */
-.success-container {
+.contact-success-container {
+  max-width: 700px;
   padding: 5rem 1rem;
   background: white;
   border-radius: 20px;
   box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
 }
 
-.success-icon {
+.contact-success-icon {
   font-size: 5rem;
   color: #28a745;
   animation: bounceIn 0.8s ease-out;
 }
 
-.success-title {
+.contact-success-title {
   font-weight: 700;
-  color: #2c3e32;
+  color: var(--dark-green);
   margin-bottom: 1rem;
 }
 
-.success-text {
+.contact-success-text {
   font-size: 1.1rem;
-  color: #6c757d;
+  color: var(--gray-text);
   max-width: 600px;
   margin: 0 auto 1.5rem;
 }
@@ -91,11 +223,245 @@
 }
 
 /* Responsive */
+@media (max-width: 991.98px) {
+  .contact-form-wrapper {
+    padding: 2rem;
+  }
+  .contact-info-wrapper {
+    padding: 2rem;
+  }
+}
+
 @media (max-width: 768px) {
   .contact-page {
     padding: 2rem 0;
   }
-  .contact-form-container {
+}
+
+
+/* =========================
+   ANIMACIONES
+========================= */
+@keyframes fadeInDown {
+  from {
+    opacity: 0;
+    transform: translateY(-30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeInLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes fadeInRight {
+  from {
+    opacity: 0;
+    transform: translateX(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes pulse {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+}
+
+@keyframes bounceIn {
+  0% {
+    opacity: 0;
+    transform: scale(0.3);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.05);
+  }
+  70% {
+    transform: scale(0.95);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes scaleUp {
+  from {
+    transform: scale(0);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+/* =========================
+   RESPONSIVE - TABLETS
+========================= */
+@media (max-width: 991.98px) {
+  .contact-page {
+    padding: 2.5rem 0 3rem;
+  }
+
+  .contact-header {
+    margin-bottom: 2.5rem;
+  }
+
+  .contact-form-wrapper,
+  .contact-info-wrapper {
     padding: 2rem;
   }
+
+  .contact-info-wrapper {
+    margin-bottom: 2rem;
+  }
+
+  .btn-submit {
+    padding: 0.875rem 2.5rem;
+    font-size: 1rem;
+  }
+}
+
+/* =========================
+   RESPONSIVE - MÓVILES
+========================= */
+@media (max-width: 768px) {
+  .contact-page {
+    padding: 2rem 0;
+  }
+
+  .contact-header {
+    margin-bottom: 2rem;
+  }
+
+  .contact-header-icon-wrapper {
+    width: 80px;
+    height: 80px;
+    margin-bottom: 1rem;
+  }
+
+  .contact-header-icon {
+    font-size: 2.5rem;
+  }
+
+  .contact-form-wrapper,
+  .contact-info-wrapper {
+    padding: 1.5rem;
+    border-radius: 20px;
+  }
+
+  .contact-info-item {
+    padding: 0.75rem;
+  }
+
+  .contact-info-icon-circle {
+    width: 45px;
+    height: 45px;
+    min-width: 45px;
+  }
+
+  .contact-info-icon {
+    font-size: 1.1rem;
+  }
+
+  .social-icon-link {
+    width: 45px;
+    height: 45px;
+    font-size: 1.25rem;
+  }
+
+  .form-control {
+    padding: 0.75rem 1rem;
+    font-size: 0.9rem;
+  }
+
+  textarea.form-control {
+    min-height: 120px;
+  }
+
+  .btn-submit {
+    width: 100%;
+    padding: 0.875rem 2rem;
+    font-size: 1rem;
+  }
+
+  .contact-success-container {
+    padding: 3rem 1.5rem;
+    margin: 2rem auto;
+  }
+
+  .contact-success-icon {
+    font-size: 4rem;
+  }
+}
+
+/* =========================
+   RESPONSIVE - MÓVILES PEQUEÑOS
+========================= */
+@media (max-width: 576px) {
+  .contact-page {
+    padding: 1.5rem 0;
+  }
+
+  .contact-header {
+    margin-bottom: 1.5rem;
+  }
+
+  .contact-form-wrapper,
+  .contact-info-wrapper {
+    padding: 1.25rem;
+    border-radius: 16px;
+  }
+
+  .contact-info-title,
+  .contact-form-title,
+  .contact-social-title,
+  .contact-info-title1{
+    font-size: 1.5rem;
+  }
+
+  .contact-social-icons {
+    justify-content: center;
+  }
+
+  .contact-success-container {
+    padding: 2.5rem 1.25rem;
+  }
+}
+
+/* =========================
+   MEJORAS DE ACCESIBILIDAD
+========================= */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* Focus visible para accesibilidad */
+*:focus-visible {
+  outline: 3px solid var(--mustard-color);
+  outline-offset: 2px;
 }
