@@ -154,7 +154,7 @@ const Header = () => {
                 <Nav.Link as={Link} to="/" className={`nav-link-custom ${isNavLinkActive('/') ? 'active' : ''}`}>INICIO</Nav.Link>
                 <Nav.Link as={Link} to="/productos" className={`nav-link-custom ${isNavLinkActive('/productos') ? 'active' : ''}`}>PRODUCTOS</Nav.Link>
                 <Nav.Link as={Link} to="/categorias" className={`nav-link-custom ${isNavLinkActive('/categorias') ? 'active' : ''}`}>CATEGORIAS</Nav.Link>
-                <Nav.Link as={Link} to="/about" className={`nav-link-custom ${isNavLinkActive('/nosotros') ? 'active' : ''}`}>SOBRE NOSOTROS</Nav.Link>
+                <Nav.Link as={Link} to="/about" className={`nav-link-custom ${isNavLinkActive('/about') ? 'active' : ''}`}>SOBRE NOSOTROS</Nav.Link>
                 <Nav.Link as={Link} to="/contacto" className={`nav-link-custom ${isNavLinkActive('/contacto') ? 'active' : ''}`}>CONTACTO</Nav.Link>
               </Nav>
             </Navbar.Collapse>
@@ -233,7 +233,7 @@ const Header = () => {
             <Nav.Link as={Link} to="/mis-ordenes" onClick={handleMobileLinkClick}><i className="bi bi-box-seam-fill"></i> Mis Órdenes</Nav.Link>
           )}
 
-          <Nav.Link as={Link} to="/nosotros" onClick={handleMobileLinkClick}><i className="bi bi-people-fill"></i> Sobre Nosotros</Nav.Link>
+          <Nav.Link as={Link} to="/about" onClick={handleMobileLinkClick}><i className="bi bi-people-fill"></i> Sobre Nosotros</Nav.Link>
           <Nav.Link as={Link} to="/contacto" onClick={handleMobileLinkClick}><i className="bi bi-envelope-fill"></i> Contacto</Nav.Link>
 
           {isAuthenticated && (
