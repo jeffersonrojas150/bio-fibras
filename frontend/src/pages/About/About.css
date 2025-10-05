@@ -1,0 +1,348 @@
+/* ============================================
+   PALETA DE COLORES Y VARIABLES
+   ============================================ */
+:root {
+  --about-color-mustard: #c78b01;
+  --about-color-mustard-dark: #a16f00;
+  --about-color-mustard-light: #fef3c7;
+  --about-color-green-accent: #15803d;
+  --about-color-text-dark: #1f1f1f;
+  --about-color-text-light: #575757;
+  --about-color-white: #ffffff;
+  --about-color-offwhite: #f9f9f9;
+}
+
+/* ============================================
+   ESTILOS GENERALES DEL COMPONENTE
+   ============================================ */
+.about-page-container {
+  background-color: var(--about-color-white); 
+  color: var(--about-color-text-dark);
+}
+
+.about__container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1rem;
+}
+
+.about__container--small {
+  max-width: 900px;
+}
+
+/* ============================================
+   SECCIÓN HEADER
+   ============================================ */
+.about__header {
+  position: relative;
+  height: 50vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  overflow: hidden;
+  color:#1f1f1f;
+}
+
+
+
+.about__header-content {
+  position: relative;
+  z-index: 2;
+  padding: 1rem;
+}
+
+.about__award-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background-color: rgba(255, 238, 86, 0.684);
+  backdrop-filter: blur(5px);
+  color: #1f1f1f;
+  padding: 0.75rem 1.5rem;
+  border-radius: 9999px;
+  font-weight: 500;
+  margin-bottom: 1.5rem;
+  border: 1px solid rgb(191, 156, 28);
+  animation: pulse 2s infinite; 
+}
+
+@keyframes pulse {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05); 
+  }
+}
+
+
+.about__badge-icon {
+  width: 1.25rem;
+  height: 1.25rem;
+  color:#ffffff;
+}
+
+.about__title {
+  font-size: clamp(2.9rem, 9vw, 6rem);
+  font-weight: 800;
+  margin-bottom: 1rem;
+  text-shadow: 0 4px 10px rgba(0,0,0,0.4);
+}
+
+.about__title--highlight {
+  color:#15803d;
+}
+
+.about__subtitle {
+  font-size: clamp(1rem, 4vw, 1.5rem);
+  color: rgba(0, 0, 0, 0.9);
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+/* ============================================
+   SECCIÓN HISTORIA
+   ============================================ */
+.about__story {
+  padding: 1rem 1rem;
+}
+
+.about__story-card {
+  background-color: var(--about-color-white);
+  border-radius: 1.5rem;
+  box-shadow: 0 20px 40px rgba(0,0,0,0.08);
+  overflow: hidden;
+  display: grid;
+}
+
+.about__story-grid {
+  display: contents; /* Permite que los hijos se posicionen en el grid padre */
+}
+
+.about__story-image {
+  background: linear-gradient(135deg, var(--about-color-mustard), var(--about-color-mustard-dark));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 3rem;
+  min-height: 20rem;
+  color: var(--about-color-white);
+}
+
+.about__story-image-content { text-align: center; }
+.about__leaf-icon-animated {
+  width: 4rem;
+  height: 4rem;
+  margin-bottom: 1.5rem;
+  opacity: 0.8;
+  animation: bounce 2s infinite ease-in-out;
+}
+.about__story-image-title { font-size: 1.875rem; font-weight: bold; }
+.about__story-image-subtitle { color: var(--about-color-mustard-light); }
+
+.about__story-content { padding: 3rem; }
+.about__section-title {
+  font-size: 3.4rem;
+   
+  font-weight: 300;
+  color: #2c5530;;
+  margin-bottom: 1.5rem;
+}
+.about__section-title--centered { text-align: center; }
+.about__story-text {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  color: var(--about-color-text-light);
+  line-height: 1.75;
+}
+.about__text-highlight { color: var(--about-color-mustard-dark); }
+.about__story-highlight {
+  font-weight: 500;
+  color: var(--about-color-green-accent); 
+}
+
+/* ============================================
+   SECCIÓN MATERIALES
+   ============================================ */
+.about__materials {
+  padding: 5rem 1rem;
+  background-color: var(--about-color-offwhite);
+}
+
+.about__section-header { text-align: center; margin-bottom: 3rem; }
+.about__section-subtitle { font-size: 1.25rem; color: var(--about-color-text-light); }
+.about__materials-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1.5rem;
+}
+
+.about__material-card {
+  background-color: var(--about-color-white);
+  border-radius: 1rem;
+  padding: 2rem;
+  text-align: center;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+.about__material-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 15px 30px rgba(0,0,0,0.1);
+}
+.about__material-icon { font-size: 3rem; margin-bottom: 1rem; }
+.about__material-name { font-weight: 600; color: var(--about-color-text-dark); }
+
+/* ============================================
+   SECCIÓN FUNDADOR
+   ============================================ */
+.about__founder {
+  padding: 5rem 1rem;
+  background: linear-gradient(135deg, var(--about-color-mustard), var(--about-color-mustard-dark));;
+  color: var(--about-color-white);
+  border-radius: 1.9rem;
+  
+  overflow: hidden;
+  display: grid;
+
+  max-width: 1200px;
+  margin: 0 auto; 
+}
+
+.about__founder-grid {
+  display: grid;
+  align-items: center;
+  gap: 3rem;
+  grid-template-columns: 1fr;
+}
+.about__founder-photo { border-radius: 1.5rem; overflow: hidden; }
+.about__founder-image { width: 100%; height: 100%; object-fit: cover; display: block;   animation: pulse 1s infinite; 
+}
+
+@keyframes pulse {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05); /* se agranda un poco */
+  }
+}
+.about__founder-name { font-size: 2.5rem; font-weight: 700; margin-bottom: 1rem; line-height: 1.2; }
+.about__founder-badge { display: inline-flex; align-items: center; gap: 0.5rem; background-color: rgba(37, 150, 6, 0.873); padding: 0.5rem 1rem; border-radius: 9999px; font-size: 0.9rem; font-weight: 500; margin-bottom: 1.5rem;  animation: pulse 1s infinite; 
+}
+
+@keyframes pulse {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05); /* se agranda un poco */
+  }
+}
+
+.about__founder-info { display: flex; flex-direction: column; gap: 1.25rem; color: rgba(255,255,255,0.8); font-size: 1.125rem; margin-bottom: 2rem; }
+.about__info-item { display: flex; align-items: flex-start; gap: 1rem; }
+.about__info-icon { flex-shrink: 0; margin-top: 0.2rem; color:#ffffff; }
+.about__info-title { font-weight: 500; color: var(--about-color-white); }
+.about__info-subtitle { color:#ffffff;font-size: 1.3rem; }
+
+.about__recognition-card { background-color: rgba(255, 255, 255, 0.05); border-radius: 1rem; padding: 1.5rem; border: 1px solid rgba(255, 255, 255, 0.1); }
+.about__recognition-header { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1rem; }
+.about__recognition-icon { width: 2rem; height: 2rem; color:#ffffff; }
+.about__recognition-title { font-size: 1.25rem; font-weight: bold; }
+.about__recognition-text { color: rgba(255,255,255,0.9); line-height: 1.75; }
+
+/* ============================================
+   SECCIÓN PRODUCTOS
+   ============================================ */
+.about__products {
+  padding: 5rem 1rem;
+}
+.about__products-grid {
+  display: grid;
+  gap: 1.5rem;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+}
+.about__product-card {
+  background-color: var(--about-color-white);
+  border: 1px solid #eee;
+  border-radius: 1rem;
+  padding: 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  transition: all 0.3s ease;
+}
+.about__product-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 20px rgba(0,0,0,0.07);
+  border-color: var(--about-color-mustard);
+}
+.about__product-icon-wrapper {
+  width: 3rem;
+  height: 3rem;
+  flex-shrink: 0;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--about-color-mustard-light);
+}
+.about__product-icon { color: var(--about-color-mustard-dark); }
+.about__product-name { font-weight: 600; }
+
+/* ============================================
+   SECCIÓN CTA
+   ============================================ */
+.about__cta {
+  padding: 5rem 1rem;
+  background-color: var(--about-color-offwhite);
+}
+.about__cta-card {
+  background: linear-gradient(135deg, var(--about-color-mustard), var(--about-color-mustard-dark));
+  border-radius: 1.5rem;
+  padding: 3rem;
+  box-shadow: 0 25px 50px -12px rgba(199, 139, 1, 0.4);
+  text-align: center;
+  color: var(--about-color-white);
+}
+.about__cta-title { font-size: 2.25rem; font-weight: 700; margin-bottom: 1rem; }
+.about__cta-text { font-size: 1.25rem; color: rgba(255,255,255,0.9); margin-bottom: 2rem; }
+.about__cta-button {
+  background-color: var(--about-color-white);
+  color: var(--about-color-mustard-dark);
+  padding: 1rem 2.5rem;
+  border-radius: 9999px;
+  font-weight: bold;
+  font-size: 1rem;
+  border: none;
+  cursor: pointer;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+}
+.about__cta-button:hover {
+  background-color:#1f1f1f;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+  transform: translateY(-3px);
+}
+
+/* ============================================
+   ANIMACIONES Y RESPONSIVE
+   ============================================ */
+@keyframes bounce {
+  0%, 100% { transform: translateY(-10%); }
+  50% { transform: translateY(0); }
+}
+
+@media (min-width: 768px) {
+  .about__founder-grid {
+    grid-template-columns: 300px 1fr;
+  }
+}
+
+@media (min-width: 1024px) {
+  .about__story-card {
+    grid-template-columns: 400px 1fr;
+  }
+}

@@ -21,6 +21,7 @@ import { AuthProvider } from "./context/authContext";
 import MyOrders from "./pages/Orders/MyOrders";
 import { FavoritesProvider } from "./context/favoritesContext";
 import Favorites from "./pages/Favorites/Favorites";
+import About from './pages/About/About';
 
 import "./App.css";
 
@@ -64,6 +65,7 @@ function App() {
 
                       <Route path="/mis-ordenes" element={<MyOrders />} />
                       <Route path="/favoritos" element={<Favorites />} />
+                      <Route path="/about" element={<About />} />
 
                       {/* futuras rutas */}
                       {/* <Route path="/nosotros" element={<About />} /> */}
