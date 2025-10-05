@@ -2,13 +2,13 @@ import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Container, Row, Col, Button, Form, Badge, Modal, Alert, Spinner } from 'react-bootstrap';
 import { FaHeart, FaRegHeart, FaShoppingCart, FaArrowLeft, FaMinus, FaPlus, FaShare, FaWhatsapp, FaFacebook, FaTwitter, FaBox, FaShippingFast, FaUndo } from 'react-icons/fa';
-
-// Paso 1: Importar hooks y cliente de API
 import { useCart } from '../../context/cartContext';
-import apiClient from '../../api'; // Asegúrate que la ruta a tu cliente API sea correcta
+import apiClient from '../../api';
 import './ProductDetail.css';
 
-// Componente de Acordeón reutilizable (sin cambios)
+
+import { useFavorites } from '../../context/favoritesContext';
+
 const AccordionItem = ({ title, content, isOpen, onToggle, icon }) => (
   <div className="accordion-item">
     <div className="accordion-header" onClick={onToggle}>
@@ -25,20 +25,21 @@ const AccordionItem = ({ title, content, isOpen, onToggle, icon }) => (
 );
 
 const ProductDetail = () => {
-  // Se usa 'slug' para coincidir con la URL de la API (ej: /productos/nombre-del-producto)
   const { slug } = useParams();
   const navigate = useNavigate();
   const { addToCart } = useCart();
+  // <-- Obtener las funciones del contexto de favoritos
+  const { isFavorite, addFavorite, removeFavorite } = useFavorites();
 
-  // Estados para manejar el producto, la carga y los errores desde la API
+  // Estados del producto, carga y error
   const [product, setProduct] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   
-  // Estados existentes para la interacción del usuario
+  // Estados de UI
   const [quantity, setQuantity] = useState(1);
   const [selectedImage, setSelectedImage] = useState(0);
-  const [isFavorite, setIsFavorite] = useState(false);
+  
   const [showShareModal, setShowShareModal] = useState(false);
   const [showAddedAlert, setShowAddedAlert] = useState(false);
   const [relatedProducts, setRelatedProducts] = useState([]);
@@ -46,7 +47,6 @@ const ProductDetail = () => {
 
   const adminWhatsappNumber = '910881837'; 
 
-  // useEffect reescrito para obtener datos de la API
   useEffect(() => {
     const fetchProductData = async () => {
       if (!slug) {
@@ -56,37 +56,27 @@ const ProductDetail = () => {
       setLoading(true);
       setError(null);
       try {
-        // Llamada a la API para obtener los detalles del producto por su slug
         const response = await apiClient.get(`/productos/${slug}/`);
         const productData = response.data;
         
-        // Transformamos los datos de la API al formato que nuestro componente espera
         const formattedProduct = {
           id: productData.id,
           name: productData.nombre,
           description: productData.descripcion,
           price: productData.precio_oferta ? parseFloat(productData.precio_oferta) : parseFloat(productData.precio_unitario),
           originalPrice: productData.precio_oferta ? parseFloat(productData.precio_unitario) : null,
-          // Adaptado para precio mayorista
           wholesalePrice: productData.precio_mayor ? {
             pricePerUnit: parseFloat(productData.precio_mayor),
             minUnits: productData.cantidad_minima_mayor || 1
           } : null,
           stock: productData.stock,
-          images: productData.imagenes.length > 0 ? productData.imagenes.map(img => img.imagen) : ['/path/to/placeholder.png'], // Usa un placeholder si no hay imágenes
+          images: productData.imagenes.length > 0 ? productData.imagenes.map(img => img.imagen) : ['/path/to/placeholder.png'],
           category: productData.categoria,
         };
 
         setProduct(formattedProduct);
-        
-        // Comprobar si es favorito desde localStorage
-        const storedFavorites = JSON.parse(localStorage.getItem('favorites') || '[]');
-        setIsFavorite(storedFavorites.includes(formattedProduct.id));
 
-        // TODO: Implementar la obtención de productos relacionados desde la API.
-        // Se necesitaría un endpoint como `/productos/relacionados/{categoria}/`
-        // Por ahora, `relatedProducts` quedará vacío.
-        // fetchRelatedProducts(formattedProduct.category, formattedProduct.id);
+        
 
       } catch (err) {
         console.error("Error al cargar el producto:", err);
@@ -114,25 +104,19 @@ const ProductDetail = () => {
     setTimeout(() => setShowAddedAlert(false), 3000);
   };
 
-  const toggleFavorite = () => {
-    // TODO: En una aplicación real, esto debería ser una llamada a la API
-    // para guardar los favoritos del usuario en su cuenta.
-    const storedFavorites = JSON.parse(localStorage.getItem('favorites') || '[]');
-    let newFavorites;
-
-    if (isFavorite) {
-      newFavorites = storedFavorites.filter(favId => favId !== product.id);
+  // <--  Se reemplaza la función `toggleFavorite` por una que usa el contexto
+  const handleToggleFavorite = () => {
+    if (!product) return;
+    if (isFavorite(product.id)) {
+      removeFavorite(product.id);
     } else {
-      newFavorites = [...storedFavorites, product.id];
+      addFavorite(product);
     }
-    localStorage.setItem('favorites', JSON.stringify(newFavorites));
-    setIsFavorite(!isFavorite);
   };
 
   const handleShare = (platform) => {
     const url = window.location.href;
     const text = `¡No te pierdas este increíble producto! ✨: ${product.name} - S/ ${product.price.toFixed(2)}`;
-    
     let shareUrl = '';
     switch (platform) {
       case 'whatsapp':
@@ -147,9 +131,7 @@ const ProductDetail = () => {
       default:
         break;
     }
-    if (shareUrl) {
-      window.open(shareUrl, '_blank');
-    }
+    if (shareUrl) window.open(shareUrl, '_blank');
   };
 
   const handleWhatsappContact = (message = `Hola, estoy interesado en el producto: "${product?.name}". ¿Podrían darme más información?`) => {
@@ -157,7 +139,6 @@ const ProductDetail = () => {
     window.open(`https://wa.me/${adminWhatsappNumber}?text=${encodedMessage}`, '_blank');
   };
   
-  // Renderizado condicional para estados de carga y error
   if (loading) {
     return (
       <div className="product-detail-page text-center py-5">
@@ -179,7 +160,6 @@ const ProductDetail = () => {
   }
 
   if (!product) {
-    // Este caso previene un renderizado vacío si algo sale mal.
     return null;
   }
 
@@ -231,13 +211,16 @@ const ProductDetail = () => {
             <div className="product-info-panel">
               <div className="product-header">
                 <h1 className="product-title">{product.name}</h1>
+                
+                {/* <-- El botón ahora usa la función y el estado del contexto --> */}
                 <Button 
                   variant="link" 
                   className="favorite-btn-detail"
-                  onClick={toggleFavorite}
+                  onClick={handleToggleFavorite}
                 >
-                  {isFavorite ? <FaHeart className="text-warning" /> : <FaRegHeart />}
+                  {isFavorite(product.id) ? <FaHeart className="text-warning" /> : <FaRegHeart />}
                 </Button>
+
               </div>
 
               <div className="product-pricing-section">

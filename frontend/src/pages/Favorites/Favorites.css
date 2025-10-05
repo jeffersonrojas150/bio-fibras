@@ -1,0 +1,10 @@
+.empty-favorites {
+  color: #6c757d;
+}
+.empty-favorites svg {
+  color: #dc3545;
+}
+.product-card a {
+  text-decoration: none;
+  color: inherit;
+}

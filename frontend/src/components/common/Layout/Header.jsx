@@ -9,6 +9,7 @@ import { CartIcon } from '../../Cart/Cart';
 import { productsData } from '../../../mocks/productsData';
 import UserMenu from '../UserMenu/UserMenu';
 import { useAuth } from '../../../context/authContext';
+import { FavoritesIcon } from '../FavoritesIcon/FavoritesIcon';
 
 const Header = () => {
   const location = useLocation();
@@ -29,7 +30,7 @@ const Header = () => {
   const announcements = [
     { icon: <i className="bi bi-truck"></i>, text: "Envíos a todo el Perú" },
     { icon: <i className="bi bi-leaf"></i>, text: "🌱 100% Productos Ecológicos y Sostenibles" },
-    { icon: <i className="bi bi-telephone"></i>, text: "Atención 24/7 - WhatsApp: +51 999 888 777" },
+    { icon: <i className="bi bi-telephone"></i>, text: "Atención 24/7 - WhatsApp: +51 910 881 837" },
   ];
 
   useEffect(() => {
@@ -142,9 +143,7 @@ const Header = () => {
                   <i className="bi bi-search nav-icon"></i>
                 </button>
                 <UserMenu />
-                <Nav.Link as={Link} to="/favoritos" className="nav-icon-link">
-                  <i className="bi bi-heart nav-icon"></i>
-                </Nav.Link>
+                <FavoritesIcon />
                 <CartIcon />
               </Nav>
               <Navbar.Toggle aria-controls="responsive-navbar-nav" className="ms-2 border-0" />

@@ -6,7 +6,7 @@
   --text-secondary: #6c757d;
   --border-color: #dee2e6;
   --background-light: #f8f9fa;
-  --font-body: 'Poppins', sans-serif; /* Usando una fuente más moderna como ejemplo */
+  --font-body: 'Poppins', sans-serif; 
 }
 
 /* Estilos generales de la página */
@@ -42,7 +42,7 @@
 /* Sidebar de filtros (Desktop) */
 .filters-sidebar {
   position: sticky;
-  top: 90px; /* Espacio para el header pegajoso */
+  top: 90px; 
 }
 
 .filters-container {
@@ -82,12 +82,12 @@
   margin-bottom: 2rem;
 }
 
-/* CORRECCIÓN: Espaciado para los títulos de filtros */
+/*  Espaciado para los títulos de filtros */
 .filter-section h4 {
   font-size: 1.1rem;
   font-weight: 600 !important;
   color: var(--text-primary);
-  margin-bottom: 1rem; /* AÑADIDO: Espacio entre título y checkboxes */
+  margin-bottom: 1rem; 
   display: flex;
   align-items: center;
   gap: 0.5rem;
@@ -140,129 +140,20 @@
   
 }
 .sort-select:focus {
-  border-color: #C8860D !important; /* Color del borde en estado activo */
-box-shadow: 0 0 0 0.25rem rgba(200, 134, 13, 0.25) !important; /* Sombra/resplandor con el color mostaza */
+  border-color: #C8860D !important;
+box-shadow: 0 0 0 0.25rem rgba(200, 134, 13, 0.25) !important; 
 }
 
 .sort-select option:hover {
-  background-color: var(--mustard-color) !important; /* Color de fondo mostaza al pasar el ratón */
-  color: white !important; /* Color de texto blanco para que contraste */
+  background-color: var(--mustard-color) !important;
+  color: white !important; 
 }
 
-/* Tarjeta de Producto */
-.product-card {
-  border: none;
-  border-radius: 12px;
-  overflow: hidden;
-  background: white;
-  transition: all 0.3s ease;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
-}
-.product-card:hover {
-  transform: translateY(-8px);
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
-}
 
-.product-image-container {
-  position: relative;
-  overflow: hidden;
-}
-.product-image-container img {
-  width: 100%;
-  height: 250px;
-  object-fit: cover;
-  transition: transform 0.4s ease;
-}
-.product-card:hover .product-image-container img {
-  transform: scale(1.05);
-}
-
-.product-badges {
-  position: absolute;
-  top: 1rem;
-  left: 1rem;
-  z-index: 2;
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-}
-
-/* CORRECCIÓN: Nuevo estilo para el botón de favorito */
-.favorite-btn {
-  position: absolute;
-  top: 0.5rem;
-  right: 0.5rem;
-  background: none;
-  border: none;
-  padding: 0.5rem;
-  cursor: pointer;
-  z-index: 2;
-  transition: transform 0.2s ease;
-}
-.favorite-btn:hover {
-  transform: scale(1.15);
-}
-.favorite-btn svg {
-  font-size: 1.6rem;
-  color: white;
-  filter: drop-shadow(0 1px 2px rgba(0,0,0,0.5)); /* Sombra para que se vea bien en fondos claros */
-}
-.favorite-btn.favorited svg {
-  color: var(--mustard-color); /* Color dorado cuando está activo */
-}
-
-.product-card .card-body {
-  padding: 1rem;
-}
-
-.product-title {
-  font-size: 1rem;
-  font-weight: 600;
-  color: var(--text-primary);
-  margin-bottom: 0.5rem;
-  line-height: 1.4;
-  flex-grow: 1;
-}
-
-.product-price {
-  margin-bottom: 1rem;
-}
-.original-price {
-  text-decoration: line-through;
-  color: var(--text-secondary);
-  font-size: 0.9rem;
-  margin-right: 0.5rem;
-}
-.current-price {
-  font-size: 1.25rem;
-  font-weight: 700;
-  color: var(--text-primary);
-}
-
-/* CORRECCIÓN: Botón principal con color mostaza */
-.add-to-cart-btn {
-  background-color: #C8860D !important;
-  border-color: #C8860D !important;
-  color: white !important;
-  font-size: 1.2em;
-  font-weight: 400;
-  padding: 15px 25px;
-  border-radius: 8px;
-  transition: all 0.3s ease;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-}
-.add-to-cart-btn:hover:not(:disabled) {
-  background-color: #ffffff !important;
-  border-color: #C8860D !important;
-  transform: translateY(-2px);
-  box-shadow: 0 4px 15px rgba(132, 93, 2, 0.974);
-  color: #361c00 !important;
-}
 
 /* --- Filtros Móviles y Offcanvas --- */
 
-/* CORRECCIÓN: Ancho personalizado para el Offcanvas */
+
 .mobile-filters-offcanvas.offcanvas-start {
   width: 85% !important;
   max-width: 380px !important;
@@ -401,7 +292,7 @@ box-shadow: 0 0 0 0.25rem rgba(200, 134, 13, 0.25) !important; /* Sombra/resplan
   font-weight: 600;
 }
 
-/* === CORRECCIONES ESPECÍFICAS PARA RESPONSIVIDAD MÓVIL === */
+/* === RESPONSIVIDAD MÓVIL === */
 
 /* Título principal más pequeño en móviles */
 @media (max-width: 767.98px) {
@@ -424,7 +315,16 @@ box-shadow: 0 0 0 0.25rem rgba(200, 134, 13, 0.25) !important; /* Sombra/resplan
 
 /* === TOOLBAR RESPONSIVO === */
 @media (max-width: 991.98px) {
-
+  .toolbar {
+    flex-direction: column;
+    gap: 1rem;
+    padding: 1rem;
+  }
+  
+  .sort-controls {
+    width: 100%;
+    justify-content: space-between;
+  }
   
   .sort-controls .form-label {
     font-size: 0.9rem;
@@ -497,7 +397,7 @@ box-shadow: 0 0 0 0.25rem rgba(200, 134, 13, 0.25) !important; /* Sombra/resplan
   .add-to-cart-btn {
     font-size: 1rem;
     padding: 10px 16px;
-    text-transform: none !important; 
+    text-transform: none !important; /* Quitar mayúsculas en móvil */
     letter-spacing: normal;
     border-radius: 6px;
     white-space: nowrap; /* Evitar que se rompa en líneas */
@@ -696,7 +596,7 @@ box-shadow: 0 0 0 0.25rem rgba(200, 134, 13, 0.25) !important; /* Sombra/resplan
   }
 }
 
-/* === SIN PRODUCTOS - RESPONSIVO === */
+/* === RESPONSIVO === */
 @media (max-width: 575.98px) {
   .no-products {
     min-height: 300px;
@@ -712,10 +612,10 @@ box-shadow: 0 0 0 0.25rem rgba(200, 134, 13, 0.25) !important; /* Sombra/resplan
   }
 }
 
-/* Agrégalo a tu archivo Products.css o similar */
+
 
 .product-price {
-  margin-bottom: 8px; /* Espacio entre el precio y la info de por mayor */
+  margin-bottom: 8px;
 }
 
 .original-price {
@@ -740,80 +640,5 @@ box-shadow: 0 0 0 0.25rem rgba(200, 134, 13, 0.25) !important; /* Sombra/resplan
   border-radius: 5px;
   text-align: center;
   margin-top: 5px;
-  margin-bottom: 15px; /* Espacio antes del botón de añadir al carrito */
-}
-
-
-
-/* El contenedor principal que alinea "Filtros" y "Ordenar por" */
-.mobile-toolbar {
-  display: flex;
-  justify-content: space-between; /* Los empuja a los extremos */
-  align-items: center;
-  gap: 1rem; /* Espacio entre ellos */
-  background: white;
-  padding: 0.8rem 1rem;
-  border-radius: 12px;
-  margin-bottom: 1.5rem;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.07);
-}
-
-
-.mobile-toolbar .mobile-filter-btn {
-  
-  flex-shrink: 0; 
-  font-size: 0.9rem;
-  padding: 0.5rem 0.8rem;
-  border-color: #ced4da;
-  color: #495057;
-}
-
-/* Ajustes para el contenedor de ordenación en el nuevo contenedor */
-.mobile-toolbar .sort-controls {
-  display: flex;
-  align-items: center;
-  
-  flex-grow: 1; 
-  justify-content: flex-end; /* Alinea su contenido a la derecha */
-}
-
-.mobile-toolbar .sort-controls .form-label {
-  font-size: 0.85rem;
-  white-space: nowrap;
-  color: var(--text-secondary);
-}
-
-.mobile-toolbar .custom-sort-dropdown {
-
-  max-width: 160px; 
-}
-
-@media (max-width: 575.98px) {
-  
-  /* Hacemos que el contenedor de los controles de ordenación sea vertical */
-  .mobile-toolbar .sort-controls {
-    flex-direction: column;      /* Apila los elementos verticalmente */
-    align-items: stretch;   /* Alinea la etiqueta y el dropdown a la izquierda */
-    gap: 0.25rem;              /* Pequeño espacio entre la etiqueta y el dropdown */
-  }
-
-  .mobile-toolbar .sort-controls .form-label {
-    font-size: 0.8rem;         
-    font-weight: 600 !important;
-    color: var(--text-secondary);
-    text-align: center;
-
-  }
-
-  
-  .mobile-toolbar .custom-sort-dropdown {
-    width: 100%;                 
-    max-width: 100%; 
-  }
-
-  
-  .mobile-toolbar .mobile-filter-btn {
-    align-self: flex-end; 
-    margin-bottom: 2px;
-  }
+  margin-bottom: 15px;
 }

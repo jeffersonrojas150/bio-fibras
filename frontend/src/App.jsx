@@ -19,6 +19,7 @@ import { OrderProvider } from './context/orderContext';
 import { AuthProvider } from './context/authContext'; 
 import MyOrders from './pages/Orders/MyOrders'; 
 import { FavoritesProvider } from './context/favoritesContext';
+import Favorites from './pages/Favorites/Favorites';
 import './App.css';
 
 function App() {
@@ -26,8 +27,9 @@ function App() {
     <div className="App">
       {/*  Envolver todo con AuthProvider */}
       <AuthProvider>
-        <FavoritesProvider>
+        
         <CartProvider>
+          <FavoritesProvider>
           <OrderProvider>
             <Router>
               {/* Header fuera de las rutas */}
@@ -50,6 +52,7 @@ function App() {
                   
                   
                   <Route path="/mis-ordenes" element={<MyOrders />} />
+                  <Route path="/favoritos" element={<Favorites />} />
                                  
                   {/* Rutas adicionales que puedes implementar */}
                   {/* <Route path="/nosotros" element={<About />} /> */}
@@ -70,8 +73,9 @@ function App() {
               <Cart />
             </Router>
           </OrderProvider>
+          </FavoritesProvider>
         </CartProvider>
-      </FavoritesProvider>
+      
     </AuthProvider>
     </div>
   );
