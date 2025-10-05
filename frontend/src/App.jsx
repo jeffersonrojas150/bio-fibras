@@ -7,7 +7,7 @@ import Home from "./pages/Home/Home";
 import Products from "./pages/Products/Products";
 import ProductDetail from "./pages/ProductDetail/ProductDetail";
 import Categories from "./pages/Categories/Categories";
-import { LoginForm, RegisterForm, ForgotPasswordForm } from "./components/auth";
+import { LoginForm, RegisterForm, ForgotPasswordForm, ResetPasswordForm } from "./components/auth";
 
 import Header from "./components/common/Layout/Header";
 import Footer from "./components/common/Layout/Footer";
@@ -45,7 +45,7 @@ function App() {
                       <Route path="/productos" element={<Products />} />
                       <Route path="/producto/:slug" element={<ProductDetail />} />
                       <Route path="/categorias" element={<Categories />} />
-                      
+
 
                       {/* Ruta para la página de productos con un filtro de categoría */}
                       <Route path="/productos/categoria/:categorySlug" element={<Products />} />
@@ -55,6 +55,10 @@ function App() {
                       <Route
                         path="/recuperar-password"
                         element={<ForgotPasswordForm />}
+                      />
+                      <Route
+                        path="/reset-password/:uid/:token"
+                        element={<ResetPasswordForm />}
                       />
                       <Route path="/checkout" element={<Checkout />} />
                       <Route
