@@ -8,3 +8,12 @@
   text-decoration: none;
   color: inherit;
 }
+
+.fav-main-title {
+  font-size: 3.3rem;
+  font-weight: 300;
+  color: #2c5530; /* Verde oscuro del logo */
+  margin-bottom: 0.9rem;
+   text-align: center;
+  
+}
