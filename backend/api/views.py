@@ -36,9 +36,10 @@ from .serializers import (
     DireccionSerializer,
     PasswordResetRequestSerializer,
     PasswordResetConfirmSerializer,
+    ContactFormSerializer,
     )
 
-from .email_service import enviar_correo_confirmacion_orden, enviar_correo_nueva_orden_admin, enviar_correo_password_reset
+from .email_service import enviar_correo_confirmacion_orden, enviar_correo_nueva_orden_admin, enviar_correo_password_reset, enviar_correo_contacto
 
 class ProductoListView(generics.ListAPIView):
     queryset = Producto.objects.filter(es_activo=True)
@@ -275,3 +276,26 @@ class GoogleLogin(SocialLoginView):
             }, status=status.HTTP_200_OK)
         
         return response
+
+class ContactFormView(generics.GenericAPIView):
+    """
+    Vista para manejar los envíos del formulario de contacto.
+    """
+    permission_classes = [AllowAny]
+    serializer_class = ContactFormSerializer
+
+    def post(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+
+        name = serializer.validated_data.get('name')
+        email = serializer.validated_data.get('email')
+        subject = serializer.validated_data.get('subject')
+        message = serializer.validated_data.get('message')
+
+        enviar_correo_contacto(name, email, subject, message)
+
+        return Response(
+            {"detail": "Mensaje enviado exitosamente. Nos pondremos en contacto contigo pronto."},
+            status=status.HTTP_200_OK
+        )
