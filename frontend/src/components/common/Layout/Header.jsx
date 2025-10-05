@@ -1,12 +1,12 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useLocation, Link, useNavigate } from 'react-router-dom';
-import { Navbar, Nav, Container, Form, InputGroup, Button } from 'react-bootstrap';
+import { Navbar, Nav, Container, Form, InputGroup, Button, Spinner } from 'react-bootstrap';
 
 import logo from '../../../assets/logo.png';
 import './Header.css';
 
 import { CartIcon } from '../../Cart/Cart';
-import { productsData } from '../../../mocks/productsData';
+import apiClient from '../../../api'; 
 import UserMenu from '../UserMenu/UserMenu';
 import { useAuth } from '../../../context/authContext';
 import { FavoritesIcon } from '../FavoritesIcon/FavoritesIcon';
@@ -15,24 +15,25 @@ const Header = () => {
   const location = useLocation();
   const { user, isAuthenticated, logout } = useAuth();
   const navigate = useNavigate();
+  
+  // Estados del componente
   const [isSearchVisible, setIsSearchVisible] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
   const [searchResults, setSearchResults] = useState([]);
-  const [currentAnnouncementIndex, setCurrentAnnouncementIndex] = useState(0);
-  const searchInputRef = useRef(null);
+  const [isSearching, setIsSearching] = useState(false); 
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-
+  const [currentAnnouncementIndex, setCurrentAnnouncementIndex] = useState(0);
   
-  const userFullName = user 
-    ? `${user.first_name || ''} ${user.last_name || ''}`.trim() 
-    : '';
+  const searchInputRef = useRef(null);
 
+  // Datos para los anuncios
   const announcements = [
     { icon: <i className="bi bi-truck"></i>, text: "Envíos a todo el Perú" },
     { icon: <i className="bi bi-leaf"></i>, text: "🌱 100% Productos Ecológicos y Sostenibles" },
     { icon: <i className="bi bi-telephone"></i>, text: "Atención 24/7 - WhatsApp: +51 910 881 837" },
   ];
 
+  // Efecto para el carrusel de anuncios
   useEffect(() => {
     const interval = setInterval(() => {
       setCurrentAnnouncementIndex((prev) => (prev === announcements.length - 1 ? 0 : prev + 1));
@@ -40,12 +41,14 @@ const Header = () => {
     return () => clearInterval(interval);
   }, [announcements.length]);
 
+  // Efecto para poner el foco en el input de búsqueda cuando se abre
   useEffect(() => {
     if (isSearchVisible) {
       searchInputRef.current?.focus();
     }
   }, [isSearchVisible]);
 
+  // Efecto para controlar el scroll del body cuando el menú móvil está abierto
   useEffect(() => {
     if (isMenuOpen) {
       document.body.classList.add('body-menu-open');
@@ -57,20 +60,36 @@ const Header = () => {
     };
   }, [isMenuOpen]);
 
-  const handleSearch = (value) => {
-    setSearchTerm(value);
-    if (value.trim().length > 1) {
-      const filtered = productsData.filter(product =>
-        product.name.toLowerCase().includes(value.toLowerCase()) ||
-        product.category.toLowerCase().includes(value.toLowerCase()) ||
-        (product.description && product.description.toLowerCase().includes(value.toLowerCase()))
-      );
-      setSearchResults(filtered);
-    } else {
-      setSearchResults([]);
-    }
-  };
 
+ 
+  useEffect(() => {
+    if (searchTerm.trim().length < 2) {
+      setSearchResults([]);
+      setIsSearching(false);
+      return;
+    }
+
+    setIsSearching(true);
+
+    const delayDebounceFn = setTimeout(async () => {
+      try {
+        const response = await apiClient.get(`/productos/?search=${searchTerm}`);
+        setSearchResults(response.data.results || []);
+      } catch (error) {
+        console.error("Error en la búsqueda:", error);
+        setSearchResults([]);
+      } finally {
+        setIsSearching(false);
+      }
+    }, 300);
+
+    return () => clearTimeout(delayDebounceFn);
+  }, [searchTerm]);
+
+  const handleSearchChange = (value) => {
+    setSearchTerm(value);
+  };
+  
   const handleSearchSubmit = (e) => {
     e.preventDefault();
     if (searchTerm.trim()) {
@@ -84,16 +103,16 @@ const Header = () => {
     setSearchResults([]);
     setSearchTerm('');
   };
-
+  
   const handleProductClick = (product) => {
-    navigate(`/productos/${product.id}`);
+    
+    navigate(`/producto/${product.slug}`);
     closeSearch();
   };
 
+  // Funciones auxiliares
   const isNavLinkActive = (path) => {
-    if (path === '/') {
-      return location.pathname === path;
-    }
+    if (path === '/') return location.pathname === path;
     return location.pathname.startsWith(path);
   };
 
@@ -168,28 +187,37 @@ const Header = () => {
                     <Form.Control
                       ref={searchInputRef}
                       type="search"
-                      placeholder="Buscar lámparas, espejos, tapetes..."
+                      placeholder="¿Qué producto buscas?"
                       className="enhanced-search-input"
                       value={searchTerm}
-                      onChange={(e) => handleSearch(e.target.value)}
+                      onChange={(e) => handleSearchChange(e.target.value)}
                     />
                     <Button type="submit" className="enhanced-search-btn">
                       <i className="bi bi-search"></i>
                     </Button>
                   </InputGroup>
-                  {searchResults.length > 0 && (
+
+                  
+                  {(isSearching || searchResults.length > 0) && (
                     <div className="search-results-dropdown">
-                      {searchResults.map(product => (
-                        <div key={product.id} className="result-item" onClick={() => handleProductClick(product)}>
-                          <img src={product.image} alt={product.name} className="result-image" />
-                          <div className="result-info">
-                            <span className="result-name">{product.name}</span>
-                            <span className="result-category">{product.category}</span>
-                          </div>
+                      {isSearching ? (
+                        <div className="result-item-loading">
+                          <Spinner animation="border" size="sm" /> Buscando...
                         </div>
-                      ))}
+                      ) : (
+                        searchResults.map(product => (
+                          <div key={product.id} className="result-item" onClick={() => handleProductClick(product)}>
+                            <img src={product.imagen_principal} alt={product.nombre} className="result-image" />
+                            <div className="result-info">
+                              <span className="result-name">{product.nombre}</span>
+                              <span className="result-category">{product.categoria}</span>
+                            </div>
+                          </div>
+                        ))
+                      )}
                     </div>
                   )}
+
                 </Form>
                 <Button variant="link" className="close-search-btn" onClick={closeSearch}>
                   <i className="bi bi-x-lg"></i>
@@ -216,13 +244,12 @@ const Header = () => {
           </Button>
         </div>
 
-      {!isAuthenticated && (
-  <div className="mobile-menu-auth">
-    <Button as={Link} to="/login" variant="dark" className="auth-btn" onClick={handleMobileLinkClick}>Iniciar Sesión</Button>
-    <Button as={Link} to="/registro" variant="outline-dark" className="auth-btn" onClick={handleMobileLinkClick}>Registrarse</Button>
-  </div>
-)}
-
+        {!isAuthenticated && (
+          <div className="mobile-menu-auth">
+            <Button as={Link} to="/login" variant="dark" className="auth-btn" onClick={handleMobileLinkClick}>Iniciar Sesión</Button>
+            <Button as={Link} to="/registro" variant="outline-dark" className="auth-btn" onClick={handleMobileLinkClick}>Registrarse</Button>
+          </div>
+        )}
 
         <Nav className="flex-column mobile-menu-nav">
           <Nav.Link as={Link} to="/" onClick={handleMobileLinkClick}><i className="bi bi-house-door-fill"></i> Inicio</Nav.Link>
