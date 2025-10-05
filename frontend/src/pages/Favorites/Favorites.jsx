@@ -49,7 +49,7 @@ const Favorites = () => {
 
   return (
     <Container className="my-5">
-      <h1 className="mb-4">Mis Favoritos</h1>
+      <h1 className="fav-main-title">Tus Favoritos</h1>
       {renderContent()}
     </Container>
   );

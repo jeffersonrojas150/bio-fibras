@@ -69,7 +69,7 @@ const Categories = () => {
     return (
       <div className="categories-page text-center py-5">
         <Spinner animation="border" variant="primary" />
-        <h2 className="mt-3">Cargando categorías...</h2>
+        <h2 >Cargando categorías...</h2>
       </div>
     );
   }
