@@ -172,21 +172,6 @@ class OrdenItemSerializer(serializers.ModelSerializer):
     def get_producto_nombre(self, obj):
         return obj.producto.nombre if obj.producto else "Producto Eliminado"
 
-class OrdenSerializer(serializers.ModelSerializer):
-    items = OrdenItemSerializer(many=True, read_only=True)
-    
-    usuario = serializers.StringRelatedField()
-
-    class Meta:
-        model = Orden
-        fields = [
-            'id', 'usuario', 'direccion', 'total', 'metodo_pago', 'numero_orden',
-            'estado_pago', 'estado_orden', 'cantidad_compra', 
-            'fecha_creacion', 'items'
-        ]
-
-        read_only_fields = ['total', 'cantidad_compra']
-
 class DireccionSerializer(serializers.ModelSerializer):
     class Meta:
         model = Direccion
@@ -199,6 +184,26 @@ class DireccionSerializer(serializers.ModelSerializer):
         extra_kwargs = {
             'usuario': {'read_only': True}
         }
+
+class OrdenSerializer(serializers.ModelSerializer):
+    items = OrdenItemSerializer(many=True, read_only=True)
+    
+    usuario = serializers.StringRelatedField(read_only=True)
+
+    direccion = DireccionSerializer(read_only=True) 
+
+    direccion_id = serializers.IntegerField(write_only=True, source='direccion')
+
+    class Meta:
+        model = Orden
+        fields = [
+            'id', 'usuario', 'direccion', 'total', 'metodo_pago', 'numero_orden',
+            'estado_pago', 'estado_orden', 'cantidad_compra', 
+            'fecha_creacion', 'items', 'direccion', 'direccion_id'
+        ]
+
+        read_only_fields = ['total', 'cantidad_compra', 'usuario']
+
 
 class PasswordResetRequestSerializer(serializers.Serializer):
     email = serializers.EmailField()

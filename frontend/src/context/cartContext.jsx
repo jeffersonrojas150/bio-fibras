@@ -24,7 +24,7 @@ export const CartProvider = ({ children }) => {
     setLoading(true);
     try {
       const { data } = await apiClient.get('/carrito/');
-      
+
       const formattedCart = data.results.map(apiItem => {
         const productData = apiItem.producto;
 
@@ -175,6 +175,11 @@ export const CartProvider = ({ children }) => {
     }
   };
 
+  // === NUEVA FUNCIÓN AÑADIDA ===
+  const clearCartLocal = () => {
+    setCartItems([]);
+  };
+
   const toggleCart = () => {
     setIsCartOpen(prev => !prev);
   };
@@ -205,7 +210,9 @@ export const CartProvider = ({ children }) => {
     clearCart,
     toggleCart,
     getTotalItems,
-    getTotalPrice
+    getTotalPrice,
+    clearCartLocal,
+    fetchCart,
   };
 
   return <CartContext.Provider value={value}>{children}</CartContext.Provider>;

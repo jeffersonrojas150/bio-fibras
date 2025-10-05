@@ -1,30 +1,51 @@
 Hola {{ usuario.first_name|default:usuario.username }},
 
-¡Gracias por tu compra en Bio-Fibras! Hemos recibido tu pedido y lo estamos procesando.
+¡Gracias por tu compra en Bio-Fibras!
+Hemos recibido tu pedido y lo estamos preparando.
 
-========================================
-RESUMEN DE TU PEDIDO
-========================================
-Número de Orden: {{ orden.numero_orden }}
-Fecha del Pedido: {{ orden.fecha_creacion|date:"d/m/Y" }}
-Total: S/ {{ orden.total }}
+==================================
+RESUMEN DE TU PEDIDO: #{{ orden.numero_orden }}
+==================================
+Fecha del pedido: {{ orden.fecha_creacion|date:"d M, Y" }}
 
-========================================
-PRODUCTOS
-========================================
+Items:
 {% for item in items %}
-- {{ item.producto.nombre }} (x{{ item.cantidad }}) - S/ {{ item.precio_total }}
+- {{ item.producto.nombre|default:"[Producto Eliminado]" }} (x{{ item.cantidad }}) - S/ {{ item.precio_total|floatformat:2 }}
 {% endfor %}
 
-========================================
-!NO TE OLVIDES!
-========================================
-Recuerda que tu pedido está pendiente de pago. Por favor, realiza la transferencia o Yape por el monto total de S/ {{ orden.total }} y envíanos el comprobante respondiendo a este correo o a nuestro número de WhatsApp 910 881 837.
+----------------------------------
+Total: S/ {{ orden.total|floatformat:2 }}
+----------------------------------
 
-Una vez verificado tu pago, procederemos con el envío.
 
-Gracias por confiar en nosotros.
+==================================
+PRÓXIMOS PASOS: COMPLETA TU PAGO
+==================================
 
-Atentamente,
+{% if orden.metodo_pago == 'yape' %}
+Para confirmar tu pedido, por favor realiza el pago a través de Yape a los siguientes datos:
 
-Bio-Fibras
+Titular: Jairo Jhanpier Villegas Solano
+Número: 910 881 837
+
+¡IMPORTANTE! Una vez realizado el pago, envía la captura junto con tu número de pedido #{{ orden.numero_orden }} a nuestro WhatsApp.
+
+Puedes usar este enlace: https://wa.me/51910881837?text=Hola,%20adjunto%20el%20voucher%20de%20mi%20pedido%20%23{{ orden.numero_orden }}
+
+{% elif orden.metodo_pago == 'transferencia' %}
+Para confirmar tu pedido, por favor realiza una transferencia o depósito a nuestra cuenta BCP:
+
+Banco: Banco de Crédito del Perú (BCP)
+Titular: Jairo Jhanpier Villegas Solano
+Cuenta de Ahorro: 47571003862030
+CCI: 00247517100386203021
+
+¡IMPORTANTE! Una vez realizado el pago, envía la captura junto con tu número de pedido #{{ orden.numero_orden }} a nuestro WhatsApp.
+
+Puedes usar este enlace: https://wa.me/51910881837?text=Hola,%20adjunto%20el%20voucher%20de%20mi%20pedido%20%23{{ orden.numero_orden }}
+
+{% endif %}
+
+Revisaremos tu comprobante y actualizaremos el estado de tu pedido a la brevedad.
+
+¡Gracias por elegir Bio-Fibras!
