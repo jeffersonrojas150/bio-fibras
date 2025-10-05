@@ -1,14 +1,10 @@
-// src/components/Cart/Cart.jsx
 import React, { useState } from 'react';
 import { Offcanvas, Button, Badge, Form } from 'react-bootstrap';
 import { FaTimes, FaShoppingCart, FaTrash, FaMinus, FaPlus } from 'react-icons/fa';
 import { useCart } from '../../context/cartContext';
 import './Cart.css';
-
-// Paso 1: Importar el hook useNavigate de react-router-dom
 import { useNavigate } from 'react-router-dom';
 
-// Componente para el icono del carrito en el header
 export const CartIcon = () => {
   const { getTotalItems, toggleCart } = useCart();
   const totalItems = getTotalItems();
@@ -27,17 +23,35 @@ export const CartIcon = () => {
   );
 };
 
-// Componente para cada item del carrito
 const CartItem = ({ item }) => {
   const { updateQuantity, removeFromCart } = useCart();
   const [showRemoveAlert, setShowRemoveAlert] = useState(false);
 
+  const currentQuantity = parseInt(item.quantity, 10) || 1;
+
+  const rawPrice = item.precio_oferta || item.precio_unitario;
+  const displayPrice = rawPrice ? parseFloat(rawPrice) : 0;
+  const subtotal = displayPrice * currentQuantity;
+
   const handleQuantityChange = (newQuantity) => {
-    if (newQuantity <= 0) {
+    const parsedQuantity = typeof newQuantity === 'number'
+      ? newQuantity
+      : parseInt(newQuantity, 10);
+
+    if (isNaN(parsedQuantity) || parsedQuantity <= 0) {
       handleRemove();
-    } else {
-      updateQuantity(item.id, Math.min(newQuantity, item.stock));
+      return;
     }
+
+    const maxStock = parseInt(item.stock, 10) || 999;
+    const finalQuantity = Math.min(parsedQuantity, maxStock);
+
+    if (isNaN(finalQuantity)) {
+      console.error("Error calculando cantidad final:", { parsedQuantity, stock: item.stock, maxStock });
+      return;
+    }
+
+    updateQuantity(item.id, finalQuantity);
   };
 
   const handleRemove = () => {
@@ -48,14 +62,12 @@ const CartItem = ({ item }) => {
     }, 300);
   };
 
-  const subtotal = item.price * item.quantity;
-
   return (
     <div className={`cart-item ${showRemoveAlert ? 'removing' : ''}`}>
       <div className="cart-item-image">
-        <img 
-          src={item.image || item.images?.[0]} 
-          alt={item.name}
+        <img
+          src={item.imagen_principal}
+          alt={item.name || item.nombre}
           onError={(e) => {
             e.target.src = 'https://via.placeholder.com/85x85/f8f9fa/dee2e6?text=Imagen';
           }}
@@ -63,45 +75,56 @@ const CartItem = ({ item }) => {
       </div>
 
       <div className="cart-item-details">
-        <h6 className="cart-item-name">{item.name}</h6>
-        
+        <h6 className="cart-item-name">{item.nombre}</h6>
+
         <div className="cart-item-price">
-          <span className="current-price">S/ {item.price.toFixed(2)}</span>
+          <span className="current-price">S/ {displayPrice.toFixed(2)}</span>
         </div>
 
         <div className="cart-item-controls">
           <div className="quantity-controls">
-            <Button 
-              variant="outline-secondary" 
+            <Button
+              variant="outline-secondary"
               size="sm"
-              onClick={() => handleQuantityChange(item.quantity - 1)}
-              disabled={item.quantity <= 1}
+              onClick={() => handleQuantityChange(currentQuantity - 1)}
+              disabled={currentQuantity <= 1}
             >
               <FaMinus />
             </Button>
-            
+
             <Form.Control
               type="number"
-              value={item.quantity}
-              onChange={(e) => handleQuantityChange(parseInt(e.target.value) || 1)}
+              value={currentQuantity}
+              onChange={(e) => {
+                const value = e.target.value;
+                if (value !== '' && value !== null) {
+                  handleQuantityChange(value);
+                }
+              }}
+              onBlur={(e) => {
+                const value = parseInt(e.target.value, 10);
+                if (isNaN(value) || value < 1) {
+                  handleQuantityChange(1);
+                }
+              }}
               min="1"
               max={item.stock}
               className="quantity-input"
               size="sm"
             />
-            
-            <Button 
-              variant="outline-secondary" 
+
+            <Button
+              variant="outline-secondary"
               size="sm"
-              onClick={() => handleQuantityChange(item.quantity + 1)}
-              disabled={item.quantity >= item.stock}
+              onClick={() => handleQuantityChange(currentQuantity + 1)}
+              disabled={currentQuantity >= item.stock}
             >
               <FaPlus />
             </Button>
           </div>
 
-          <Button 
-            variant="link" 
+          <Button
+            variant="link"
             className="remove-btn"
             onClick={handleRemove}
             title="Eliminar producto"
@@ -114,7 +137,7 @@ const CartItem = ({ item }) => {
           <strong>S/ {subtotal.toFixed(2)}</strong>
         </div>
 
-        {item.quantity >= item.stock && (
+        {currentQuantity >= item.stock && (
           <div className="stock-warning">
             <small style={{ color: '#856404', fontSize: '0.8rem' }}>
               Stock máximo: {item.stock} unidades
@@ -126,20 +149,16 @@ const CartItem = ({ item }) => {
   );
 };
 
-// Componente principal del carrito (sidebar)
 const Cart = () => {
   const { cartItems, isCartOpen, toggleCart, getTotalItems, getTotalPrice, clearCart } = useCart();
-  
-  // Paso 2: Inicializar el hook para obtener la función de navegación
   const navigate = useNavigate();
 
   const totalItems = getTotalItems();
   const totalPrice = getTotalPrice();
 
   const handleCheckout = () => {
-    // ¡Ahora 'navigate' existe y funcionará!
     navigate('/checkout');
-    toggleCart(); // Cierra el carrito después de navegar
+    toggleCart();
   };
 
   const handleClearCart = () => {
@@ -150,15 +169,15 @@ const Cart = () => {
 
   return (
     <>
-      <div 
+      <div
         className={`cart-overlay ${isCartOpen ? 'active' : ''}`}
         onClick={toggleCart}
       />
-      
-      <Offcanvas 
-        show={isCartOpen} 
-        onHide={toggleCart} 
-        placement="end" 
+
+      <Offcanvas
+        show={isCartOpen}
+        onHide={toggleCart}
+        placement="end"
         className="cart-sidebar"
         backdrop={false}
       >
@@ -167,7 +186,7 @@ const Cart = () => {
             <FaShoppingCart />
             <span>Tu Carrito</span>
             {totalItems > 0 && (
-              <Badge bg="" pill className="ms-2" style={{ color: '#000',backgroundColor:'#d7ad44',borderColor:'#8b6914' }}>
+              <Badge bg="" pill className="ms-2" style={{ color: '#000', backgroundColor: '#d7ad44', borderColor: '#8b6914' }}>
                 {totalItems}
               </Badge>
             )}
@@ -185,11 +204,11 @@ const Cart = () => {
               </div>
               <h5>Tu carrito está vacío</h5>
               <p>Descubre nuestros productos ecológicos y sostenibles</p>
-              <Button 
-                variant="primary" 
+              <Button
+                variant="primary"
                 onClick={() => {
                   toggleCart();
-                  navigate('/productos'); // También puedes usar navigate aquí
+                  navigate('/productos');
                 }}
               >
                 Explorar Productos
@@ -199,8 +218,8 @@ const Cart = () => {
             <div className="cart-content">
               {cartItems.length > 2 && (
                 <div className="cart-actions">
-                  <Button 
-                    variant="outline-danger" 
+                  <Button
+                    variant="outline-danger"
                     size="sm"
                     onClick={handleClearCart}
                     className="clear-cart-btn"
@@ -228,9 +247,9 @@ const Cart = () => {
                     <span>S/ {totalPrice.toFixed(2)}</span>
                   </div>
                 </div>
-                
-                <Button 
-                  variant="primary" 
+
+                <Button
+                  variant="primary"
                   className="checkout-btn"
                   onClick={handleCheckout}
                 >
