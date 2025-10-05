@@ -261,7 +261,7 @@ class PasswordResetConfirmView(generics.GenericAPIView):
 class GoogleLogin(SocialLoginView):
     adapter_class = GoogleOAuth2Adapter
     client_class = OAuth2Client
-    callback_url = "http://127.0.0.1:8000/api/auth/google/callback/"
+    callback_url = "http://localhost:5173"
 
     def post(self, request, *args, **kwargs):
         response = super().post(request, *args, **kwargs)

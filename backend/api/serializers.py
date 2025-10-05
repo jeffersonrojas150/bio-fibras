@@ -132,12 +132,13 @@ class CarritoSerializer(serializers.ModelSerializer):
         return obj.cantidad * precio
 
     def validate(self, data):
-        producto = Producto.objects.get(id=data['producto_id'])
-        
-        if data['cantidad'] > producto.stock:
-            raise serializers.ValidationError(
-                f"La cantidad solicitada ({data['cantidad']}) supera el stock disponible ({producto.stock})."
-            )
+        if 'producto_id' in data:
+            producto = Producto.objects.get(id=data['producto_id'])
+            
+            if data['cantidad'] > producto.stock:
+                raise serializers.ValidationError(
+                    f"La cantidad solicitada ({data['cantidad']}) supera el stock disponible ({producto.stock})."
+                )
         return data
 
     def create(self, validated_data):

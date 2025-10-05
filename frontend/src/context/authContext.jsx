@@ -67,6 +67,43 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
+    // Nueva función para el login con Google
+  const loginWithGoogle = async (code) => {
+    try {
+      // 1. Hacemos la petición POST a nuestro endpoint de Django
+      const response = await apiClient.post('/auth/google/', {
+        code: code,
+      });
+
+      // 2. Django nos devuelve nuestros propios tokens JWT
+      const { access, refresh } = response.data;
+
+      // 3. Guardamos los tokens en localStorage
+      localStorage.setItem('access_token', access);
+      localStorage.setItem('refresh_token', refresh);
+      
+      // 4. Actualizamos el interceptor de apiClient para usar el nuevo token
+      //    (Aunque el interceptor lo hace en la siguiente petición,
+      //    es buena práctica actualizarlo explícitamente si es necesario)
+      apiClient.defaults.headers.common['Authorization'] = `Bearer ${access}`;
+
+
+      // 5. Obtenemos el perfil del usuario para actualizar el estado
+      const userProfileResponse = await apiClient.get('/auth/perfil/');
+      const userData = userProfileResponse.data;
+
+      setUser(userData);
+      setIsAuthenticated(true);
+      localStorage.setItem('user', JSON.stringify(userData));
+
+    } catch (error) {
+      console.error('Error en el login con Google:', error.response?.data || error);
+      // Limpiamos cualquier token residual si falla la autenticación
+      logout(); 
+      throw error; // Lanzamos el error para que el componente lo maneje si es necesario
+    }
+  };
+
   //  Función de registro conectada a la API
   const register = async (userData) => {
     try {
@@ -111,6 +148,7 @@ export const AuthProvider = ({ children }) => {
     register,
     logout,
     updateUser,
+    loginWithGoogle,
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

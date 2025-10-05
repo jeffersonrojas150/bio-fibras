@@ -1,5 +1,6 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import React from 'react';
+import { GoogleOAuthProvider } from '@react-oauth/google';
 
 // Importar páginas
 import Home from './pages/Home/Home';
@@ -16,67 +17,69 @@ import Cart from './components/Cart/Cart';
 import Checkout from './components/Checkout/Checkout';
 import OrderConfirmation from './pages/Orders/OrderConfirmation';
 import { OrderProvider } from './context/orderContext';
-import { AuthProvider } from './context/authContext'; 
-import MyOrders from './pages/Orders/MyOrders'; 
+import { AuthProvider } from './context/authContext';
+import MyOrders from './pages/Orders/MyOrders';
 import { FavoritesProvider } from './context/favoritesContext';
 import Favorites from './pages/Favorites/Favorites';
+
 import './App.css';
+
+const GOOGLE_CLIENT_ID = "876707612320-et00ma5g32t9a4op91mp4ajobbgrukeg.apps.googleusercontent.com";
 
 function App() {
   return (
     <div className="App">
-      {/*  Envolver todo con AuthProvider */}
+      {/* Envolver todo con AuthProvider */}
       <AuthProvider>
-        
-        <CartProvider>
+        {/* Google OAuth Provider para login con Google */}
+        <GoogleOAuthProvider clientId={GOOGLE_CLIENT_ID}>
+          {/* Contextos globales */}
           <FavoritesProvider>
-          <OrderProvider>
-            <Router>
-              {/* Header fuera de las rutas */}
-              <Header />
-                         
-              {/* Contenido principal */}
-              <main id="page-content">
-                <Routes>
-                  <Route path="/" element={<Home />} />
-                  <Route path="/productos" element={<Products />} />
-                  <Route path="/producto/:slug" element={<ProductDetail />} />
-                  <Route path="/categorias" element={<Categories />} />
-                  <Route path="/productos/categoria/:slug" element={<Products />} />
-                                 
-                  <Route path="/login" element={<LoginForm />} />
-                  <Route path="/registro" element={<RegisterForm />} />
-                  <Route path="/recuperar-password" element={<ForgotPasswordForm />} />
-                  <Route path="/checkout" element={<Checkout />} />
-                  <Route path="/order-confirmation" element={<OrderConfirmation />} />
-                  
-                  
-                  <Route path="/mis-ordenes" element={<MyOrders />} />
-                  <Route path="/favoritos" element={<Favorites />} />
-                                 
-                  {/* Rutas adicionales que puedes implementar */}
-                  {/* <Route path="/nosotros" element={<About />} /> */}
-                  {/* <Route path="/contacto" element={<Contact />} /> */}
-                  {/* <Route path="/terminos" element={<Terms />} /> */}
-                  {/* <Route path="/privacidad" element={<Privacy />} /> */}
-                  {/* <Route path="/mi-perfil" element={<MyProfile />} /> */}
-                  {/* <Route path="/favoritos" element={<Favorites />} /> */}
-                                 
-                  {/* Ruta 404 - Página no encontrada */}
-                  {/* <Route path="*" element={<NotFound />} /> */}
-                </Routes>
-              </main>
-                         
-              {/* Footer fuera del main, después de las rutas */}
-              <Footer />
-                         
-              <Cart />
-            </Router>
-          </OrderProvider>
+            <CartProvider>
+              <OrderProvider>
+                <Router>
+                  {/* Header fuera de las rutas */}
+                  <Header />
+
+                  {/* Contenido principal */}
+                  <main id="page-content">
+                    <Routes>
+                      <Route path="/" element={<Home />} />
+                      <Route path="/productos" element={<Products />} />
+                      <Route path="/producto/:slug" element={<ProductDetail />} />
+                      <Route path="/categorias" element={<Categories />} />
+                      <Route path="/productos/categoria/:slug" element={<Products />} />
+
+                      <Route path="/login" element={<LoginForm />} />
+                      <Route path="/registro" element={<RegisterForm />} />
+                      <Route path="/recuperar-password" element={<ForgotPasswordForm />} />
+                      <Route path="/checkout" element={<Checkout />} />
+                      <Route path="/order-confirmation" element={<OrderConfirmation />} />
+
+                      <Route path="/mis-ordenes" element={<MyOrders />} />
+                      <Route path="/favoritos" element={<Favorites />} />
+
+                      {/* Rutas adicionales (puedes habilitarlas luego) */}
+                      {/* <Route path="/nosotros" element={<About />} /> */}
+                      {/* <Route path="/contacto" element={<Contact />} /> */}
+                      {/* <Route path="/terminos" element={<Terms />} /> */}
+                      {/* <Route path="/privacidad" element={<Privacy />} /> */}
+                      {/* <Route path="/mi-perfil" element={<MyProfile />} /> */}
+                      {/* <Route path="*" element={<NotFound />} /> */}
+                    </Routes>
+                  </main>
+
+                  {/* Footer fuera del main */}
+                  <Footer />
+
+                  {/* Carrito flotante */}
+                  <Cart />
+                </Router>
+              </OrderProvider>
+            </CartProvider>
           </FavoritesProvider>
-        </CartProvider>
-      
-    </AuthProvider>
+        </GoogleOAuthProvider>
+      </AuthProvider>
     </div>
   );
 }
