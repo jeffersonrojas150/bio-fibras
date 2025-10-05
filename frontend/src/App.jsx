@@ -1,65 +1,71 @@
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import React from 'react';
-import { GoogleOAuthProvider } from '@react-oauth/google';
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import React from "react";
+import { GoogleOAuthProvider } from "@react-oauth/google";
 
 // Importar páginas
-import Home from './pages/Home/Home';
-import Products from './pages/Products/Products';
-import ProductDetail from './pages/ProductDetail/ProductDetail';
-import Categories from './pages/Categories/Categories';
-import { LoginForm, RegisterForm, ForgotPasswordForm } from './components/auth';
+import Home from "./pages/Home/Home";
+import Products from "./pages/Products/Products";
+import ProductDetail from "./pages/ProductDetail/ProductDetail";
+import Categories from "./pages/Categories/Categories";
+import { LoginForm, RegisterForm, ForgotPasswordForm } from "./components/auth";
 
-import Header from './components/common/Layout/Header';
-import Footer from './components/common/Layout/Footer';
+import Header from "./components/common/Layout/Header";
+import Footer from "./components/common/Layout/Footer";
 
-import { CartProvider } from './context/cartContext';
-import Cart from './components/Cart/Cart';
-import Checkout from './components/Checkout/Checkout';
-import OrderConfirmation from './pages/Orders/OrderConfirmation';
-import { OrderProvider } from './context/orderContext';
-import { AuthProvider } from './context/authContext';
-import MyOrders from './pages/Orders/MyOrders';
-import { FavoritesProvider } from './context/favoritesContext';
-import Favorites from './pages/Favorites/Favorites';
+import { CartProvider } from "./context/cartContext";
+import Cart from "./components/Cart/Cart";
+import Checkout from "./components/Checkout/Checkout";
+import OrderConfirmation from "./pages/Orders/OrderConfirmation";
+import { OrderProvider } from "./context/orderContext";
+import { AuthProvider } from "./context/authContext";
+import MyOrders from "./pages/Orders/MyOrders";
+import { FavoritesProvider } from "./context/favoritesContext";
+import Favorites from "./pages/Favorites/Favorites";
 
-import './App.css';
+import "./App.css";
 
-const GOOGLE_CLIENT_ID = "876707612320-et00ma5g32t9a4op91mp4ajobbgrukeg.apps.googleusercontent.com";
+const GOOGLE_CLIENT_ID =
+  "876707612320-et00ma5g32t9a4op91mp4ajobbgrukeg.apps.googleusercontent.com";
 
 function App() {
   return (
     <div className="App">
-      {/* Envolver todo con AuthProvider */}
+      {/* AuthProvider maneja login, tokens y refresh */}
       <AuthProvider>
-        {/* Google OAuth Provider para login con Google */}
         <GoogleOAuthProvider clientId={GOOGLE_CLIENT_ID}>
-          {/* Contextos globales */}
           <FavoritesProvider>
             <CartProvider>
               <OrderProvider>
                 <Router>
-                  {/* Header fuera de las rutas */}
                   <Header />
 
-                  {/* Contenido principal */}
                   <main id="page-content">
                     <Routes>
                       <Route path="/" element={<Home />} />
                       <Route path="/productos" element={<Products />} />
                       <Route path="/producto/:slug" element={<ProductDetail />} />
                       <Route path="/categorias" element={<Categories />} />
-                      <Route path="/productos/categoria/:slug" element={<Products />} />
+                      <Route
+                        path="/productos/categoria/:slug"
+                        element={<Products />}
+                      />
 
                       <Route path="/login" element={<LoginForm />} />
                       <Route path="/registro" element={<RegisterForm />} />
-                      <Route path="/recuperar-password" element={<ForgotPasswordForm />} />
+                      <Route
+                        path="/recuperar-password"
+                        element={<ForgotPasswordForm />}
+                      />
                       <Route path="/checkout" element={<Checkout />} />
-                      <Route path="/order-confirmation" element={<OrderConfirmation />} />
+                      <Route
+                        path="/order-confirmation"
+                        element={<OrderConfirmation />}
+                      />
 
                       <Route path="/mis-ordenes" element={<MyOrders />} />
                       <Route path="/favoritos" element={<Favorites />} />
 
-                      {/* Rutas adicionales (puedes habilitarlas luego) */}
+                      {/* futuras rutas */}
                       {/* <Route path="/nosotros" element={<About />} /> */}
                       {/* <Route path="/contacto" element={<Contact />} /> */}
                       {/* <Route path="/terminos" element={<Terms />} /> */}
@@ -69,10 +75,7 @@ function App() {
                     </Routes>
                   </main>
 
-                  {/* Footer fuera del main */}
                   <Footer />
-
-                  {/* Carrito flotante */}
                   <Cart />
                 </Router>
               </OrderProvider>
