@@ -1,7 +1,7 @@
 from django.db import models
 from django.conf import settings
 import time, random
-from .email_service import enviar_correo_actualizacion_estado
+from .email_service import enviar_correo_actualizacion_estado, enviar_correo_orden_cancelada
 
 # =================================================================
 # 🏷️ TABLA: CATEGORIA
@@ -181,6 +181,8 @@ class Orden(models.Model):
     
     cantidad_compra = models.PositiveIntegerField(verbose_name="Total de productos en la orden")
     comprobante_envio = models.ImageField(upload_to='comprobantes/', null=True, blank=True, verbose_name="Imagen del comprobante de envío")
+
+    recordatorio_enviado = models.BooleanField(default=False, verbose_name="¿Recordatorio de pago enviado?")
     
     fecha_creacion = models.DateTimeField(auto_now_add=True, verbose_name="Fecha de creación")
     fecha_actualizacion = models.DateTimeField(auto_now=True, verbose_name="Última actualización")
@@ -200,10 +202,16 @@ class Orden(models.Model):
 
         super().save(*args, **kwargs)
 
-        if not is_new:
-            if (self.estado_pago != estado_pago_anterior or self.estado_orden != estado_orden_anterior):
-                print("¡El estado de la orden ha cambiado! Enviando correo...")
-                enviar_correo_actualizacion_estado(self)
+        if not is_new and estado_pago_anterior is not None:
+            hubo_cambio_estado = (self.estado_pago != estado_pago_anterior or self.estado_orden != estado_orden_anterior)
+            
+            if hubo_cambio_estado:
+                print("¡El estado de la orden ha cambiado! Decidiendo qué correo enviar...")
+                
+                if self.estado_pago == self.EstadoPago.CANCELADO:
+                    enviar_correo_orden_cancelada(self)
+                else:
+                    enviar_correo_actualizacion_estado(self)
 
     def __str__(self):
         return f"Orden #{self.numero_orden} de {self.usuario.username if self.usuario else 'Usuario Eliminado'}"
