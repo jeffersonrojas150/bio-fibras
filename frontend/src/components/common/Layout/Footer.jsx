@@ -105,6 +105,9 @@ const Footer = () => {
                 </Link>
               </li>
               <li>
+                <Link to="/contacto" className="text-dark">Contacto</Link>
+              </li>
+              <li>
                 <Link to="/terminos" className="footer-link">
                   Términos y Condiciones
                 </Link>

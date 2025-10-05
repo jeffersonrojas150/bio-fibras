@@ -134,3 +134,37 @@ def enviar_correo_password_reset(request, usuario, token, uid):
     except Exception as e:
         print(f"ERROR al enviar correo de restablecimiento a {usuario.email}: {e}")
         return False
+
+def enviar_correo_contacto(name, email, subject, message):
+    """
+    Envía el contenido del formulario de contacto al correo del administrador.
+    """
+    try:
+        admin_email = "bio.fibras.j@gmail.com"
+        
+        asunto_correo = f"Nuevo Mensaje de Contacto: {subject}"
+        
+        contexto = {
+            'nombre_remitente': name,
+            'email_remitente': email,
+            'asunto_mensaje': subject,
+            'cuerpo_mensaje': message,
+        }
+
+        mensaje_texto = render_to_string('emails/contacto.txt', contexto)
+        mensaje_html = render_to_string('emails/contacto.html', contexto)
+
+        send_mail(
+            asunto_correo,
+            mensaje_texto,
+            settings.DEFAULT_FROM_EMAIL,
+            [admin_email],
+            fail_silently=False,
+            html_message=mensaje_html
+        )
+        print(f"Correo de contacto de '{email}' enviado exitosamente a '{admin_email}'.")
+        return True
+
+    except Exception as e:
+        print(f"ERROR al enviar correo de contacto de '{email}': {e}")
+        return False

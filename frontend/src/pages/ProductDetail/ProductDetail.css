@@ -479,6 +479,7 @@
   font-weight: 300;
   color: #666666;
   line-height: 1.7;
+  white-space: pre-line;
 }
 
 .shipping-info {

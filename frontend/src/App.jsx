@@ -7,6 +7,7 @@ import Home from "./pages/Home/Home";
 import Products from "./pages/Products/Products";
 import ProductDetail from "./pages/ProductDetail/ProductDetail";
 import Categories from "./pages/Categories/Categories";
+import Contact from "./pages/Contact/Contact";
 import { LoginForm, RegisterForm, ForgotPasswordForm, ResetPasswordForm } from "./components/auth";
 
 import Header from "./components/common/Layout/Header";
@@ -50,6 +51,7 @@ function App() {
 
                       {/* Ruta para la página de productos con un filtro de categoría */}
                       <Route path="/productos/categoria/:categorySlug" element={<Products />} />
+                      <Route path="/contacto" element={<Contact />} />
 
                       <Route path="/login" element={<LoginForm />} />
                       <Route path="/registro" element={<RegisterForm />} />

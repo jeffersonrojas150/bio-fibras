@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Nuevo Mensaje de Contacto</title>
+    <style>
+        body { font-family: sans-serif; color: #333; }
+        .container { max-width: 600px; margin: auto; border: 1px solid #ddd; padding: 20px; }
+        .header { background-color: #f2f2f2; padding: 10px; text-align: center; }
+        .content { padding: 20px 0; }
+        .field { margin-bottom: 10px; }
+        .field strong { color: #555; }
+        .message-box { background-color: #f9f9f9; border: 1px solid #eee; padding: 15px; margin-top: 15px; white-space: pre-wrap; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h3>Nuevo Mensaje desde el Formulario de Contacto</h3>
+        </div>
+        <div class="content">
+            <div class="field"><strong>De:</strong> {{ nombre_remitente }}</div>
+            <div class="field"><strong>Email:</strong> {{ email_remitente }}</div>
+            <div class="field"><strong>Asunto:</strong> {{ asunto_mensaje }}</div>
+            <hr>
+            <p><strong>Mensaje:</strong></p>
+            <div class="message-box">
+                {{ cuerpo_mensaje }}
+            </div>
+        </div>
+    </div>
+</body>
+</html>

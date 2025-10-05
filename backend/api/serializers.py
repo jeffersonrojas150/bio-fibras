@@ -226,3 +226,16 @@ class PasswordResetConfirmSerializer(serializers.Serializer):
         if data['password'] != data['password2']:
             raise serializers.ValidationError({"password": "Las contraseñas no coinciden."})
         return data
+
+class ContactFormSerializer(serializers.Serializer):
+    """
+    Serializer para el formulario de contacto.
+    Valida los datos de entrada del formulario.
+    """
+    name = serializers.CharField(max_length=100, required=True)
+    email = serializers.EmailField(required=True)
+    subject = serializers.CharField(max_length=150, required=True)
+    message = serializers.CharField(required=True)
+
+    class Meta:
+        fields = ['name', 'email', 'subject', 'message']

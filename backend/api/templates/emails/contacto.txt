@@ -1,0 +1,11 @@
+Nuevo Mensaje desde el Formulario de Contacto
+============================================
+
+De: {{ nombre_remitente }}
+Email: {{ email_remitente }}
+Asunto: {{ asunto_mensaje }}
+
+--------------------------------------------
+Mensaje:
+--------------------------------------------
+{{ cuerpo_mensaje }}

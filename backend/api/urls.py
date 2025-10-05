@@ -18,6 +18,7 @@ from .views import (
     OrdenDetailView,
     PasswordResetRequestView,
     PasswordResetConfirmView,
+    ContactFormView,
 )
 
 router = routers.DefaultRouter()
@@ -33,6 +34,8 @@ urlpatterns = [
 
     path('auth/password-reset-request/', PasswordResetRequestView.as_view(), name='password-reset-request'),
     path('auth/password-reset-confirm/<uidb64>/<token>/', PasswordResetConfirmView.as_view(), name='password-reset-confirm'),
+
+    path('contacto/', ContactFormView.as_view(), name='contacto'),
 
     path('productos/', ProductoListView.as_view(), name='lista-productos'),
     path('productos/<slug:slug>/', ProductoDetailView.as_view(), name='detalle-producto'),
