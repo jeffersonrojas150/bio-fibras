@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <title>Tu Pedido ha sido Cancelado</title>
+    <style>
+        body { font-family: Arial, sans-serif; color: #333; }
+        .container { max-width: 600px; margin: auto; border: 1px solid #ddd; padding: 20px; }
+        .header { text-align: center; border-bottom: 1px solid #ddd; padding-bottom: 20px; margin-bottom: 20px; }
+        .alert-box { background-color: #f8d7da; border-left: 4px solid #f5c6cb; padding: 15px; margin-top: 20px; }
+        .button { background-color: #007bff; color: white !important; padding: 10px 20px; text-decoration: none; border-radius: 5px; display: inline-block; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h2>Aviso de Cancelación de Pedido</h2>
+        </div>
+
+        <p>Hola {{ usuario.first_name|default:usuario.username }},</p>
+        <p>Te informamos que tu pedido <strong>#{{ orden.numero_orden }}</strong> ha sido cancelado.</p>
+        
+        <div class="alert-box">
+            <h4>Motivo de la Cancelación</h4>
+            <p>
+                Esta cancelación se ha producido automáticamente debido a que no se recibió la confirmación del pago dentro del plazo de 3 días.
+            </p>
+            <p>
+                Si ya realizaste el pago y crees que esto es un error, por favor, contáctanos de inmediato a través de WhatsApp para solucionarlo.
+            </p>
+        </div>
+        
+        <p style="margin-top: 20px;">
+            ¡No te preocupes! El stock de los productos ha sido restaurado y puedes volver a realizar tu compra cuando lo desees.
+        </p>
+        <div style="text-align: center; margin-top: 20px;">
+            <a href="http://localhost:5173/productos" class="button">Volver a la Tienda</a>
+        </div>
+    </div>
+</body>
+</html>

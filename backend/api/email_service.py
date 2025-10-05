@@ -168,3 +168,67 @@ def enviar_correo_contacto(name, email, subject, message):
     except Exception as e:
         print(f"ERROR al enviar correo de contacto de '{email}': {e}")
         return False
+    
+def enviar_correo_recordatorio_pago(orden):
+    """
+    Envía un correo de recordatorio al cliente si su orden sigue pendiente de pago.
+    """
+    try:
+        asunto = f"Recordatorio de pago para tu pedido #{orden.numero_orden}"
+        
+        contexto = {
+            'orden': orden,
+            'usuario': orden.usuario,
+        }
+    
+        mensaje_texto = render_to_string('emails/recordatorio_pago.txt', contexto)
+        mensaje_html = render_to_string('emails/recordatorio_pago.html', contexto)
+
+        destinatario = orden.usuario.email
+    
+        send_mail(
+            asunto,
+            mensaje_texto,
+            settings.DEFAULT_FROM_EMAIL,
+            [destinatario],
+            fail_silently=False,
+            html_message=mensaje_html
+        )
+        print(f"Correo de recordatorio de pago enviado para la orden #{orden.numero_orden}")
+        return True
+
+    except Exception as e:
+        print(f"ERROR al enviar correo de recordatorio para la orden #{orden.numero_orden}: {e}")
+        return False
+
+def enviar_correo_orden_cancelada(orden):
+    """
+    Envía un correo de notificación al cliente cuando su orden es cancelada.
+    """
+    try:
+        asunto = f"Tu pedido #{orden.numero_orden} ha sido cancelado"
+        
+        contexto = {
+            'orden': orden,
+            'usuario': orden.usuario,
+        }
+    
+        mensaje_texto = render_to_string('emails/orden_cancelada.txt', contexto)
+        mensaje_html = render_to_string('emails/orden_cancelada.html', contexto)
+
+        destinatario = orden.usuario.email
+    
+        send_mail(
+            asunto,
+            mensaje_texto,
+            settings.DEFAULT_FROM_EMAIL,
+            [destinatario],
+            fail_silently=False,
+            html_message=mensaje_html
+        )
+        print(f"Correo de cancelación de orden enviado para la orden #{orden.numero_orden}")
+        return True
+
+    except Exception as e:
+        print(f"ERROR al enviar correo de cancelación para la orden #{orden.numero_orden}: {e}")
+        return False

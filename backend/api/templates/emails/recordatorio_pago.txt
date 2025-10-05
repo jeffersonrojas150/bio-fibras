@@ -1,0 +1,16 @@
+Hola {{ usuario.first_name|default:usuario.username }},
+
+¡No olvides tu pedido de Bio-Fibras!
+
+Te escribimos para recordarte que tu pedido #{{ orden.numero_orden }} todavía está pendiente de pago.
+
+==================================
+¿NECESITAS AYUDA O YA PAGASTE?
+==================================
+Si ya realizaste el pago, por favor envíanos el comprobante para poder procesar tu orden. Si tienes alguna duda o problema, no dudes en contactarnos a través de WhatsApp.
+
+Puedes usar este enlace: https://wa.me/51910881837?text=Hola,%20tengo%20una%20consulta%20sobre%20mi%20pedido%20%23{{ orden.numero_orden }}
+
+Recuerda que las órdenes que no se pagan en un plazo de 3 días son canceladas automáticamente para liberar el stock.
+
+¡Esperamos poder preparar tu pedido pronto!

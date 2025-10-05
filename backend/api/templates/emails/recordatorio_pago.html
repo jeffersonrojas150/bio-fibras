@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <title>Recordatorio de Pago</title>
+    <style>
+        body { font-family: Arial, sans-serif; color: #333; }
+        .container { max-width: 600px; margin: auto; border: 1px solid #ddd; padding: 20px; }
+        .header { text-align: center; border-bottom: 1px solid #ddd; padding-bottom: 20px; margin-bottom: 20px; }
+        .alert-box { background-color: #fff3cd; border-left: 4px solid #ffeeba; padding: 15px; margin-top: 20px; }
+        .button { background-color: #25D366; color: white !important; padding: 10px 20px; text-decoration: none; border-radius: 5px; display: inline-block; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h2>¡No olvides tu pedido de Bio-Fibras!</h2>
+        </div>
+
+        <p>Hola {{ usuario.first_name|default:usuario.username }},</p>
+        <p>Te escribimos para recordarte que tu pedido <strong>#{{ orden.numero_orden }}</strong> todavía está pendiente de pago.</p>
+        
+        <div class="alert-box">
+            <h4>¿Necesitas ayuda o ya realizaste el pago?</h4>
+            <p>Si ya pagaste, por favor envíanos el comprobante para poder procesar tu orden. Si tienes alguna duda o problema, no dudes en contactarnos.</p>
+            <a href="https://wa.me/51910881837?text=Hola,%20tengo%20una%20consulta%20sobre%20mi%20pedido%20%23{{ orden.numero_orden }}" class="button">Contactar por WhatsApp</a>
+        </div>
+        
+        <p style="margin-top: 20px;">Recuerda que las órdenes que no se pagan en un plazo de 3 días son canceladas automáticamente para liberar el stock.</p>
+        <p>¡Esperamos poder preparar tu pedido pronto!</p>
+    </div>
+</body>
+</html>
