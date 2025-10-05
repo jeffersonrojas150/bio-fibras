@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import AuthLayout from './AuthLayout';
+import apiClient from '../../api';
 
 
 const ForgotPasswordForm = () => {
@@ -13,12 +14,13 @@ const ForgotPasswordForm = () => {
     e.preventDefault();
     setIsLoading(true);
     setError('');
-    
+
     try {
-      await authService.forgotPassword(email);
+      await apiClient.post('/auth/password-reset-request/', { email });
       setSuccess(true);
     } catch (error) {
-      setError('Error al enviar el correo de recuperación');
+      console.error("Error al solicitar el reseteo de contraseña:", err);
+      setError('Ocurrió un error inesperado. Por favor, intenta de nuevo más tarde.');
     } finally {
       setIsLoading(false);
     }
@@ -29,9 +31,14 @@ const ForgotPasswordForm = () => {
       <AuthLayout title="Correo Enviado" subtitle="Revisa tu bandeja de entrada">
         <div className="auth-success">
           <div className="success-icon">✉️</div>
-          <p>Hemos enviado un enlace de recuperación a <strong>{email}</strong></p>
-          <p>Revisa tu correo electrónico y sigue las instrucciones para restablecer tu contraseña.</p>
-          
+          <p>
+            Si existe una cuenta asociada a <strong>{email}</strong>, hemos enviado un correo
+            con las instrucciones para restablecer tu contraseña.
+          </p>
+          <p>
+            Si no lo encuentras, por favor revisa tu carpeta de spam.
+          </p>
+
           <div className="auth-footer">
             <Link to="/login" className="auth-button primary">
               Volver al inicio de sesión
@@ -46,11 +53,11 @@ const ForgotPasswordForm = () => {
     <AuthLayout title="Recuperar Contraseña" subtitle="Te ayudamos a recuperar tu cuenta">
       <form onSubmit={handleSubmit} className="auth-form">
         {error && <div className="auth-error">{error}</div>}
-        
+
         <p className="forgot-password-description">
           Ingresa tu correo electrónico y te enviaremos un enlace para restablecer tu contraseña.
         </p>
-        
+
         <div className="auth-input-group">
           <input
             type="email"
@@ -64,8 +71,8 @@ const ForgotPasswordForm = () => {
           />
         </div>
 
-        <button 
-          type="submit" 
+        <button
+          type="submit"
           disabled={isLoading || !email}
           className="auth-button primary"
         >

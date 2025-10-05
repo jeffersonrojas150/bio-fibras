@@ -1,219 +1,207 @@
-import React, { useState } from 'react';
-import { Container, Row, Col, Card, Button, Alert, Spinner } from 'react-bootstrap';
-import { FaShoppingCart, FaLock, FaArrowLeft } from 'react-icons/fa';
+// src/components/Checkout/Checkout.jsx
+
+import React, { useState, useEffect } from 'react';
+import { Container, Row, Col, Card, Button, Alert, Spinner, Form, Badge } from 'react-bootstrap';
+import { FaShoppingCart, FaArrowRight } from 'react-icons/fa';
 import { useCart } from '../../context/cartContext';
-import { useNavigate } from 'react-router-dom';
-import CheckoutForm from './CheckoutForm';
+import { useNavigate, Link } from 'react-router-dom';
+import apiClient from '../../api';
 import OrderSummary from './OrderSummary';
 import PaymentMethods from './PaymentMethods';
+import AddressForm from './AddressForm'; // Importamos el nuevo formulario
 import './Checkout.css';
 
 const Checkout = () => {
-  const { cartItems, getTotalPrice, clearCart } = useCart();
+  const { cartItems, getTotalPrice, clearCartLocal } = useCart();
   const navigate = useNavigate();
-  
+
   const [currentStep, setCurrentStep] = useState(1);
   const [isProcessing, setIsProcessing] = useState(false);
-  const [formData, setFormData] = useState({
-    // Datos de envío
-    firstName: '',
-    lastName: '',
-    email: '',
-    phone: '',
-    address: '',
-    district: '',
-    city: 'Lima',
-    zipCode: '',
-    // Datos de facturación
-    billingSame: true,
-    billingFirstName: '',
-    billingLastName: '',
-    billingAddress: '',
-    billingDistrict: '',
-    billingCity: 'Lima',
-    billingZipCode: '',
-    // Pago
-    paymentMethod: 'card',
-    cardNumber: '',
-    expiryDate: '',
-    cvv: '',
-    cardName: '',
-    // Notas
-    orderNotes: ''
-  });
+  const [error, setError] = useState('');
+
+  const [addresses, setAddresses] = useState([]);
+  const [loadingAddresses, setLoadingAddresses] = useState(true);
+  const [selectedAddressId, setSelectedAddressId] = useState(null);
+  const [paymentMethod, setPaymentMethod] = useState('transferencia');
 
   const totalPrice = getTotalPrice();
-  const shipping = totalPrice > 100 ? 0 : 15; // Envío gratis por compras mayores a S/100
-  const finalTotal = totalPrice + shipping;
+  const shipping = 0;
+  const finalTotal = totalPrice;
 
-  // Si el carrito está vacío, redirigir
-  if (cartItems.length === 0) {
-    return (
-      <Container className="checkout-empty">
-        <Row className="justify-content-center">
-          <Col md={6} className="text-center">
-            <div className="empty-checkout">
-              <FaShoppingCart size={80} className="mb-4" style={{ color: '#d7ad44' }} />
-              <h3>Tu carrito está vacío</h3>
-              <p className="text-muted mb-4">
-                Agrega algunos productos antes de proceder al checkout
-              </p>
-              <Button 
-                variant="primary" 
-                onClick={() => navigate('/productos')}
-                className="btn-fiofibras"
-              >
-                Ver Productos
-              </Button>
-            </div>
-          </Col>
-        </Row>
-      </Container>
-    );
-  }
+  // Efecto para obtener las direcciones existentes del usuario
+  useEffect(() => {
+    const getAddresses = async () => {
+      setLoadingAddresses(true);
+      try {
+        const response = await apiClient.get('/direcciones/');
+        const userAddresses = response.data.results || response.data;
+        setAddresses(userAddresses);
 
-  const handleFormChange = (field, value) => {
-    setFormData(prev => ({
-      ...prev,
-      [field]: value
-    }));
+        if (userAddresses.length > 0) {
+          const principal = userAddresses.find(addr => addr.es_principal);
+          setSelectedAddressId(principal ? principal.id : userAddresses[0].id);
+        }
+      } catch (err) {
+        console.error("Error al obtener las direcciones:", err);
+        setError("No pudimos cargar tus datos. Por favor, recarga la página.");
+      } finally {
+        setLoadingAddresses(false);
+      }
+    };
+    getAddresses();
+  }, []);
+
+  // Función que se pasará a AddressForm.jsx
+  const handleAddressCreated = (newAddressId) => {
+    setSelectedAddressId(newAddressId);
+    // Recargamos la lista de direcciones para que incluya la nueva
+    apiClient.get('/direcciones/').then(response => {
+        const userAddresses = response.data.results || response.data;
+        setAddresses(userAddresses);
+        // Avanzamos al siguiente paso
+        handleNextStep(newAddressId);
+    });
   };
 
-  const handleNextStep = () => {
-    if (currentStep < 3) {
-      setCurrentStep(currentStep + 1);
+  const handleNextStep = (addressIdOverride = null) => {
+    const finalAddressId = addressIdOverride || selectedAddressId;
+    if (currentStep === 1 && !finalAddressId) {
+      setError("Debes seleccionar o crear una dirección de envío.");
+      return;
     }
+    setError('');
+    setCurrentStep(currentStep + 1);
   };
-
-  const handlePrevStep = () => {
-    if (currentStep > 1) {
-      setCurrentStep(currentStep - 1);
-    }
-  };
+  
+  const handlePrevStep = () => setCurrentStep(currentStep - 1);
 
   const handlePlaceOrder = async () => {
+    if (!selectedAddressId || !paymentMethod) {
+      setError("Falta la dirección o el método de pago.");
+      return;
+    }
+
     setIsProcessing(true);
-    
-    // Simular procesamiento del pedido
+    setError('');
+
     try {
-      await new Promise(resolve => setTimeout(resolve, 3000));
-      
-      const order = {
-        id: Date.now(),
-        items: cartItems,
-        customer: formData,
-        totals: {
-          subtotal: totalPrice,
-          shipping: shipping,
-          total: finalTotal
-        },
-        status: 'confirmado',
-        date: new Date().toISOString(),
-        estimatedDelivery: new Date(Date.now() + 5 * 24 * 60 * 60 * 1000).toISOString() // 5 días
+      const orderData = {
+        direccion_id: selectedAddressId,
+        metodo_pago: paymentMethod,
       };
-      
-      const orders = JSON.parse(localStorage.getItem('fiofibras_orders') || '[]');
-      orders.push(order);
-      localStorage.setItem('fiofibras_orders', JSON.stringify(orders));
-      
-      clearCart();
-      
-      navigate('/order-confirmation', { state: { order } });
-      
-    } catch (error) {
-      console.error('Error al procesar el pedido:', error);
-      alert('Hubo un error al procesar tu pedido. Por favor intenta nuevamente.');
+
+      const response = await apiClient.post('/ordenes/', orderData);
+      const newOrder = response.data;
+
+      clearCartLocal();
+
+      navigate('/order-confirmation', { state: { order: newOrder } });
+
+    } catch (err) {
+      console.error('Error al procesar el pedido:', err.response?.data || err);
+      const errorMessage = err.response?.data?.error || "Hubo un error al procesar tu pedido. Verifica el stock de los productos e intenta nuevamente.";
+      setError(errorMessage);
     } finally {
       setIsProcessing(false);
     }
   };
 
+  // Lógica de renderizado condicional para el paso de dirección
+  const renderAddressStep = () => {
+    if (loadingAddresses) {
+      return <div className="text-center p-5"><Spinner animation="border" /> <p>Cargando datos...</p></div>;
+    }
+
+    if (addresses.length === 0) {
+      return <AddressForm onAddressCreated={handleAddressCreated} />;
+    }
+    
+    return (
+      <Card className="checkout-form-card">
+        <Card.Header as="h5">1. Selecciona una Dirección de Recojo</Card.Header>
+        <Card.Body>
+          <Form>
+            {addresses.map(addr => (
+              <Form.Check
+                type="radio"
+                key={addr.id}
+                id={`addr-${addr.id}`}
+                name="address"
+                checked={selectedAddressId === addr.id}
+                onChange={() => setSelectedAddressId(addr.id)}
+                label={
+                  <div className="w-100">
+                    <strong>Recibe: {addr.nombres} {addr.apellidos}</strong> (DNI: {addr.dni})
+                    {addr.es_principal && <Badge bg="success" className="ms-2">Principal</Badge>}
+                    <br />
+                    <small className="text-muted">
+                      {addr.agencia_recojo ? `Recoger en ${addr.agencia_recojo} - ${addr.direccion_agencia}` : `${addr.direccion_completo}, ${addr.distrito}`}
+                    </small>
+                    <br />
+                    <small className="text-muted">Tel: {addr.telefono}</small>
+                  </div>
+                }
+                className="mb-3 p-3 border rounded d-flex align-items-center"
+              />
+            ))}
+          </Form>
+          <Alert variant="info" className="mt-3">
+             ¿Quieres usar otra dirección? Puedes <Link to="/mi-perfil/direcciones">añadirla en tu perfil</Link> y luego recargar esta página.
+          </Alert>
+          <div className="text-end mt-4">
+            <Button className="btn-fiofibras" onClick={() => handleNextStep()} disabled={!selectedAddressId}>
+              Continuar al Pago <FaArrowRight className="ms-2" />
+            </Button>
+          </div>
+        </Card.Body>
+      </Card>
+    );
+  };
+
   const renderStep = () => {
     switch (currentStep) {
       case 1:
-        return (
-          <CheckoutForm 
-            formData={formData} 
-            onChange={handleFormChange}
-            onNext={handleNextStep}
-          />
-        );
+        return renderAddressStep();
       case 2:
         return (
-          <PaymentMethods 
-            formData={formData} 
-            onChange={handleFormChange}
-            onNext={handleNextStep}
+          <PaymentMethods
+            selectedMethod={paymentMethod}
+            onChange={setPaymentMethod}
+            onNext={handlePlaceOrder}
             onPrev={handlePrevStep}
+            isProcessing={isProcessing}
+            finalTotal={finalTotal}
           />
-        );
-      case 3:
-        return (
-          <div className="order-review">
-            <Card className="review-card">
-              <Card.Body>
-                <h5 className="mb-4">
-                  <FaLock className="me-2" style={{ color: '#228B22' }} />
-                  Revisar y Confirmar Pedido
-                </h5>
-                <div className="review-section mb-4">
-                  <h6>Datos de Envío</h6>
-                  <p className="mb-1">{formData.firstName} {formData.lastName}</p>
-                  <p className="mb-1">{formData.address}</p>
-                  <p className="mb-1">{formData.district}, {formData.city} {formData.zipCode}</p>
-                  <p className="mb-1">Tel: {formData.phone}</p>
-                  <p className="mb-0">Email: {formData.email}</p>
-                </div>
-                <div className="review-section mb-4">
-                  <h6>Método de Pago</h6>
-                  <p className="mb-0">
-                    {formData.paymentMethod === 'card' ? 'Tarjeta de Crédito/Débito' : 
-                     formData.paymentMethod === 'transfer' ? 'Transferencia Bancaria' : 
-                     'Pago con Yape'}
-                    {formData.paymentMethod === 'card' && formData.cardNumber && 
-                      ` - **** **** **** ${formData.cardNumber.slice(-4)}`
-                    }
-                  </p>
-                </div>
-                {formData.orderNotes && (
-                  <div className="review-section mb-4">
-                    <h6>Notas del Pedido</h6>
-                    <p className="mb-0">{formData.orderNotes}</p>
-                  </div>
-                )}
-                <div className="review-actions">
-                  <Button 
-                    variant="outline-secondary" 
-                    onClick={handlePrevStep}
-                    disabled={isProcessing}
-                  >
-                    <FaArrowLeft className="me-2" />
-                    Atrás
-                  </Button>
-                  <Button 
-                    variant="primary" 
-                    className="btn-fiofibras ms-2"
-                    onClick={handlePlaceOrder}
-                    disabled={isProcessing}
-                  >
-                    {isProcessing ? (
-                      <>
-                        <Spinner size="sm" className="me-2" />
-                        Procesando...
-                      </>
-                    ) : (
-                      `Confirmar Pedido - S/ ${finalTotal.toFixed(2)}`
-                    )}
-                  </Button>
-                </div>
-              </Card.Body>
-            </Card>
-          </div>
         );
       default:
         return null;
     }
   };
+  
+  if (cartItems.length === 0 && !loadingAddresses) {
+    return (
+        <Container className="checkout-empty">
+            <Row className="justify-content-center">
+                <Col md={6} className="text-center">
+                    <div className="empty-checkout">
+                        <FaShoppingCart size={80} className="mb-4" style={{ color: '#d7ad44' }} />
+                        <h3>Tu carrito está vacío</h3>
+                        <p className="text-muted mb-4">
+                            Agrega algunos productos antes de proceder al checkout
+                        </p>
+                        <Button
+                            variant="primary"
+                            onClick={() => navigate('/productos')}
+                            className="btn-fiofibras"
+                        >
+                            Ver Productos
+                        </Button>
+                    </div>
+                </Col>
+            </Row>
+        </Container>
+    );
+  }
 
   return (
     <div className="checkout-page">
@@ -224,34 +212,27 @@ const Checkout = () => {
               <span>1</span>
               <label>Envío</label>
             </div>
-            <div className={`step ${currentStep >= 2 ? 'active' : ''} ${currentStep > 2 ? 'completed' : ''}`}>
+            <div className={`step ${currentStep >= 2 ? 'active' : ''}`}>
               <span>2</span>
               <label>Pago</label>
             </div>
-            <div className={`step ${currentStep >= 3 ? 'active' : ''}`}>
-              <span>3</span>
-              <label>Revisar</label>
-            </div>
           </div>
         </div>
+        
+        {error && <Alert variant="danger" onClose={() => setError('')} dismissible>{error}</Alert>}
+
         <Row className="checkout-mobile-layout">
           <Col lg={8} className="checkout-form-col">
             {renderStep()}
           </Col>
           <Col lg={4} className="order-summary-col">
-            {/* === CAMBIO REALIZADO AQUÍ === */}
             <div className="order-summary-sticky-container">
-              <OrderSummary 
+              <OrderSummary
                 items={cartItems}
                 subtotal={totalPrice}
                 shipping={shipping}
                 total={finalTotal}
               />
-              {shipping === 0 && (
-                <Alert variant="success" className="mt-3">
-                  <small>🎉 ¡Tienes envío gratuito por compras mayores a S/ 100!</small>
-                </Alert>
-              )}
             </div>
           </Col>
         </Row>

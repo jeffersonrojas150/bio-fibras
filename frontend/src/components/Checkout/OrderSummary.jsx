@@ -1,54 +1,58 @@
 // src/components/Checkout/OrderSummary.jsx
+
 import React from 'react';
-import { Card, Badge } from 'react-bootstrap';
+import { Card, Badge, Alert } from 'react-bootstrap'; // Añadimos Alert
 import { FaShoppingCart, FaTruck, FaTag } from 'react-icons/fa';
 
 const OrderSummary = ({ items = [], subtotal = 0, shipping = 0, total = 0 }) => {
   return (
     <Card className="order-summary-card">
-      <Card.Header>
+      <Card.Header as="h5">
         <FaShoppingCart className="me-2" />
         Resumen del Pedido
-        <Badge bg="" className="ms-2" style={{ color: '#000', backgroundColor: '#d7ad44' }}>
-          {items.length} {items.length === 1 ? 'producto' : 'productos'}
+        <Badge bg="secondary" className="ms-2">
+          {items.reduce((acc, item) => acc + item.quantity, 0)} producto(s)
         </Badge>
       </Card.Header>
-      
+     
       <Card.Body className="order-summary">
         {/* Lista de productos */}
-        <div className="order-items">
-          {items.map((item) => (
-            <div key={item.id} className="order-item">
-              <div className="order-item-image">
-                <img 
-                  src={item.image || item.images?.[0]} 
-                  alt={item.name}
-                  onError={(e) => {
-                    e.target.src = 'https://via.placeholder.com/60x60/f8f9fa/dee2e6?text=Img';
-                  }}
-                />
-              </div>
-              
-              <div className="order-item-details">
-                <div className="order-item-name">
-                  {item.name}
+        <div className="order-items mb-3">
+          {items.map((item) => {
+            // === CORRECCIÓN CLAVE AQUÍ ===
+            // 1. Obtenemos el precio correcto (oferta o unitario)
+            const price = parseFloat(item.precio_oferta || item.precio_unitario);
+            // 2. Calculamos el subtotal del item
+            const itemTotal = price * item.quantity;
+
+            return (
+              <div key={item.id} className="order-item">
+                <div className="order-item-image">
+                  <img
+                    // 3. Accedemos a la imagen correcta
+                    src={item.imagen_principal}
+                    alt={item.nombre}
+                    onError={(e) => { e.target.src = 'https://via.placeholder.com/60x60/f8f9fa/dee2e6?text=Img'; }}
+                  />
                 </div>
-                <div className="order-item-quantity">
-                  Cantidad: {item.quantity}
-                </div>
-                {item.category && (
-                  <div className="order-item-category">
-                    <FaTag size={12} className="me-1" />
-                    {item.category}
+                
+                <div className="order-item-details">
+                  <div className="order-item-name">
+                    {/* 4. Accedemos al nombre correcto */}
+                    {item.nombre}
                   </div>
-                )}
+                  <div className="order-item-quantity">
+                    Cantidad: {item.quantity}
+                  </div>
+                </div>
+                
+                <div className="order-item-price">
+                  {/* 5. Mostramos el subtotal del item calculado */}
+                  S/ {itemTotal.toFixed(2)}
+                </div>
               </div>
-              
-              <div className="order-item-price">
-                S/ {(item.price * item.quantity).toFixed(2)}
-              </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
 
         {/* Totales */}
@@ -58,68 +62,23 @@ const OrderSummary = ({ items = [], subtotal = 0, shipping = 0, total = 0 }) => 
             <span>S/ {subtotal.toFixed(2)}</span>
           </div>
           
-          <div className={`total-row ${shipping === 0 ? 'shipping free' : 'shipping'}`}>
-            <span className="d-flex align-items-center">
-              <FaTruck className="me-2" size={14} />
-              Envío:
-              {shipping === 0 && (
-                <Badge bg="success" className="ms-2 small-badge">
-                  GRATIS
-                </Badge>
-              )}
-            </span>
-            <span>
-              {shipping === 0 ? 'Gratis' : `S/ ${shipping.toFixed(2)}`}
-            </span>
+          <div className="total-row">
+            <span>Envío:</span>
+            {/* El valor de shipping ahora será 0, lo mostraremos como "Pago en Destino" */}
+            <strong>Pago en Destino</strong>
           </div>
           
-          {shipping === 0 && subtotal > 0 && (
-            <div className="total-row savings">
-              <span style={{ color: '#228B22', fontSize: '0.85rem' }}>
-                🎉 ¡Ahorraste S/ 15 en envío!
-              </span>
-            </div>
-          )}
-          
-          <div className="total-row">
+          <div className="total-row final-total">
             <strong>Total a Pagar:</strong>
             <strong>S/ {total.toFixed(2)}</strong>
           </div>
         </div>
 
-        {/* Información adicional */}
-        <div className="order-info mt-3 p-3" style={{ backgroundColor: '#f8f9fa', borderRadius: '8px' }}>
-          <div className="info-item">
-            <FaTruck className="me-2" style={{ color: '#d7ad44' }} />
-            <small>
-              <strong>Entrega estimada:</strong> 3-5 días hábiles
-            </small>
-          </div>
-          
-          <div className="info-item mt-2">
-            <FaTag className="me-2" style={{ color: '#228B22' }} />
-            <small>
-              <strong>Productos ecológicos</strong> certificados
-            </small>
-          </div>
-        </div>
+        <Alert variant="info" className="mt-4">
+          <FaTruck className="me-2" />
+          El costo del envío será pagado por usted al momento de recoger el pedido en la agencia.
+        </Alert>
 
-        {/* Cupón de descuento - placeholder para futura funcionalidad */}
-        {false && ( // Deshabilitado por ahora
-          <div className="coupon-section mt-3">
-            <div className="input-group">
-              <input 
-                type="text" 
-                className="form-control" 
-                placeholder="Código de descuento"
-                style={{ fontSize: '0.9rem' }}
-              />
-              <button className="btn btn-outline-secondary" type="button">
-                Aplicar
-              </button>
-            </div>
-          </div>
-        )}
       </Card.Body>
     </Card>
   );

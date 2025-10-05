@@ -3,78 +3,83 @@
 <head>
     <meta charset="UTF-8">
     <title>Confirmación de Pedido</title>
+    <style>
+        /* Estilos básicos para compatibilidad con clientes de correo */
+        body { font-family: Arial, sans-serif; margin: 0; padding: 20px; color: #333; }
+        .container { max-width: 600px; margin: auto; border: 1px solid #ddd; padding: 20px; }
+        .header { text-align: center; border-bottom: 1px solid #ddd; padding-bottom: 20px; margin-bottom: 20px; }
+        .order-details th, .order-details td { text-align: left; padding: 8px; border-bottom: 1px solid #eee; }
+        .total { font-weight: bold; font-size: 1.2em; }
+        .instructions-box { background-color: #f8f9fa; border-left: 4px solid #17a2b8; padding: 15px; margin-top: 20px; }
+        .instructions-box h4 { margin-top: 0; color: #17a2b8; }
+        .button { background-color: #28a745; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px; display: inline-block; }
+    </style>
 </head>
-<body style="font-family: Arial, sans-serif; margin: 0; padding: 20px; background-color: #f4f4f4;">
+<body>
+    <div class="container">
+        <div class="header">
+            <h2>¡Gracias por tu compra, {{ usuario.first_name|default:usuario.username }}!</h2>
+            <p>Hemos recibido tu pedido y lo estamos preparando.</p>
+        </div>
 
-    <table width="100%" border="0" cellspacing="0" cellpadding="0">
-        <tr>
-            <td align="center">
-                <table width="600" border="0" cellspacing="0" cellpadding="0" style="background-color: #ffffff; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);">
-                    
-                    <tr>
-                        <td align="center" style="padding: 20px; background-color: #2c5e3f; color: #ffffff; border-top-left-radius: 8px; border-top-right-radius: 8px;">
-                            <h1 style="margin: 0;">Bio-Fibras</h1>
-                            <p style="margin: 5px 0 0;">Artesanía que inspira</p>
-                        </td>
-                    </tr>
+        <h3>Resumen de tu Pedido: #{{ orden.numero_orden }}</h3>
+        <p>Fecha del pedido: {{ orden.fecha_creacion|date:"d M, Y" }}</p>
 
-                    <tr>
-                        <td style="padding: 30px 20px;">
-                            <h2 style="color: #333333;">¡Gracias por tu compra, {{ usuario.first_name|default:usuario.username }}!</h2>
-                            <p style="color: #555555; line-height: 1.6;">Hemos recibido tu pedido y ya lo estamos preparando. A continuación, te dejamos los detalles de tu compra.</p>
-                            
-                            <hr style="border: 0; border-top: 1px solid #eeeeee; margin: 20px 0;">
+        <table class="order-details" width="100%">
+            <thead>
+                <tr>
+                    <th>Producto</th>
+                    <th>Cantidad</th>
+                    <th style="text-align: right;">Precio</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in items %}
+                <tr>
+                    <td>{{ item.producto.nombre|default:"[Producto Eliminado]" }}</td>
+                    <td>{{ item.cantidad }}</td>
+                    <td style="text-align: right;">S/ {{ item.precio_total|floatformat:2 }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+            <tfoot>
+                <tr>
+                    <td colspan="2" style="text-align: right;" class="total">Total:</td>
+                    <td style="text-align: right;" class="total">S/ {{ orden.total|floatformat:2 }}</td>
+                </tr>
+            </tfoot>
+        </table>
 
-                            <h3 style="color: #333333;">Resumen del Pedido</h3>
-                            <p style="color: #555555;"><strong>Número de Orden:</strong> {{ orden.numero_orden }}</p>
-                            <p style="color: #555555;"><strong>Fecha:</strong> {{ orden.fecha_creacion|date:"d M, Y" }}</p>
-
-                            <!-- Tabla de Productos -->
-                            <table width="100%" border="0" cellspacing="0" cellpadding="0" style="margin-top: 20px; border-collapse: collapse;">
-                                <thead style="background-color: #f9f9f9;">
-                                    <tr>
-                                        <th style="padding: 10px; border-bottom: 1px solid #dddddd; text-align: left;">Producto</th>
-                                        <th style="padding: 10px; border-bottom: 1px solid #dddddd; text-align: center;">Cantidad</th>
-                                        <th style="padding: 10px; border-bottom: 1px solid #dddddd; text-align: right;">Subtotal</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {% for item in items %}
-                                    <tr>
-                                        <td style="padding: 10px; border-bottom: 1px solid #eeeeee;">{{ item.producto.nombre }}</td>
-                                        <td style="padding: 10px; border-bottom: 1px solid #eeeeee; text-align: center;">{{ item.cantidad }}</td>
-                                        <td style="padding: 10px; border-bottom: 1px solid #eeeeee; text-align: right;">S/ {{ item.precio_total }}</td>
-                                    </tr>
-                                    {% endfor %}
-                                </tbody>
-                                <tfoot>
-                                    <tr>
-                                        <td colspan="2" style="padding: 15px 10px 10px; text-align: right; font-weight: bold; font-size: 1.1em;">Total:</td>
-                                        <td style="padding: 15px 10px 10px; text-align: right; font-weight: bold; font-size: 1.1em;">S/ {{ orden.total }}</td>
-                                    </tr>
-                                </tfoot>
-                            </table>
-
-                            <hr style="border: 0; border-top: 1px solid #eeeeee; margin: 20px 0;">
-
-                            <div style="background-color: #fffbe6; border: 1px solid #ffe58f; padding: 15px; border-radius: 4px;">
-                                <h3 style="margin-top: 0; color: #333333;">!NO TE OLVIDES!</h3>
-                                <p style="color: #555555; line-height: 1.6;">Tu pedido se encuentra <strong>"{{ orden.get_estado_pago_display }}"</strong>. Para completarlo, por favor, realiza el pago por el monto total de <strong>S/ {{ orden.total }}</strong> a través de Yape o Transferencia Bancaria y envíanos una captura del comprobante respondiendo a este correo o a nuestro número de WhatsApp <strong>910 881 837</strong>.</p>
-                            </div>
-                        </td>
-                    </tr>
-
-                    <tr>
-                        <td align="center" style="padding: 20px; font-size: 12px; color: #888888; background-color: #f9f9f9; border-bottom-left-radius: 8px; border-bottom-right-radius: 8px;">
-                            <p>Gracias por apoyar el trabajo artesanal.</p>
-                            <p>&copy; {% now "Y" %} Bio-Fibras. Todos los derechos reservados.</p>
-                        </td>
-                    </tr>
-
-                </table>
-            </td>
-        </tr>
-    </table>
-
+        <!-- ================================================== -->
+        <!-- SECCIÓN CONDICIONAL DE INSTRUCCIONES DE PAGO -->
+        <!-- ================================================== -->
+        <div class="instructions-box">
+            <h4>Próximos Pasos: Completa tu Pago</h4>
+            
+            {% if orden.metodo_pago == 'yape' %}
+                <p>Para confirmar tu pedido, por favor realiza el pago a través de Yape a los siguientes datos:</p>
+                <ul>
+                    <li><strong>Titular:</strong> Jairo Jhanpier Villegas Solano</li>
+                    <li><strong>Número:</strong> 910 881 837</li>
+                </ul>
+                <p><strong>¡Importante!</strong> Una vez realizado el pago, envía la captura junto con tu número de pedido <strong>#{{ orden.numero_orden }}</strong> a nuestro WhatsApp.</p>
+                <a href="https://wa.me/51910881837?text=Hola,%20adjunto%20el%20voucher%20de%20mi%20pedido%20%23{{ orden.numero_orden }}" class="button">Enviar Voucher por WhatsApp</a>
+            
+            {% elif orden.metodo_pago == 'transferencia' %}
+                <p>Para confirmar tu pedido, por favor realiza una transferencia o depósito a nuestra cuenta BCP:</p>
+                <ul>
+                    <li><strong>Banco:</strong> Banco de Crédito del Perú (BCP)</li>
+                    <li><strong>Titular:</strong> Jairo Jhanpier Villegas Solano</li>
+                    <li><strong>Cuenta de Ahorro:</strong> 47571003862030</li>
+                    <li><strong>CCI:</strong> 00247517100386203021</li>
+                </ul>
+                <p><strong>¡Importante!</strong> Una vez realizado el pago, envía la captura junto con tu número de pedido <strong>#{{ orden.numero_orden }}</strong> a nuestro WhatsApp.</p>
+                <a href="https://wa.me/51910881837?text=Hola,%20adjunto%20el%20voucher%20de%20mi%20pedido%20%23{{ orden.numero_orden }}" class="button">Enviar Voucher por WhatsApp</a>
+            
+            {% endif %}
+        </div>
+        
+        <p style="margin-top: 20px;">Revisaremos tu comprobante y actualizaremos el estado de tu pedido a la brevedad. ¡Gracias por elegir Bio-Fibras!</p>
+    </div>
 </body>
 </html>

@@ -190,6 +190,7 @@ SITE_ID = 1
 # ==========================================
 
 REST_USE_JWT = True
+ACCOUNT_UNIQUE_EMAIL = True
 ACCOUNT_EMAIL_VERIFICATION = 'none'
 ACCOUNT_SIGNUP_FIELDS = {
     'email': {
@@ -223,3 +224,5 @@ REST_AUTH = {
     'SESSION_LOGIN': False,
     'JWT_SERIALIZER': 'dj_rest_auth.serializers.JWTSerializer',
 }
+
+SOCIALACCOUNT_ADAPTER = 'api.adapter.CustomSocialAccountAdapter'
