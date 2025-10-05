@@ -45,10 +45,10 @@ function App() {
                       <Route path="/productos" element={<Products />} />
                       <Route path="/producto/:slug" element={<ProductDetail />} />
                       <Route path="/categorias" element={<Categories />} />
-                      <Route
-                        path="/productos/categoria/:slug"
-                        element={<Products />}
-                      />
+                      
+
+                      {/* Ruta para la página de productos con un filtro de categoría */}
+                      <Route path="/productos/categoria/:categorySlug" element={<Products />} />
 
                       <Route path="/login" element={<LoginForm />} />
                       <Route path="/registro" element={<RegisterForm />} />
