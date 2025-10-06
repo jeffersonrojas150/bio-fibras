@@ -6,7 +6,7 @@ import logo from '../../../assets/logo.png';
 import './Header.css';
 
 import { CartIcon } from '../../Cart/Cart';
-import apiClient from '../../../api'; 
+import apiClient from '../../../api';
 import UserMenu from '../UserMenu/UserMenu';
 import { useAuth } from '../../../context/authContext';
 import { FavoritesIcon } from '../FavoritesIcon/FavoritesIcon';
@@ -15,15 +15,15 @@ const Header = () => {
   const location = useLocation();
   const { user, isAuthenticated, logout } = useAuth();
   const navigate = useNavigate();
-  
+
   // Estados del componente
   const [isSearchVisible, setIsSearchVisible] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
   const [searchResults, setSearchResults] = useState([]);
-  const [isSearching, setIsSearching] = useState(false); 
+  const [isSearching, setIsSearching] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [currentAnnouncementIndex, setCurrentAnnouncementIndex] = useState(0);
-  
+
   const searchInputRef = useRef(null);
 
   // Datos para los anuncios
@@ -61,7 +61,7 @@ const Header = () => {
   }, [isMenuOpen]);
 
 
- 
+
   useEffect(() => {
     if (searchTerm.trim().length < 2) {
       setSearchResults([]);
@@ -89,7 +89,7 @@ const Header = () => {
   const handleSearchChange = (value) => {
     setSearchTerm(value);
   };
-  
+
   const handleSearchSubmit = (e) => {
     e.preventDefault();
     if (searchTerm.trim()) {
@@ -103,9 +103,9 @@ const Header = () => {
     setSearchResults([]);
     setSearchTerm('');
   };
-  
+
   const handleProductClick = (product) => {
-    
+
     navigate(`/producto/${product.slug}`);
     closeSearch();
   };
@@ -197,7 +197,7 @@ const Header = () => {
                     </Button>
                   </InputGroup>
 
-                  
+
                   {(isSearching || searchResults.length > 0) && (
                     <div className="search-results-dropdown">
                       {isSearching ? (
@@ -257,7 +257,10 @@ const Header = () => {
           <Nav.Link as={Link} to="/categorias" onClick={handleMobileLinkClick}><i className="bi bi-grid-fill"></i> Categorías</Nav.Link>
 
           {isAuthenticated && (
-            <Nav.Link as={Link} to="/mis-ordenes" onClick={handleMobileLinkClick}><i className="bi bi-box-seam-fill"></i> Mis Órdenes</Nav.Link>
+            <>
+              <Nav.Link as={Link} to="/perfil" onClick={handleMobileLinkClick}><i className="bi bi-person-fill"></i> Mi Cuenta</Nav.Link>
+              <Nav.Link as={Link} to="/mis-ordenes" onClick={handleMobileLinkClick}><i className="bi bi-box-seam-fill"></i> Mis Órdenes</Nav.Link>
+            </>
           )}
 
           <Nav.Link as={Link} to="/about" onClick={handleMobileLinkClick}><i className="bi bi-people-fill"></i> Sobre Nosotros</Nav.Link>

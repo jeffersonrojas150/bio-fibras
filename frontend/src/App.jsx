@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
 import React from "react";
 import { GoogleOAuthProvider } from "@react-oauth/google";
 
@@ -26,6 +26,9 @@ import { ProductProvider } from "./context/productContext";
 import { CategoryProvider } from "./context/categoryContext";
 import Favorites from "./pages/Favorites/Favorites";
 import About from './pages/About/About';
+import ProfilePage from './pages/Profile/ProfilePage';
+import AddressManagement from './pages/Profile/AddressManagement';
+import PersonalData from './pages/Profile/PersonalData';
 
 import "./App.css";
 
@@ -78,6 +81,11 @@ function App() {
                           <Route path="/ordenes/:orderId" element={<OrderDetail />} />
                           <Route path="/favoritos" element={<Favorites />} />
                           <Route path="/about" element={<About />} />
+                          <Route path="/perfil" element={<ProfilePage />}>
+                            <Route index element={<Navigate to="datos" replace />} />
+                            <Route path="datos" element={<PersonalData />} />
+                            <Route path="direcciones" element={<AddressManagement />} />
+                          </Route>
 
                           {/* futuras rutas */}
                           {/* <Route path="/nosotros" element={<About />} /> */}

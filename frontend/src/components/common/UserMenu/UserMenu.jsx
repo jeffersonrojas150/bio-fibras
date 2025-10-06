@@ -28,16 +28,16 @@ const UserMenu = () => {
 
   const toggleMenu = () => setIsOpen(!isOpen);
 
- 
-  const userFullName = user 
-    ? `${user.first_name || ''} ${user.last_name || ''}`.trim() 
+
+  const userFullName = user
+    ? `${user.first_name || ''} ${user.last_name || ''}`.trim()
     : '';
 
   return (
     <div className="user-menu-container" ref={menuRef}>
-      <button 
-        type="button" 
-        className="nav-icon-link btn-reset user-menu-trigger" 
+      <button
+        type="button"
+        className="nav-icon-link btn-reset user-menu-trigger"
         onClick={toggleMenu}
       >
         <i className="bi bi-person-circle nav-icon"></i>
@@ -57,18 +57,28 @@ const UserMenu = () => {
                   )}
                 </div>
                 <div className="user-info">
-                  
+
                   <p className="user-greeting">¡Bienvenido a Biofibras!</p>
-                  
-                  
+
+
                   <p className="user-name">{userFullName || user.username}</p>
                 </div>
               </div>
 
               <ul className="user-menu-list">
                 <li>
-                  <Link 
-                    to="/mis-ordenes" 
+                  <Link
+                    to="/perfil"
+                    className="user-menu-item"
+                    onClick={() => setIsOpen(false)}
+                  >
+                    <i className="bi bi-person-circle"></i>
+                    <span>Mi Perfil</span>
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    to="/mis-ordenes"
                     className="user-menu-item"
                     onClick={() => setIsOpen(false)}
                   >
@@ -80,8 +90,8 @@ const UserMenu = () => {
 
               <div className="user-menu-divider"></div>
 
-              <button 
-                className="user-menu-item user-menu-logout" 
+              <button
+                className="user-menu-item user-menu-logout"
                 onClick={handleLogout}
               >
                 <i className="bi bi-box-arrow-right"></i>
@@ -97,15 +107,15 @@ const UserMenu = () => {
               </div>
 
               <div className="user-menu-buttons">
-                <Link 
-                  to="/login" 
+                <Link
+                  to="/login"
                   className="btn btn-dark w-100 mb-2"
                   onClick={() => setIsOpen(false)}
                 >
                   Iniciar Sesión
                 </Link>
-                <Link 
-                  to="/registro" 
+                <Link
+                  to="/registro"
                   className="btn btn-outline-dark w-100"
                   onClick={() => setIsOpen(false)}
                 >

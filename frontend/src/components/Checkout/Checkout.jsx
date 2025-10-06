@@ -56,10 +56,10 @@ const Checkout = () => {
     setSelectedAddressId(newAddressId);
     // Recargamos la lista de direcciones para que incluya la nueva
     apiClient.get('/direcciones/').then(response => {
-        const userAddresses = response.data.results || response.data;
-        setAddresses(userAddresses);
-        // Avanzamos al siguiente paso
-        handleNextStep(newAddressId);
+      const userAddresses = response.data.results || response.data;
+      setAddresses(userAddresses);
+      // Avanzamos al siguiente paso
+      handleNextStep(newAddressId);
     });
   };
 
@@ -72,7 +72,7 @@ const Checkout = () => {
     setError('');
     setCurrentStep(currentStep + 1);
   };
-  
+
   const handlePrevStep = () => setCurrentStep(currentStep - 1);
 
   const handlePlaceOrder = async () => {
@@ -115,7 +115,7 @@ const Checkout = () => {
     if (addresses.length === 0) {
       return <AddressForm onAddressCreated={handleAddressCreated} />;
     }
-    
+
     return (
       <Card className="checkout-form-card">
         <Card.Header as="h5">1. Selecciona una Dirección de Recojo</Card.Header>
@@ -146,7 +146,7 @@ const Checkout = () => {
             ))}
           </Form>
           <Alert variant="info" className="mt-3">
-             ¿Quieres usar otra dirección? Puedes <Link to="/mi-perfil/direcciones">añadirla en tu perfil</Link> y luego recargar esta página.
+            ¿Quieres usar otra dirección? Puedes <Link to="/perfil/direcciones">añadirla en tu perfil</Link> y luego recargar esta página.
           </Alert>
           <div className="text-end mt-4">
             <Button className="btn-fiofibras" onClick={() => handleNextStep()} disabled={!selectedAddressId}>
@@ -177,29 +177,29 @@ const Checkout = () => {
         return null;
     }
   };
-  
+
   if (cartItems.length === 0 && !loadingAddresses) {
     return (
-        <Container className="checkout-empty">
-            <Row className="justify-content-center">
-                <Col md={6} className="text-center">
-                    <div className="empty-checkout">
-                        <FaShoppingCart size={80} className="mb-4" style={{ color: '#d7ad44' }} />
-                        <h3>Tu carrito está vacío</h3>
-                        <p className="text-muted mb-4">
-                            Agrega algunos productos antes de proceder al checkout
-                        </p>
-                        <Button
-                            variant="primary"
-                            onClick={() => navigate('/productos')}
-                            className="btn-fiofibras"
-                        >
-                            Ver Productos
-                        </Button>
-                    </div>
-                </Col>
-            </Row>
-        </Container>
+      <Container className="checkout-empty">
+        <Row className="justify-content-center">
+          <Col md={6} className="text-center">
+            <div className="empty-checkout">
+              <FaShoppingCart size={80} className="mb-4" style={{ color: '#d7ad44' }} />
+              <h3>Tu carrito está vacío</h3>
+              <p className="text-muted mb-4">
+                Agrega algunos productos antes de proceder al checkout
+              </p>
+              <Button
+                variant="primary"
+                onClick={() => navigate('/productos')}
+                className="btn-fiofibras"
+              >
+                Ver Productos
+              </Button>
+            </div>
+          </Col>
+        </Row>
+      </Container>
     );
   }
 
@@ -218,7 +218,7 @@ const Checkout = () => {
             </div>
           </div>
         </div>
-        
+
         {error && <Alert variant="danger" onClose={() => setError('')} dismissible>{error}</Alert>}
 
         <Row className="checkout-mobile-layout">
