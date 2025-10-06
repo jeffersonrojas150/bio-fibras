@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { Container, Row, Col, Button, Form, Badge, Offcanvas, Spinner, Alert } from 'react-bootstrap';
+import { Container, Row, Col, Button, Form, Badge, Offcanvas, Spinner, Alert, Pagination } from 'react-bootstrap';
 import { FaFilter } from 'react-icons/fa';
 
 import apiClient from '../../api';
@@ -14,17 +14,21 @@ const Products = () => {
   const navigate = useNavigate();
 
   // === ESTADOS ===
-  const [allProducts, setAllProducts] = useState([]); // Almacenará los productos de la vista actual.
-  const [categories, setCategories] = useState([]); // Almacenará todas las categorías para los filtros.
+  const [allProducts, setAllProducts] = useState([]); 
+  const [categories, setCategories] = useState([]); 
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [filteredProducts, setFilteredProducts] = useState([]);
+  const [filteredProducts, setFilteredProducts] = useState([]); 
   
   // Estados para los filtros del sidebar
   const [selectedCategories, setSelectedCategories] = useState(new Set());
   const [selectedPriceRanges, setSelectedPriceRanges] = useState(new Set());
   const [sortBy, setSortBy] = useState('name');
   const [showFilters, setShowFilters] = useState(false);
+
+  // Estados para la paginación
+  const [currentPage, setCurrentPage] = useState(1);
+  const PRODUCTS_PER_PAGE = 6; 
 
   // === CONSTANTES DE CONFIGURACIÓN ===
   const priceRanges = [
@@ -42,7 +46,7 @@ const Products = () => {
     { value: 'price-high', label: 'Precio: Mayor a Menor' },
   ];
 
-
+  // === EFECTO PARA OBTENER DATOS INICIALES ===
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -51,18 +55,13 @@ const Products = () => {
         
         let productsResponse;
 
-       
         if (categorySlugFromUrl) {
-          // Si hay un slug, pedimos solo los productos de esa categoría.
           productsResponse = await apiClient.get(`/categorias/${categorySlugFromUrl}/productos/`);
         } else {
-          // Si no hay slug, pedimos todos los productos.
           productsResponse = await apiClient.get('/productos/');
         }
         setAllProducts(productsResponse.data.results || productsResponse.data);
 
-       
-        // Solo lo hacemos si aún no las tenemos para evitar llamadas repetidas.
         if (categories.length === 0) {
             const categoriesResponse = await apiClient.get('/categorias/');
             const transformedCategories = (categoriesResponse.data.results || categoriesResponse.data).map(cat => ({
@@ -82,11 +81,9 @@ const Products = () => {
     fetchData();
   }, [categorySlugFromUrl, categories.length]); 
 
-
+  // === EFECTO PARA SINCRONIZAR FILTROS CON LA URL ===
   useEffect(() => {
-    // Sincroniza el checkbox del filtro con la categoría de la URL
     setSelectedCategories(categorySlugFromUrl ? new Set([categorySlugFromUrl]) : new Set());
-    // Resetea otros filtros para evitar confusiones al navegar a una nueva categoría
     setSelectedPriceRanges(new Set()); 
   }, [categorySlugFromUrl]);
 
@@ -96,7 +93,7 @@ const Products = () => {
 
     let filtered = [...allProducts];
     
-   
+    // Filtrado por categoría (si no estamos en una página de categoría específica)
     if (selectedCategories.size > 0 && !categorySlugFromUrl) {
         const selectedCategoryNames = new Set(
             categories
@@ -133,6 +130,8 @@ const Products = () => {
     });
 
     setFilteredProducts(filtered);
+    
+    setCurrentPage(1); 
   }, [selectedCategories, selectedPriceRanges, sortBy, allProducts, categories, loading, categorySlugFromUrl]);
   
   // === MANEJADORES DE EVENTOS ===
@@ -145,7 +144,6 @@ const Products = () => {
     }
     setSelectedCategories(newSelectedCategories);
     
-    // Si el usuario desmarca la categoría de la URL, lo llevamos a /productos
     if (categorySlugFromUrl && !newSelectedCategories.has(categorySlugFromUrl)) {
         navigate('/productos');
     }
@@ -162,13 +160,25 @@ const Products = () => {
     setSelectedCategories(new Set());
     setSelectedPriceRanges(new Set());
     setSortBy('name');
-    // Si estamos en una página de categoría, limpiar filtros nos lleva a la página general
     if (categorySlugFromUrl) {
         navigate('/productos');
     }
   };
 
   const hasActiveFilters = selectedPriceRanges.size > 0 || (selectedCategories.size > 0 && (!categorySlugFromUrl || selectedCategories.size > 1));
+
+  // === LÓGICA DE PAGINACIÓN ===
+  const indexOfLastProduct = currentPage * PRODUCTS_PER_PAGE;
+  const indexOfFirstProduct = indexOfLastProduct - PRODUCTS_PER_PAGE;
+  const currentProducts = filteredProducts.slice(indexOfFirstProduct, indexOfLastProduct);
+  const totalPages = Math.ceil(filteredProducts.length / PRODUCTS_PER_PAGE);
+
+  const paginate = (pageNumber) => {
+    if (pageNumber > 0 && pageNumber <= totalPages) {
+      setCurrentPage(pageNumber);
+      window.scrollTo(0, 0); 
+    }
+  };
 
   // === COMPONENTES DE RENDERIZADO INTERNOS ===
   const FilterSidebar = ({ isMobile = false }) => (
@@ -198,6 +208,29 @@ const Products = () => {
     </div>
   );
 
+  const PaginationComponent = () => {
+    if (totalPages <= 1) return null;
+
+    let items = [];
+    for (let number = 1; number <= totalPages; number++) {
+      items.push(
+        <Pagination.Item key={number} active={number === currentPage} onClick={() => paginate(number)}>
+          {number}
+        </Pagination.Item>,
+      );
+    }
+
+    return (
+      <div className="d-flex justify-content-center mt-4">
+        <Pagination>
+          <Pagination.Prev onClick={() => paginate(currentPage - 1)} disabled={currentPage === 1} />
+          {items}
+          <Pagination.Next onClick={() => paginate(currentPage + 1)} disabled={currentPage === totalPages} />
+        </Pagination>
+      </div>
+    );
+  };
+
   const renderContent = () => {
     if (loading) {
       return (
@@ -213,7 +246,7 @@ const Products = () => {
       return <Alert variant="danger" className="text-center">{error}</Alert>;
     }
     
-    if (filteredProducts.length === 0) {
+    if (currentProducts.length === 0) {
         const categoryName = categories.find(c => c.value === categorySlugFromUrl)?.label || 'la vista actual';
         return (
             <div className="no-products">
@@ -237,7 +270,7 @@ const Products = () => {
 
     return (
       <Row className="products-grid">
-        {filteredProducts.map((product) => (
+        {currentProducts.map((product) => (
           <ProductCard key={product.id} product={product} />
         ))}
       </Row>
@@ -253,7 +286,7 @@ const Products = () => {
           <h1 className="products-main-title">Nuestros Productos</h1>
           {!loading && !error && (
             <p className="products-count">
-              {filteredProducts.length} producto{filteredProducts.length !== 1 && 's'} encontrado{filteredProducts.length !== 1 && 's'}
+              Mostrando {currentProducts.length} de {filteredProducts.length} producto{filteredProducts.length !== 1 && 's'}
             </p>
           )}
         </div>
@@ -289,6 +322,9 @@ const Products = () => {
             </div>
 
             {renderContent()}
+
+            <PaginationComponent />
+
           </Col>
         </Row>
       </Container>

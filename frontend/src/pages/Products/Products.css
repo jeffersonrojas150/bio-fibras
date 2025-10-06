@@ -817,3 +817,68 @@ box-shadow: 0 0 0 0.25rem rgba(200, 134, 13, 0.25) !important; /* Sombra/resplan
     margin-bottom: 2px;
   }
 }
+
+
+/* Contenedor principal de la paginación */
+.pagination {
+  --mustard-color: #EAA400; 
+  --dark-coffee-color: #4E342E; 
+  --light-coffee-color: #D7CCC8; 
+  --cream-bg-color: #FFF8E1; 
+}
+
+/* Estilo para cada uno de los elementos (los "cuadritos") */
+.pagination .page-item .page-link {
+  color: var(--dark-coffee-color);
+  background-color: #fff;
+  border: 1px solid var(--light-coffee-color);
+  margin: 0 3px; 
+  border-radius: 0.25rem; 
+  transition: all 0.3s ease-in-out;
+}
+
+.pagination .page-item:not(.active) .page-link:hover {
+  background-color: var(--cream-bg-color);
+  border-color: var(--mustard-color);
+  color: var(--dark-coffee-color);
+}
+
+
+.pagination .page-item .page-link:focus {
+  box-shadow: 0 0 0 0.2rem rgba(234, 164, 0, 0.25); 
+}
+
+/* Estilo para el botón de la página ACTIVA */
+.pagination .page-item.active .page-link {
+  background-color: var(--mustard-color);
+  border-color: var(--mustard-color); 
+  color: white; 
+  font-weight: bold;
+}
+
+/* Hover sobre el botón activo (para que no cambie de color) */
+.pagination .page-item.active .page-link:hover {
+    background-color: var(--mustard-color);
+    border-color: var(--mustard-color);
+}
+
+
+/* Estilo para los botones deshabilitados  */
+.pagination .page-item.disabled .page-link {
+  color: #9E9E9E;
+  background-color: #F5F5F5;
+  border-color: #E0E0E0;
+}
+
+@media (max-width: 576px) {
+  .pagination .page-item .page-link {
+    padding: 0.3rem 0.6rem; 
+    font-size: 0.9rem;      
+    margin: 0 2px;
+  }
+
+ 
+  .pagination .page-link .visually-hidden {
+    display: none;
+  }
+}
