@@ -67,20 +67,19 @@ class OrdenItemInline(admin.TabularInline):
     def has_delete_permission(self, request, obj=None):
         return False
 
-# =================================================================
-# PERSONALIZACIÓN PARA CATEGORIA
-# =================================================================
+
 @admin.register(Categoria)
 class CategoriaAdmin(admin.ModelAdmin):
     list_display = ('nombre', 'slug', 'activo')
-    prepopulated_fields = {'slug': ('nombre',)}
+    exclude = ('slug',)
+
+    def save_model(self, request, obj, form, change):
+        obj.slug = slugify(obj.nombre)
+        super().save_model(request, obj, form, change)
+
 
 admin.site.register(Material)
 
-
-# =================================================================
-# Personalización del Admin para el modelo Orden
-# =================================================================
 @admin.register(Orden)
 class OrdenAdmin(admin.ModelAdmin):
     """
