@@ -21,7 +21,8 @@ import { OrderProvider } from "./context/orderContext";
 import { AuthProvider } from "./context/authContext";
 import MyOrders from "./pages/Orders/MyOrders";
 import { FavoritesProvider } from "./context/favoritesContext";
-import { ProductProvider } from "./context/productContext"; 
+import { ProductProvider } from "./context/productContext";
+import { CategoryProvider } from "./context/categoryContext";
 import Favorites from "./pages/Favorites/Favorites";
 import About from './pages/About/About';
 
@@ -36,62 +37,64 @@ function App() {
       {/* AuthProvider maneja login, tokens y refresh */}
       <AuthProvider>
         <GoogleOAuthProvider clientId={GOOGLE_CLIENT_ID}>
-          <ProductProvider>
-            <FavoritesProvider>
-              <CartProvider>
-                <OrderProvider>
-                  <Router>
-                    <Header />
+          <CategoryProvider>
+            <ProductProvider>
+              <FavoritesProvider>
+                <CartProvider>
+                  <OrderProvider>
+                    <Router>
+                      <Header />
 
-                    <main id="page-content">
-                      <Routes>
-                        <Route path="/" element={<Home />} />
-                        <Route path="/productos" element={<Products />} />
-                        <Route path="/producto/:slug" element={<ProductDetail />} />
-                        <Route path="/categorias" element={<Categories />} />
+                      <main id="page-content">
+                        <Routes>
+                          <Route path="/" element={<Home />} />
+                          <Route path="/productos" element={<Products />} />
+                          <Route path="/producto/:slug" element={<ProductDetail />} />
+                          <Route path="/categorias" element={<Categories />} />
 
 
-                        {/* Ruta para la página de productos con un filtro de categoría */}
-                        <Route path="/productos/categoria/:categorySlug" element={<Products />} />
-                        <Route path="/contacto" element={<Contact />} />
+                          {/* Ruta para la página de productos con un filtro de categoría */}
+                          <Route path="/productos/categoria/:categorySlug" element={<Products />} />
+                          <Route path="/contacto" element={<Contact />} />
 
-                        <Route path="/login" element={<LoginForm />} />
-                        <Route path="/registro" element={<RegisterForm />} />
-                        <Route
-                          path="/recuperar-password"
-                          element={<ForgotPasswordForm />}
-                        />
-                        <Route
-                          path="/reset-password/:uid/:token"
-                          element={<ResetPasswordForm />}
-                        />
-                        <Route path="/checkout" element={<Checkout />} />
-                        <Route
-                          path="/order-confirmation"
-                          element={<OrderConfirmation />}
-                        />
+                          <Route path="/login" element={<LoginForm />} />
+                          <Route path="/registro" element={<RegisterForm />} />
+                          <Route
+                            path="/recuperar-password"
+                            element={<ForgotPasswordForm />}
+                          />
+                          <Route
+                            path="/reset-password/:uid/:token"
+                            element={<ResetPasswordForm />}
+                          />
+                          <Route path="/checkout" element={<Checkout />} />
+                          <Route
+                            path="/order-confirmation"
+                            element={<OrderConfirmation />}
+                          />
 
-                        <Route path="/mis-ordenes" element={<MyOrders />} />
-                        <Route path="/favoritos" element={<Favorites />} />
-                        <Route path="/about" element={<About />} />
+                          <Route path="/mis-ordenes" element={<MyOrders />} />
+                          <Route path="/favoritos" element={<Favorites />} />
+                          <Route path="/about" element={<About />} />
 
-                        {/* futuras rutas */}
-                        {/* <Route path="/nosotros" element={<About />} /> */}
-                        {/* <Route path="/contacto" element={<Contact />} /> */}
-                        {/* <Route path="/terminos" element={<Terms />} /> */}
-                        {/* <Route path="/privacidad" element={<Privacy />} /> */}
-                        {/* <Route path="/mi-perfil" element={<MyProfile />} /> */}
-                        {/* <Route path="*" element={<NotFound />} /> */}
-                      </Routes>
-                    </main>
+                          {/* futuras rutas */}
+                          {/* <Route path="/nosotros" element={<About />} /> */}
+                          {/* <Route path="/contacto" element={<Contact />} /> */}
+                          {/* <Route path="/terminos" element={<Terms />} /> */}
+                          {/* <Route path="/privacidad" element={<Privacy />} /> */}
+                          {/* <Route path="/mi-perfil" element={<MyProfile />} /> */}
+                          {/* <Route path="*" element={<NotFound />} /> */}
+                        </Routes>
+                      </main>
 
-                    <Footer />
-                    <Cart />
-                  </Router>
-                </OrderProvider>
-              </CartProvider>
-            </FavoritesProvider>
-          </ProductProvider>
+                      <Footer />
+                      <Cart />
+                    </Router>
+                  </OrderProvider>
+                </CartProvider>
+              </FavoritesProvider>
+            </ProductProvider>
+          </CategoryProvider>
         </GoogleOAuthProvider>
       </AuthProvider>
     </div>
