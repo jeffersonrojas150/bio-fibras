@@ -1,40 +1,72 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
+    <meta charset="UTF-8">
     <title>Tu Pedido ha sido Cancelado</title>
-    <style>
-        body { font-family: Arial, sans-serif; color: #333; }
-        .container { max-width: 600px; margin: auto; border: 1px solid #ddd; padding: 20px; }
-        .header { text-align: center; border-bottom: 1px solid #ddd; padding-bottom: 20px; margin-bottom: 20px; }
-        .alert-box { background-color: #f8d7da; border-left: 4px solid #f5c6cb; padding: 15px; margin-top: 20px; }
-        .button { background-color: #007bff; color: white !important; padding: 10px 20px; text-decoration: none; border-radius: 5px; display: inline-block; }
-    </style>
 </head>
-<body>
-    <div class="container">
-        <div class="header">
-            <h2>Aviso de Cancelación de Pedido</h2>
-        </div>
+<body style="font-family: Arial, sans-serif; margin: 0; padding: 20px; background-color: #f4f4f4; color: #333;">
+    <table width="100%" border="0" cellspacing="0" cellpadding="0">
+        <tr>
+            <td align="center">
+                <table width="600" border="0" cellspacing="0" cellpadding="0" style="background-color: #ffffff; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); overflow: hidden;">
+                   
+                    <!-- ========================================== -->
+                    <!-- 1. CABECERA UNIFICADA -->
+                    <!-- ========================================== -->
+                    <tr>
+                        <td align="center" style="padding: 20px; background-color: #2c5e3f; color: #ffffff; border-top-left-radius: 8px; border-top-right-radius: 8px;">
+                            <h1 style="margin: 0; font-size: 24px;">Aviso de Cancelación de Pedido</h1>
+                            <p style="margin: 5px 0 0;">Bio-Fibras</p>
+                        </td>
+                    </tr>
+                   
+                    <!-- ========================================== -->
+                    <!-- 2. CUERPO DEL MENSAJE -->
+                    <!-- ========================================== -->
+                    <tr>
+                        <td style="padding: 30px 20px;">
+                            <h2 style="color: #333333; font-weight: 600;">Hola {{ usuario.first_name|default:usuario.username }},</h2>
+                            <p style="color: #555555; line-height: 1.6;">Te informamos que tu pedido <strong>#{{ orden.numero_orden }}</strong> ha sido cancelado.</p>
+                           
+                            <!-- Caja de Alerta/Motivo -->
+                            <div style="background-color: #fef0f1; border-left: 4px solid #dc3545; padding: 20px; margin: 25px 0; border-radius: 0 5px 5px 0;">
+                                <h3 style="margin-top: 0; color: #dc3545; font-size: 18px;">Motivo de la Cancelación</h3>
+                                <p style="color: #555555; line-height: 1.6;">
+                                    Esta cancelación se ha producido automáticamente debido a que no se recibió la confirmación del pago dentro del plazo establecido.
+                                </p>
+                                <p style="color: #555555; line-height: 1.6; margin-top: 15px;">
+                                    Si ya realizaste el pago y crees que esto es un error, por favor, contáctanos de inmediato a través de WhatsApp para solucionarlo.
+                                </p>
+                            </div>
+                           
+                            <p style="color: #555555; line-height: 1.6;">¡No te preocupes! El stock de los productos ha sido restaurado y puedes volver a realizar tu compra cuando lo desees.</p>
 
-        <p>Hola {{ usuario.first_name|default:usuario.username }},</p>
-        <p>Te informamos que tu pedido <strong>#{{ orden.numero_orden }}</strong> ha sido cancelado.</p>
-        
-        <div class="alert-box">
-            <h4>Motivo de la Cancelación</h4>
-            <p>
-                Esta cancelación se ha producido automáticamente debido a que no se recibió la confirmación del pago dentro del plazo de 3 días.
-            </p>
-            <p>
-                Si ya realizaste el pago y crees que esto es un error, por favor, contáctanos de inmediato a través de WhatsApp para solucionarlo.
-            </p>
-        </div>
-        
-        <p style="margin-top: 20px;">
-            ¡No te preocupes! El stock de los productos ha sido restaurado y puedes volver a realizar tu compra cuando lo desees.
-        </p>
-        <div style="text-align: center; margin-top: 20px;">
-            <a href="http://localhost:5173/productos" class="button">Volver a la Tienda</a>
-        </div>
-    </div>
+
+                            <!-- Botón CTA para Volver a la Tienda -->
+                            <table width="100%" border="0" cellspacing="0" cellpadding="0" style="margin-top: 25px;">
+                                <tr>
+                                    <td align="center">
+                                        <a href="http://localhost:5173/productos" target="_blank" style="background-color: #C8860D; color: white; padding: 15px 30px; text-decoration: none; border-radius: 5px; display: inline-block; font-weight: bold; font-size: 16px;">
+                                            Volver a la Tienda
+                                        </a>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+
+                    <!-- ========================================== -->
+                    <!-- 3. PIE DE PÁGINA UNIFICADO -->
+                    <!-- ========================================== -->
+                    <tr>
+                        <td align="center" style="padding: 20px; font-size: 12px; color: #888888; background-color: #f9f9f9; border-bottom-left-radius: 8px; border-bottom-right-radius: 8px;">
+                            <p style="margin: 0;">Gracias por tu interés en nuestros productos.</p>
+                            <p style="margin: 5px 0 0;">&copy; {% now "Y" %} Bio-Fibras. Todos los derechos reservados.</p>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+    </table>
 </body>
 </html>

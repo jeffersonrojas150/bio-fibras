@@ -1,32 +1,61 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
+    <meta charset="UTF-8">
     <title>Recordatorio de Pago</title>
-    <style>
-        body { font-family: Arial, sans-serif; color: #333; }
-        .container { max-width: 600px; margin: auto; border: 1px solid #ddd; padding: 20px; }
-        .header { text-align: center; border-bottom: 1px solid #ddd; padding-bottom: 20px; margin-bottom: 20px; }
-        .alert-box { background-color: #fff3cd; border-left: 4px solid #ffeeba; padding: 15px; margin-top: 20px; }
-        .button { background-color: #25D366; color: white !important; padding: 10px 20px; text-decoration: none; border-radius: 5px; display: inline-block; }
-    </style>
 </head>
-<body>
-    <div class="container">
-        <div class="header">
-            <h2>¡No olvides tu pedido de Bio-Fibras!</h2>
-        </div>
+<body style="font-family: Arial, sans-serif; margin: 0; padding: 20px; background-color: #f4f4f4; color: #333;">
+    <table width="100%" border="0" cellspacing="0" cellpadding="0">
+        <tr>
+            <td align="center">
+                <table width="600" border="0" cellspacing="0" cellpadding="0" style="background-color: #ffffff; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); overflow: hidden;">
+                   
+                    <!-- ========================================== -->
+                    <!-- 1. CABECERA UNIFICADA -->
+                    <!-- ========================================== -->
+                    <tr>
+                        <td align="center" style="padding: 20px; background-color: #2c5e3f; color: #ffffff; border-top-left-radius: 8px; border-top-right-radius: 8px;">
+                            <h1 style="margin: 0; font-size: 24px;">¡No olvides tu pedido!</h1>
+                            <p style="margin: 5px 0 0;">Bio-Fibras</p>
+                        </td>
+                    </tr>
+                   
+                    <!-- ========================================== -->
+                    <!-- 2. CUERPO DEL MENSAJE -->
+                    <!-- ========================================== -->
+                    <tr>
+                        <td style="padding: 30px 20px;">
+                            <h2 style="color: #333333; font-weight: 600;">Hola {{ usuario.first_name|default:usuario.username }},</h2>
+                            <p style="color: #555555; line-height: 1.6;">Te escribimos para recordarte que tu pedido <strong>#{{ orden.numero_orden }}</strong> todavía está pendiente de pago.</p>
+                           
+                            <!-- Caja de Instrucciones/Ayuda -->
+                            <div style="background-color: #fef9ef; border-left: 4px solid #C8860D; padding: 20px; margin: 25px 0; border-radius: 0 5px 5px 0;">
+                                <h3 style="margin-top: 0; color: #C8860D; font-size: 18px;">¿Necesitas ayuda o ya realizaste el pago?</h3>
+                                <p style="color: #555555; line-height: 1.6;">
+                                    Si ya pagaste, por favor envíanos el comprobante para poder procesar tu orden. Si tienes alguna duda o problema, no dudes en contactarnos.
+                                </p>
+                                <a href="https://wa.me/51910881837?text=Hola,%20tengo%20una%20consulta%20sobre%20mi%20pedido%20%23{{ orden.numero_orden }}" target="_blank" style="background-color: #25D366; color: white; padding: 12px 25px; text-decoration: none; border-radius: 5px; display: inline-block; font-weight: bold; margin-top: 15px;">
+                                    Contactar por WhatsApp
+                                </a>
+                            </div>
+                           
+                            <p style="color: #555555; line-height: 1.6;">Recuerda que las órdenes que no se pagan en un plazo de 3 días son canceladas automáticamente para liberar el stock.</p>
+                            <p style="color: #555555; line-height: 1.6;">¡Esperamos poder preparar tu pedido pronto!</p>
+                        </td>
+                    </tr>
 
-        <p>Hola {{ usuario.first_name|default:usuario.username }},</p>
-        <p>Te escribimos para recordarte que tu pedido <strong>#{{ orden.numero_orden }}</strong> todavía está pendiente de pago.</p>
-        
-        <div class="alert-box">
-            <h4>¿Necesitas ayuda o ya realizaste el pago?</h4>
-            <p>Si ya pagaste, por favor envíanos el comprobante para poder procesar tu orden. Si tienes alguna duda o problema, no dudes en contactarnos.</p>
-            <a href="https://wa.me/51910881837?text=Hola,%20tengo%20una%20consulta%20sobre%20mi%20pedido%20%23{{ orden.numero_orden }}" class="button">Contactar por WhatsApp</a>
-        </div>
-        
-        <p style="margin-top: 20px;">Recuerda que las órdenes que no se pagan en un plazo de 3 días son canceladas automáticamente para liberar el stock.</p>
-        <p>¡Esperamos poder preparar tu pedido pronto!</p>
-    </div>
+                    <!-- ========================================== -->
+                    <!-- 3. PIE DE PÁGINA UNIFICADO -->
+                    <!-- ========================================== -->
+                    <tr>
+                        <td align="center" style="padding: 20px; font-size: 12px; color: #888888; background-color: #f9f9f9; border-bottom-left-radius: 8px; border-bottom-right-radius: 8px;">
+                            <p style="margin: 0;">Gracias por apoyar el trabajo artesanal.</p>
+                            <p style="margin: 5px 0 0;">&copy; {% now "Y" %} Bio-Fibras. Todos los derechos reservados.</p>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+    </table>
 </body>
 </html>
