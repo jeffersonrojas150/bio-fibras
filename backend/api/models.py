@@ -180,7 +180,8 @@ class Orden(models.Model):
     estado_orden = models.CharField(max_length=50, choices=EstadoOrden.choices, default=EstadoOrden.PENDIENTE, verbose_name="Estado de la orden")
     
     cantidad_compra = models.PositiveIntegerField(verbose_name="Total de productos en la orden")
-    comprobante_envio = models.ImageField(upload_to='comprobantes/', null=True, blank=True, verbose_name="Imagen del comprobante de envío")
+    comprobante_pago = models.ImageField(upload_to='comprobantes_pago/', null=True, blank=True, verbose_name="Imagen del comprobante de PAGO")
+    comprobante_envio = models.ImageField(upload_to='comprobantes_envio/', null=True, blank=True, verbose_name="Imagen del comprobante de ENVÍO")
 
     recordatorio_enviado = models.BooleanField(default=False, verbose_name="¿Recordatorio de pago enviado?")
     
@@ -191,10 +192,14 @@ class Orden(models.Model):
         is_new = self._state.adding
 
         if not is_new:
-            estado_anterior = Orden.objects.get(pk=self.pk)
-            estado_pago_anterior = estado_anterior.estado_pago
-            estado_orden_anterior = estado_anterior.estado_orden
-        
+            try:
+                estado_anterior = Orden.objects.get(pk=self.pk)
+                estado_pago_anterior = estado_anterior.estado_pago
+                estado_orden_anterior = estado_anterior.estado_orden
+            except Orden.DoesNotExist:
+                estado_pago_anterior = None
+                estado_orden_anterior = None
+
         if is_new:
             timestamp = int(time.time() * 1000)
             aleatorio = random.randint(10, 99)

@@ -88,35 +88,35 @@ class OrdenAdmin(admin.ModelAdmin):
     inlines = [
         OrdenItemInline,
     ]
-    
+
     list_display = (
-        'numero_orden', 
-        'usuario', 
-        'fecha_creacion', 
-        'total', 
-        'estado_pago', 
+        'numero_orden',
+        'usuario',
+        'fecha_creacion',
+        'total',
+        'estado_pago',
         'estado_orden'
     )
 
     list_editable = ('estado_pago', 'estado_orden')
-    
+
     list_filter = ('estado_pago', 'estado_orden', 'metodo_pago', 'fecha_creacion')
-    
+
     search_fields = ('numero_orden', 'usuario__username')
 
     fieldsets = (
         ('Información del Pedido', {
             'fields': ('numero_orden', 'fecha_creacion', 'total', 'metodo_pago')
         }),
-        ('Estado Actual', {
-            'fields': ('estado_pago', 'estado_orden', 'comprobante_envio')
+        ('Estado y Comprobantes', {
+            'fields': ('estado_pago', 'estado_orden', 'comprobante_pago', 'comprobante_envio')
         }),
         ('Información del Cliente', {
             'fields': ('get_usuario_info',)
         }),
         ('Dirección de Envío', {
             'fields': (
-                'get_direccion_completa', 
+                'get_direccion_completa',
                 'get_contacto_cliente'
             )
         }),
@@ -126,13 +126,13 @@ class OrdenAdmin(admin.ModelAdmin):
         'numero_orden', 'fecha_creacion', 'total', 'metodo_pago',
         'get_usuario_info', 'get_direccion_completa', 'get_contacto_cliente'
     )
-    
+
     def has_add_permission(self, request):
         return False
 
     def has_delete_permission(self, request, obj=None):
         return False
-    
+
     def get_usuario_info(self, obj):
         if obj.usuario:
             nombre_completo = obj.usuario.get_full_name()

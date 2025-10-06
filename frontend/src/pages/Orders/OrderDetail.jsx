@@ -1,38 +1,39 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { Container, Row, Col, Card, Spinner, Alert, Badge, Table } from 'react-bootstrap';
-import { FaArrowLeft, FaBox, FaUser, FaTruck, FaCreditCard } from 'react-icons/fa';
+import { Container, Row, Col, Card, Spinner, Alert, Badge, Table, Button, Modal } from 'react-bootstrap';
+import { FaArrowLeft, FaBox, FaUser, FaTruck, FaCreditCard, FaFileImage } from 'react-icons/fa';
 import apiClient from '../../api';
-import './Orders.css'; // Usaremos el mismo CSS de MyOrders y añadiremos más estilos después
+import './Orders.css';
 
 const OrderDetail = () => {
-    // useParams nos permite leer los parámetros de la URL, en este caso, el 'orderId'
     const { orderId } = useParams();
     const [order, setOrder] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
+    const [showImageModal, setShowImageModal] = useState(false);
+
+    const handleShowModal = () => setShowImageModal(true);
+    const handleCloseModal = () => setShowImageModal(false);
+
     useEffect(() => {
-        // Esta función se ejecuta cuando el componente se monta
         const fetchOrderDetail = async () => {
             setLoading(true);
             setError(null);
             try {
-                // Hacemos la llamada al endpoint de detalle de la orden usando el ID de la URL
                 const response = await apiClient.get(`/ordenes/${orderId}/`);
                 setOrder(response.data);
             } catch (err) {
                 console.error("Error al cargar el detalle de la orden:", err);
-                setError("No pudimos encontrar los detalles de esta orden. Es posible que no te pertenezca o haya sido eliminada.");
+                setError("No pudimos encontrar los detalles de esta orden.");
             } finally {
                 setLoading(false);
             }
         };
 
         fetchOrderDetail();
-    }, [orderId]); // El efecto se vuelve a ejecutar si el orderId cambia
+    }, [orderId]);
 
-    // Función para obtener el badge de estado, similar a la de MyOrders
     const getStatusBadge = (estadoOrden, estadoPago) => {
         if (estadoPago === 'cancelado') {
             return <Badge bg="danger">Cancelado</Badge>;
@@ -46,7 +47,6 @@ const OrderDetail = () => {
         return <Badge bg={config.variant} className="fs-6">{config.text}</Badge>;
     };
 
-    // Renderizado mientras carga
     if (loading) {
         return (
             <Container className="text-center py-5">
@@ -56,7 +56,6 @@ const OrderDetail = () => {
         );
     }
 
-    // Renderizado si hay un error
     if (error) {
         return (
             <Container className="py-5">
@@ -68,7 +67,6 @@ const OrderDetail = () => {
         );
     }
 
-    // Renderizado principal una vez que tenemos los datos
     return (
         <div className="order-confirmation-page">
             <Container className="py-5">
@@ -78,7 +76,6 @@ const OrderDetail = () => {
 
                 <Row>
                     <Col lg={8}>
-                        {/* Detalles del Pedido y Items */}
                         <Card className="order-details-card mb-4">
                             <Card.Header as="h5">Detalles del Pedido #{order?.numero_orden}</Card.Header>
                             <Card.Body>
@@ -124,7 +121,6 @@ const OrderDetail = () => {
                     </Col>
 
                     <Col lg={4}>
-                        {/* Resumen e Información de Envío */}
                         <Card className="shipping-info-card mb-4">
                             <Card.Header as="h5"><FaBox className="me-2" />Resumen</Card.Header>
                             <Card.Body>
@@ -152,9 +148,40 @@ const OrderDetail = () => {
                                 <p className="mb-0">{order?.direccion?.direccion_agencia}</p>
                             </Card.Body>
                         </Card>
+
+                        {order?.comprobante_envio && (
+                            <Card className="shipping-info-card mb-4">
+                                <Card.Header as="h5"><FaFileImage className="me-2" />Comprobante de Envío</Card.Header>
+                                <Card.Body className="text-center">
+                                    <p>¡Tu pedido ha sido enviado! Aquí tienes el comprobante.</p>
+                                    <img
+                                        src={order.comprobante_envio}
+                                        alt="Comprobante de envío"
+                                        style={{ maxWidth: '100%', borderRadius: '8px', cursor: 'pointer' }}
+                                        onClick={handleShowModal}
+                                    />
+                                    <Button variant="link" onClick={handleShowModal} className="mt-2">
+                                        Ver imagen completa
+                                    </Button>
+                                </Card.Body>
+                            </Card>
+                        )}
                     </Col>
                 </Row>
             </Container>
+
+            <Modal show={showImageModal} onHide={handleCloseModal} centered size="lg">
+                <Modal.Header closeButton>
+                    <Modal.Title>Comprobante de Envío</Modal.Title>
+                </Modal.Header>
+                <Modal.Body className="text-center">
+                    <img
+                        src={order?.comprobante_envio}
+                        alt="Comprobante de envío"
+                        style={{ width: '100%', height: 'auto' }}
+                    />
+                </Modal.Body>
+            </Modal>
         </div>
     );
 };

@@ -209,8 +209,9 @@ class OrdenSerializer(serializers.ModelSerializer):
         model = Orden
         fields = [
             'id', 'usuario', 'direccion', 'total', 'metodo_pago', 'numero_orden',
-            'estado_pago', 'estado_orden', 'cantidad_compra', 
-            'fecha_creacion', 'items', 'direccion', 'direccion_id'
+            'estado_pago', 'estado_orden', 'cantidad_compra',
+            'fecha_creacion', 'items', 'direccion', 'direccion_id',
+            'comprobante_envio'
         ]
 
         read_only_fields = ['total', 'cantidad_compra', 'usuario']
