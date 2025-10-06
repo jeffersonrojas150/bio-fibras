@@ -164,13 +164,24 @@ class CarritoSerializer(serializers.ModelSerializer):
 
 class OrdenItemSerializer(serializers.ModelSerializer):
     producto_nombre = serializers.SerializerMethodField()
+    producto_imagen = serializers.SerializerMethodField()
 
     class Meta:
         model = OrdenItem
-        fields = ['id', 'producto_nombre', 'cantidad', 'precio_unitario', 'precio_total']
+        fields = ['id', 'producto_nombre', 'producto_imagen', 'cantidad', 'precio_unitario', 'precio_total']
 
     def get_producto_nombre(self, obj):
         return obj.producto.nombre if obj.producto else "Producto Eliminado"
+
+    def get_producto_imagen(self, obj):
+        if obj.producto:
+            imagen_principal = obj.producto.imagenes.filter(es_principal=True).first()
+            if imagen_principal:
+                request = self.context.get('request')
+                if request:
+                    return request.build_absolute_uri(imagen_principal.imagen.url)
+                return imagen_principal.imagen.url
+        return None
 
 class DireccionSerializer(serializers.ModelSerializer):
     class Meta:

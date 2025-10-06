@@ -20,6 +20,7 @@ import OrderConfirmation from "./pages/Orders/OrderConfirmation";
 import { OrderProvider } from "./context/orderContext";
 import { AuthProvider } from "./context/authContext";
 import MyOrders from "./pages/Orders/MyOrders";
+import OrderDetail from "./pages/Orders/OrderDetail";
 import { FavoritesProvider } from "./context/favoritesContext";
 import { ProductProvider } from "./context/productContext";
 import { CategoryProvider } from "./context/categoryContext";
@@ -74,6 +75,7 @@ function App() {
                           />
 
                           <Route path="/mis-ordenes" element={<MyOrders />} />
+                          <Route path="/ordenes/:orderId" element={<OrderDetail />} />
                           <Route path="/favoritos" element={<Favorites />} />
                           <Route path="/about" element={<About />} />
 
