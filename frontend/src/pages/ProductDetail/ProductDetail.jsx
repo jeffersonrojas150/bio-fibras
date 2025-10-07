@@ -313,11 +313,11 @@ const ProductDetail = () => {
                     <div className="shipping-info">
                       <div className="shipping-info-item">
                         <FaShippingFast className="shipping-icon" />
-                        <div><strong>Envío Estándar (Lima):</strong> 2-4 días hábiles.</div>
+                        <div><strong>Envío Estándar (Lima):</strong> 4 a 5 días hábiles.</div>
                       </div>
                       <div className="shipping-info-item">
                         <FaBox className="shipping-icon" />
-                        <div><strong>Envío a Provincias:</strong> 5-10 días hábiles (vía Olva/Shalom).</div>
+                        <div><strong>Envío a Provincias:</strong> 7 a 8 días hábiles (vía Olva, Shalom u otras).</div>
                       </div>
                       <div className="shipping-info-item">
                         <FaUndo className="shipping-icon" />
