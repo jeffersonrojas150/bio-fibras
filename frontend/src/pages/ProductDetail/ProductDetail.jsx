@@ -33,7 +33,7 @@ const ProductDetail = () => {
   const [activeTab, setActiveTab] = useState('description');
   
 
-  const adminWhatsappNumber = '910881837'; 
+  const adminWhatsappNumber = '51910881837'; 
 
   useEffect(() => {
     const fetchProductData = async () => {
@@ -230,32 +230,30 @@ const ProductDetail = () => {
                 </div>
               )}
 
-              <div className="stock-info mb-4">
-                <div className="stock-indicator">
-                  <FaBox className="me-2" />
-                  <span className="stock-text">
-                    {product.stock > 10 ? 'En stock' : 
-                     product.stock > 0 ? `Solo quedan ${product.stock} unidades` : 
-                     'Sin stock'}
-                  </span>
-                  <span className={`stock-status ${product.stock > 10 ? 'high' : product.stock > 0 ? 'low' : 'out'}`}>
-                    ({product.stock} disponibles)
-                  </span>
-                </div>
-              </div>
+              
+                 
+                  <div className="quantity-and-stock-section mb-4">
+                    
+                    <label className="quantity-label">CANTIDAD:</label>
 
-              <div className="quantity-section mb-4">
-                <label className="quantity-label">Cantidad:</label>
-                <div className="quantity-control-group">
-                  <Button variant="outline-secondary" size="sm" className="quantity-btn" onClick={() => handleQuantityChange(-1)} disabled={quantity <= 1}>
-                    <FaMinus />
-                  </Button>
-                  <Form.Control type="number" value={quantity} onChange={(e) => setQuantity(Math.max(1, Math.min(product.stock, parseInt(e.target.value) || 1)))} className="quantity-input" min="1" max={product.stock}/>
-                  <Button variant="outline-secondary" size="sm" className="quantity-btn" onClick={() => handleQuantityChange(1)} disabled={quantity >= product.stock}>
-                    <FaPlus />
-                  </Button>
-                </div>
-              </div>
+                    {/* Los controles de cantidad */}
+                    <div className="quantity-control-group">
+                      <Button variant="outline-secondary" size="sm" className="quantity-btn" onClick={() => handleQuantityChange(-1)} disabled={quantity <= 1}>
+                        <FaMinus />
+                      </Button>
+                      <Form.Control type="number" value={quantity} onChange={(e) => setQuantity(Math.max(1, Math.min(product.stock, parseInt(e.target.value) || 1)))} className="quantity-input" min="1" max={product.stock}/>
+                      <Button variant="outline-secondary" size="sm" className="quantity-btn" onClick={() => handleQuantityChange(1)} disabled={quantity >= product.stock}>
+                        <FaPlus />
+                      </Button>
+                    </div>
+
+                    {/* La información de stock, ahora debajo */}
+                    {product.stock > 0 && (
+                      <div className="stock-info">
+                        <span>Tenemos {product.stock} disponible</span>
+                      </div>
+                    )}
+</div>
 
                {product.stock > 0 && (
                 <div className="stock-contact-message">

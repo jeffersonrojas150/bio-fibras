@@ -182,12 +182,6 @@
 }
 
 /* --- Stock y Cantidad --- */
-.stock-info {
-  background-color: #f8f9fa;
-  border-radius: 6px;
-  padding: 12px 15px;
-  border-left: 3px solid #000200;
-}
 
 .stock-indicator {
   display: flex;
@@ -196,9 +190,12 @@
 }
 
 .stock-text {
-  font-size: 1em;
-  color: #333333;
-  margin-right: 10px;
+   display: flex;
+  align-items: center;
+  gap: 8px; /* Espacio entre el ícono y el texto */
+  font-size: 0.9em;
+  font-weight: 500;
+  color: #555;
 }
 
 .stock-status {
@@ -212,28 +209,34 @@
 .stock-status.low { background-color: #fff3cd; color: #856404; }
 .stock-status.out { background-color: #f8d7da; color: #721c24; }
 
-.quantity-section {
-  background-color: #fafafa;
-  border-radius: 6px;
-  padding: 10px
-}
-
-.quantity-label {
-  font-size: 1em;
-  font-weight: 400;
-  color: #333333;
-  margin-bottom: 8px;
-  display: block;
+.quantity-and-stock-section {
+  padding: 15px 0;
+  border-top: 1px solid #f0f0f0;
+  border-bottom: 1px solid #f0f0f0;
   text-align: center;
 }
 
-.quantity-control-group {
+.quantity-label {
+  display: block;
+  font-size: 0.9em;
+  font-weight: 300;
+  color: #333;
+  margin-bottom: 10px;
+  align-items: center !important;
+  text-align: center;
+}
+
+.controls-wrapper {
   display: flex;
   align-items: center;
-  justify-content: center;
-  gap: 0;
-  width: fit-content;
-  margin: 0 auto;
+  gap: 0.5rem; 
+}
+
+.quantity-control-group {
+  display:  inline-flex;;
+  align-items: center !important;
+  margin-bottom: 10px;
+  
 }
 
 .quantity-btn {
@@ -243,10 +246,17 @@
   width: 35px; 
   height: 35px; 
   display: flex;
-  align-items: center;
-  justify-content: center;
+  align-items: center!important;
+  justify-content: center !important;
   border-radius: 0;
   transition: all 0.2s ease;
+}
+
+.stock-info {
+  font-size: 0.9em;
+  color: #777;
+  font-weight: 400;
+  gap: 0px;
 }
 
 .quantity-btn:first-child { border-top-left-radius: 8px; border-bottom-left-radius: 8px; }
@@ -255,17 +265,18 @@
 .quantity-btn:disabled { opacity: 0.5; cursor: not-allowed; }
 
 .quantity-input {
-  width: 50px;
-  height: 40px; 
-  text-align: center;
+  width: 60px !important;      /* Ancho fijo para que no se expanda */
+  flex-grow: 0 !important;      /* Evita que crezca en el contenedor flex */
+  text-align: center!important;  
   border: 1px solid #8B4513 !important;
-  border-left: 1px solid #8B4513 !important;
-  border-right: 1px solid #8B4513 !important;
+  border-left: none !important;
+  border-right: none ;
   border-radius: 0;
   background-color: #ffffff;
   font-weight: 400!important;
   font-size: 1.1em;
 }
+
 
 .quantity-input:focus { box-shadow: none; border-color: #8B4513 !important; }
 
@@ -282,7 +293,7 @@
 .contact-text {
   font-size: 0.9em;
   font-weight: 300;
-  color: #2c5530;
+  color: #011b09;
   margin-bottom: 10px; 
   line-height: 1.3; 
 }
@@ -296,8 +307,17 @@
   font-size: 0.9em; 
   border-radius: 20px; 
   transition: all 0.2s ease;
+  animation: pulse 1s infinite; 
 }
 
+@keyframes pulse {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05); 
+  }
+}
 .whatsapp-contact-btn:hover {
   background-color: #128c1c !important;
   border-color: #000000 !important ;
@@ -666,6 +686,17 @@
     padding: 10px;
     font-size: 0.6em!important;
   }
+
+  .stock-and-quantity-wrapper {
+      flex-direction: column; /* Apila los elementos */
+      align-items: flex-start; /* Alinea todo a la izquierda */
+      gap: 15px; /* Espacio vertical entre stock y cantidad */
+    }
+
+    .quantity-section {
+      width: 100%; /* Ocupa todo el ancho */
+      justify-content: space-between; /* Etiqueta a la izq, control a la der */
+    }
 }
 
 /* Móviles pequeños */
