@@ -91,7 +91,7 @@ const ProductDetail = () => {
 
   toast.success(`🛒 ¡"${product.name}" añadido al carrito!`, {
     style: {
-      border: '1px solid #484406ff', // verde suave
+      border: '1px solid #484406ff',
       padding: '10px 16px',
       color: '#000000ff',
       background: '#f4e6c3ff',
@@ -171,11 +171,7 @@ const ProductDetail = () => {
 
   return (
     <div className="product-detail-page">
-      {showAddedAlert && (
-        <Alert variant="success" className="floating-alert animate__animated animate__fadeInDown">
-          ¡Producto "{product.name}" añadido al carrito!
-        </Alert>
-      )}
+  
 
       <Container className="py-4 product-detail-custom-container">
         <Row className="product-detail-main-row">
