@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate, Link} from 'react-router-dom';
 import { Container, Row, Col, Button, Form, Badge, Modal, Alert, Spinner } from 'react-bootstrap';
 import { FaHeart, FaRegHeart, FaShoppingCart, FaArrowLeft, FaMinus, FaPlus, FaShare, FaWhatsapp, FaFacebook, FaTwitter, FaBox, FaShippingFast, FaUndo } from 'react-icons/fa';
 import { useCart } from '../../context/cartContext';
@@ -9,20 +9,7 @@ import './ProductDetail.css';
 
 import { useFavorites } from '../../context/favoritesContext';
 
-const AccordionItem = ({ title, content, isOpen, onToggle, icon }) => (
-  <div className="accordion-item">
-    <div className="accordion-header" onClick={onToggle}>
-      <div className="accordion-title-wrapper">
-        {icon}
-        <h3 className="accordion-title">{title}</h3>
-      </div>
-      <span className="accordion-icon">{isOpen ? '−' : '+'}</span>
-    </div>
-    <div className={`accordion-content ${isOpen ? 'open' : ''}`}>
-      <div className="accordion-content-inner">{content}</div>
-    </div>
-  </div>
-);
+
 
 const ProductDetail = () => {
   const { slug } = useParams();
@@ -43,7 +30,8 @@ const ProductDetail = () => {
   const [showShareModal, setShowShareModal] = useState(false);
   const [showAddedAlert, setShowAddedAlert] = useState(false);
   const [relatedProducts, setRelatedProducts] = useState([]);
-  const [openAccordion, setOpenAccordion] = useState('description');
+  const [activeTab, setActiveTab] = useState('description');
+  
 
   const adminWhatsappNumber = '910881837'; 
 
@@ -89,9 +77,7 @@ const ProductDetail = () => {
     fetchProductData();
   }, [slug, navigate]);
 
-  const handleAccordionToggle = (key) => {
-    setOpenAccordion(openAccordion === key ? null : key);
-  };
+
 
   const handleQuantityChange = (delta) => {
     const newQuantity = Math.max(1, Math.min(product.stock, quantity + delta));
@@ -176,36 +162,39 @@ const ProductDetail = () => {
 
       <Container className="py-4 product-detail-custom-container">
         <Row className="product-detail-main-row">
-          <Col lg={6} className="mb-4">
-            <div className="product-gallery">
-              <div className="main-image-container">
-                <img 
-                  src={product.images[selectedImage]} 
-                  alt={product.name}
-                  className="main-product-image"
-                />
-                {product.originalPrice && (
-                  <Badge bg="danger" className="discount-badge">
-                    -{discountPercent}%
-                  </Badge>
-                )}
-              </div>
-              
-              {product.images.length > 1 && (
-                <div className="image-thumbnails">
-                  {product.images.map((image, index) => (
-                    <div 
-                      key={index}
-                      className={`thumbnail ${selectedImage === index ? 'active' : ''}`}
-                      onClick={() => setSelectedImage(index)}
-                    >
-                      <img src={image} alt={`${product.name} ${index + 1}`} />
+          
+              <Col lg={6} className="mb-4">
+                <div className="product-gallery">
+                  {/* Primero, renderizamos la columna de miniaturas a la izquierda */}
+                  {product.images.length > 1 && (
+                    <div className="image-thumbnails">
+                      {product.images.map((image, index) => (
+                        <div 
+                          key={index}
+                          className={`thumbnail ${selectedImage === index ? 'active' : ''}`}
+                          onClick={() => setSelectedImage(index)}
+                        >
+                          <img src={image} alt={`${product.name} ${index + 1}`} />
+                        </div>
+                      ))}
                     </div>
-                  ))}
+                  )}
+                  
+                  {/* Luego, la imagen principal que ocupará el espacio restante */}
+                  <div className="main-image-container">
+                    <img 
+                      src={product.images[selectedImage]} 
+                      alt={product.name}
+                      className="main-product-image"
+                    />
+                    {product.originalPrice && (
+                      <Badge bg="danger" className="discount-badge">
+                        -{discountPercent}%
+                      </Badge>
+                    )}
+                  </div>
                 </div>
-              )}
-            </div>
-          </Col>
+              </Col>
 
           <Col lg={6}>
             <div className="product-info-panel">
@@ -288,46 +277,78 @@ const ProductDetail = () => {
                   Compartir
                 </Button>
               </div>
-
-              <div className="payment-methods">
-                <div className="section-title">MÉTODOS DE PAGO</div>
-                <div className="payment-icons d-flex flex-wrap gap-2">
-                  <img src="https://cdn.worldvectorlogo.com/logos/visa-10.svg" alt="Visa" className="payment-logo" />
-                  <img src="https://www.coopacsancristobal.pe/wp-content/uploads/2024/11/yape-logo-png_seeklogo-504685.png" alt="Yape" className="payment-logo" />
-                </div>
-              </div>
-
-              <div className="product-details-accordion">
-                <AccordionItem
-                  title="Descripción"
-                  isOpen={openAccordion === 'description'}
-                  onToggle={() => handleAccordionToggle('description')}
-                  content={<p className="description-text">{product.description}</p>}
-                />
                
-                <AccordionItem
-                  title="Información de Envío"
-                  isOpen={openAccordion === 'shipping'}
-                  onToggle={() => handleAccordionToggle('shipping')}
-                  content={
-                    <div className="shipping-info">
-                      <div className="shipping-info-item">
-                        <FaShippingFast className="shipping-icon" />
-                        <div><strong>Envío Estándar (Lima):</strong> 4 a 5 días hábiles.</div>
-                      </div>
-                      <div className="shipping-info-item">
-                        <FaBox className="shipping-icon" />
-                        <div><strong>Envío a Provincias:</strong> 7 a 8 días hábiles (vía Olva, Shalom u otras).</div>
-                      </div>
-                      <div className="shipping-info-item">
-                        <FaUndo className="shipping-icon" />
-                        <div><strong>Política de Devolución:</strong> Aceptamos devoluciones hasta 7 días después de la entrega por defectos de fábrica.</div>
-                      </div>
+              
+                  <div className="product-tabs-container">
+                    {/* Navegación de las pestañas */}
+                    <div className="product-tabs-nav">
+                      <button 
+                        className={`tab-button ${activeTab === 'description' ? 'active' : ''}`}
+                        onClick={() => setActiveTab('description')}
+                      >
+                        Descripción
+                      </button>
+                      <button 
+                        className={`tab-button ${activeTab === 'shipping' ? 'active' : ''}`}
+                        onClick={() => setActiveTab('shipping')}
+                      >
+                        Información de Envío
+                      </button>
+                      <button 
+                        className={`tab-button ${activeTab === 'payment' ? 'active' : ''}`}
+                        onClick={() => setActiveTab('payment')}
+                      >
+                        Métodos de Pago
+                      </button>
                     </div>
-                  }
-                />
-              </div>
-            </div>
+
+                    {/* Contenido de las pestañas */}
+                    <div className="product-tabs-content">
+                      {activeTab === 'description' && (
+                        <div className="tab-pane">
+                          <p className="description-text">{product.description}</p>
+                        </div>
+                      )}
+
+                      {activeTab === 'shipping' && (
+                        <div className="tab-pane">
+                          <ul className="shipping-info-list">
+                            <li className="shipping-info-item">
+                              <FaShippingFast className="shipping-icon" />
+                              <div><strong>Lima Metropolitana:</strong> 3 a 5 días hábiles.</div>
+                            </li>
+                            <li className="shipping-info-item">
+                              <FaBox className="shipping-icon" />
+                              <div><strong>Envío a Provincias:</strong> 5 a 10 días hábiles (vía Olva, Shalom u otras).</div>
+                            </li>
+                            <li className="shipping-info-item">
+                              <FaUndo className="shipping-icon" />
+                            
+
+                              <div className="mt-2 text-sm">
+                                <strong>Política de devolución: </strong>
+                                <Link to="/terminos-y-condiciones" className="text-primary text-decoration-underline">
+                                   Ver política completa en Términos y Condiciones
+                                </Link>
+                              </div>
+
+
+                            </li>
+                          </ul>
+                        </div>
+                      )}
+
+                      {activeTab === 'payment' && (
+                        <div className="tab-pane">
+                          <div className="payment-icons d-flex flex-wrap gap-3 align-items-center">
+                            <img src="https://cdn.worldvectorlogo.com/logos/visa-10.svg" alt="Visa" className="payment-logo" />
+                            <img src="https://www.coopacsancristobal.pe/wp-content/uploads/2024/11/yape-logo-png_seeklogo-504685.png" alt="Yape" className="payment-logo" />
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                  </div>
           </Col>
         </Row>
         <div className="d-flex justify-content-end align-items-center mb-4">
