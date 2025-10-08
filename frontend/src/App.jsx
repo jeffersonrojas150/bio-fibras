@@ -31,6 +31,7 @@ import AddressManagement from './pages/Profile/AddressManagement';
 import PersonalData from './pages/Profile/PersonalData';
 import TermsConditions from './pages/Legal/TermsConditions';
 import PrivacyPolicy from './pages/Legal/PrivacyPolicy';
+import ScrollToTop from './components/ScrollToTop';
 
 
 import "./App.css";
@@ -49,7 +50,9 @@ function App() {
               <FavoritesProvider>
                 <CartProvider>
                   <OrderProvider>
+                    
                     <Router>
+                      <ScrollToTop  />
                       <Header />
 
                       <main id="page-content">
