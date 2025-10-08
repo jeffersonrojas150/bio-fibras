@@ -26,3 +26,9 @@ db.sqlite3
 categorias/
 
 productos/
+
+staticfiles/
+
+db_url.txt
+
+cloudrun-deploy.yaml
