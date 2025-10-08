@@ -104,7 +104,7 @@ const PersonalData = () => {
                     </Form.Group>
 
                     <div className="text-end">
-                        <Button type="submit" variant="primary" disabled={isLoading}>
+                        <Button type="submit" variant="success" disabled={isLoading}>
                             {isLoading ? (
                                 <>
                                     <Spinner as="span" size="sm" className="me-2" />
