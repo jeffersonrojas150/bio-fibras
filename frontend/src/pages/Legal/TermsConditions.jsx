@@ -52,7 +52,7 @@ const TermsConditions = () => {
                                     <h2>1. Introducción</h2>
                                 </div>
                                 <p>
-                                    Bienvenido a Bio Fibras J. Estos Términos y Condiciones regulan el uso de nuestro sitio web 
+                                    Bienvenido a BIOFIBRAS. Estos Términos y Condiciones regulan el uso de nuestro sitio web 
                                     y la compra de productos elaborados con fibras naturales sostenibles.
                                 </p>
                                 <p>
@@ -63,7 +63,7 @@ const TermsConditions = () => {
                                 <div className="legal-highlight">
                                     <strong>Información de la Empresa:</strong>
                                     <ul>
-                                        <li><strong>Razón Social:</strong> Bio Fibras J</li>
+                                        <li><strong>Razón Social:</strong> BIOFIBRAS</li>
                                         <li><strong>Ubicación:</strong> Vichayal, La Arena, Piura, Perú</li>
                                         <li><strong>Email:</strong> bio.fibras.j@gmail.com</li>
                                         <li><strong>Teléfono:</strong> +51 910 881 837</li>
@@ -144,20 +144,32 @@ const TermsConditions = () => {
                                 </div>
                                 <h3>4.1 Proceso de Pedido</h3>
                                 <p>
-                                    Al realizar un pedido, recibirás un correo electrónico de confirmación. Esta confirmación 
-                                    no constituye la aceptación de tu pedido, sino simplemente la recepción del mismo. La 
-                                    aceptación se produce cuando enviamos los productos o cuando te notificamos que están 
-                                    listos para su envío.
-                                </p>
+                                    Al realizar un pedido, se generará automáticamente un código único de pedido y recibirás un 
+                                    correo electrónico de confirmación. Este correo no representa la aceptación final del pedido, 
+                                    sino la confirmación de que hemos recibido tu solicitud correctamente.
+                                    </p>
+
+                                    <p>
+                                    Durante el proceso, podrás elegir tu método de pago: <strong>Yape</strong> o 
+                                    <strong> transferencia bancaria</strong>. Deberás enviar el comprobante o 
+                                    captura del pago por <strong>WhatsApp</strong> o <strong>correo electrónico</strong>, 
+                                    indicando el código de tu pedido.
+                                    </p>
+
+                                    <p>
+                                    Una vez verificado el pago, te enviaremos una notificación confirmando que tu pedido ha sido 
+                                    aceptado y procederemos con el envío correspondiente.
+                                    </p>
+
 
                                 <h3>4.2 Métodos de Pago</h3>
-                                <p>Aceptamos los siguientes métodos de pago:</p>
+                                <p>Por ahora estamos aceptando los siguientes métodos de pago:</p>
                                 <ul>
-                                    <li>Tarjetas de crédito y débito (Visa, Mastercard)</li>
                                     <li>Transferencias bancarias</li>
-                                    <li>Yape / Plin</li>
-                                    <li>Pago contra entrega (según disponibilidad)</li>
+                                    <li>Yape</li>
+                                    
                                 </ul>
+                                {/* 
 
                                 <h3>4.3 Seguridad de Pagos</h3>
                                 <p>
@@ -170,6 +182,7 @@ const TermsConditions = () => {
                                     Emitimos boletas o facturas electrónicas según lo solicitado. Para factura, debes 
                                     proporcionar tu RUC y razón social antes de completar la compra.
                                 </p>
+                                */}
                             </section>
 
                             <section id="envios" className="legal-section">
@@ -188,22 +201,26 @@ const TermsConditions = () => {
 
                                 <h3>5.2 Costos de Envío</h3>
                                 <p>
-                                    Los costos de envío se calculan según el peso, volumen y destino del pedido. El costo 
-                                    se mostrará antes de confirmar la compra. Ofrecemos envío gratuito en compras mayores 
-                                    a S/. 200 soles dentro de Lima Metropolitana.
+                                    El costo de envío es asumido por el cliente y deberá pagarse directamente al momento de recoger el pedido en la agencia de envío elegida. 
+                                    El monto puede variar según el peso, tamaño y destino del paquete. 
+                                    BIOFIBRAS no incluye el costo de envío en el precio del producto, salvo promociones específicas que lo indiquen expresamente.
                                 </p>
 
                                 <h3>5.3 Seguimiento</h3>
                                 <p>
-                                    Una vez enviado tu pedido, recibirás un código de seguimiento para rastrear tu paquete 
-                                    en tiempo real.
+                                    Una vez que tu pedido haya sido entregado a la empresa o agencia de envío seleccionada, 
+                                    se subirá el comprobante (voucher) de envío a nuestra página web para que puedas visualizarlo. 
+                                    Además, recibirás una notificación por correo electrónico o WhatsApp con los detalles del envío. 
+                                    En el voucher encontrarás el código de seguimiento para rastrear el estado de tu pedido en tiempo real.
                                 </p>
+
 
                                 <h3>5.4 Entrega</h3>
                                 <p>
-                                    Es responsabilidad del cliente proporcionar una dirección de entrega precisa. No nos 
-                                    hacemos responsables por retrasos o pérdidas debido a información incorrecta. Se requiere 
-                                    la firma de un adulto al momento de la entrega.
+                                    Es responsabilidad del cliente proporcionar una dirección de entrega correcta y completa. 
+                                    No nos hacemos responsables por retrasos o pérdidas ocasionadas por información incorrecta o incompleta. 
+                                    Al momento de recoger el pedido en la agencia de envío seleccionada, se requerirá la presentación del 
+                                    <strong> DNI</strong> y la firma de un adulto como constancia de recepción.
                                 </p>
                             </section>
 
@@ -212,24 +229,26 @@ const TermsConditions = () => {
                                     <FaUndo className="legal-section-icon" />
                                     <h2>6. Devoluciones y Reembolsos</h2>
                                 </div>
-                                <h3>6.1 Política de Devolución</h3>
+                               <h3>6.1 Política de Devolución</h3>
                                 <p>
-                                    Aceptamos devoluciones dentro de los 30 días posteriores a la recepción del producto, 
-                                    siempre que:
+                                    Aceptamos devoluciones dentro de los 5 días posteriores a la recepción del producto, 
+                                    siempre que se cumplan las siguientes condiciones:
                                 </p>
                                 <ul>
-                                    <li>El producto esté en su estado original, sin usar</li>
-                                    <li>Incluya todas las etiquetas y embalaje original</li>
-                                    <li>No sea un producto personalizado o hecho a medida</li>
-                                    <li>Se presente el comprobante de compra</li>
+                                    <li>El producto se encuentre en su estado original y sin signos de uso.</li>
+                                    <li>Incluya todas las etiquetas, accesorios y su embalaje original.</li>
+                                    <li>No se trate de un producto personalizado o hecho a medida.</li>
+                                    <li>Se presente el comprobante de compra correspondiente.</li>
                                 </ul>
+
 
                                 <h3>6.2 Productos Defectuosos</h3>
                                 <p>
-                                    Si recibes un producto defectuoso o dañado, contáctanos dentro de las 48 horas 
-                                    posteriores a la recepción con fotografías del producto. Procederemos con el reemplazo 
-                                    o reembolso sin costo adicional.
+                                    Si recibes un producto defectuoso o dañado, te pedimos que nos contactes dentro de las 24 horas 
+                                    posteriores a la recepción o lo antes posible, enviando fotografías claras del producto y su embalaje. 
+                                    Evaluaremos el caso y procederemos con el reemplazo o reembolso sin costo adicional.
                                 </p>
+
 
                                 <h3>6.3 Proceso de Reembolso</h3>
                                 <p>
@@ -250,7 +269,7 @@ const TermsConditions = () => {
                                 </div>
                                 <p>
                                     Todo el contenido de este sitio web, incluyendo texto, gráficos, logos, iconos, imágenes, 
-                                    videos y software, es propiedad de Bio Fibras J o de sus proveedores de contenido y está 
+                                    videos y software, es propiedad de BIOFIBRAS o de sus proveedores de contenido y está 
                                     protegido por leyes de propiedad intelectual peruanas e internacionales.
                                 </p>
                                 <p>
@@ -264,7 +283,7 @@ const TermsConditions = () => {
                                     <h2>8. Limitaciones de Responsabilidad</h2>
                                 </div>
                                 <p>
-                                    En la máxima medida permitida por la ley, Bio Fibras J no será responsable por:
+                                    En la máxima medida permitida por la ley, BIOFIBRAS no será responsable por:
                                 </p>
                                 <ul>
                                     <li>Daños indirectos, incidentales, especiales o consecuentes</li>
@@ -300,7 +319,7 @@ const TermsConditions = () => {
                                     Si tienes preguntas sobre estos Términos y Condiciones, por favor contáctanos:
                                 </p>
                                 <div className="legal-contact-box">
-                                    <p><strong>Bio Fibras J</strong></p>
+                                    <p><strong>BIOFIBRAS</strong></p>
                                     <p>📍 Vichayal, La Arena, Piura, Perú</p>
                                     <p>📧 bio.fibras.j@gmail.com</p>
                                     <p>📱 +51 910 881 837</p>

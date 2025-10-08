@@ -49,8 +49,8 @@ const Footer = () => {
                 <ul className="footer-links-list">
                   <li><Link to="/about" className="footer-link">Sobre Nosotros</Link></li>
                   <li><Link to="/contacto" className="footer-link">Contacto</Link></li>
-                  <li><Link to="/terminos" className="footer-link">Términos y Condiciones</Link></li>
-                  <li><Link to="/privacidad" className="footer-link">Política de Privacidad</Link></li>
+                  <li><Link to="/terminos-y-condiciones" className="footer-link">Términos y Condiciones</Link></li>
+                  <li><Link to="/politica-de-privacidad" className="footer-link">Política de Privacidad</Link></li>
                 </ul>
               </div>
 
