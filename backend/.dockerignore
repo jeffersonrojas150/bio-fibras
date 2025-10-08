@@ -1,0 +1,29 @@
+# Ignorar el entorno virtual de Python
+venv/
+.venv/
+
+# Ignorar caché de Python
+__pycache__/
+*.pyc
+*.pyo
+
+# Ignorar archivos de configuración local
+.env
+gcs_credentials.json
+
+# Ignorar archivos de IDE/editor
+.vscode/
+.idea/
+*.swp
+
+# Ignorar la base de datos local (si usaras SQLite)
+*.sqlite3
+
+# Archivos de Git
+.git
+.gitignore
+
+# Archivos estáticos recolectados (opcional, pero buena práctica si se reconstruye en el CI/CD)
+staticfiles/
+
+

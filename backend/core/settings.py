@@ -3,6 +3,7 @@ from pathlib import Path
 from datetime import timedelta
 from dotenv import load_dotenv
 from google.oauth2 import service_account
+import dj_database_url
 
 load_dotenv()
 
@@ -10,7 +11,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = os.getenv('SECRET_KEY')
 
-DEBUG = True
+DEBUG = os.getenv('DEBUG', 'False') == 'True'
 
 ALLOWED_HOSTS = os.getenv('DJANGO_ALLOWED_HOSTS', '127.0.0.1,localhost').split(',')
 
@@ -23,6 +24,9 @@ INSTALLED_APPS = [
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
+
+    'whitenoise.runserver_nostatic',
+
     'django.contrib.staticfiles',
     'django.contrib.sites',
 
@@ -41,13 +45,11 @@ INSTALLED_APPS = [
     'corsheaders',
 ]
 
-# ==========================================
-# MIDDLEWARE
-# ==========================================
 MIDDLEWARE = [
-    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.locale.LocaleMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -59,9 +61,6 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = 'core.urls'
 
-# ==========================================
-# TEMPLATES
-# ==========================================
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
@@ -79,11 +78,17 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'core.wsgi.application'
 
-# ==========================================
-# BASE DE DATOS
-# ==========================================
+
 DATABASES = {
-    'default': {
+    'default': dj_database_url.config(
+        default=os.getenv('DATABASE_URL'),
+        conn_max_age=600,
+        ssl_require=False # Railway maneja SSL en su proxy
+    )
+}
+
+if 'DATABASE_URL' not in os.environ:
+     DATABASES['default'] = {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': os.getenv('DB_NAME'),
         'USER': os.getenv('DB_USER'),
@@ -91,11 +96,8 @@ DATABASES = {
         'HOST': os.getenv('DB_HOST'),
         'PORT': os.getenv('DB_PORT'),
     }
-}
 
-# ==========================================
-# VALIDACIÓN DE CONTRASEÑAS
-# ==========================================
+
 AUTH_PASSWORD_VALIDATORS = [
     {'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator'},
     {'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator'},
@@ -103,23 +105,17 @@ AUTH_PASSWORD_VALIDATORS = [
     {'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator'},
 ]
 
-# ==========================================
-# INTERNACIONALIZACIÓN
-# ==========================================
 LANGUAGE_CODE = 'es-pe'
 TIME_ZONE = 'America/Lima'
 USE_I18N = True
 USE_TZ = True
 
-# ==========================================
-# ARCHIVOS ESTÁTICOS
-# ==========================================
 STATIC_URL = 'static/'
-# NOTA: STATIC_ROOT será necesario para producción. Por ahora está bien así.
 
-# ==========================================
-# CONFIGURACIÓN DE GOOGLE CLOUD STORAGE (PARA ARCHIVOS MEDIA)
-# ==========================================
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+
 GS_BUCKET_NAME = os.getenv('GS_BUCKET_NAME')
 GS_PROJECT_ID = os.getenv('GS_PROJECT_ID')
 CREDENTIALS_PATH = os.getenv('GOOGLE_APPLICATION_CREDENTIALS')
@@ -127,29 +123,23 @@ CREDENTIALS_PATH = os.getenv('GOOGLE_APPLICATION_CREDENTIALS')
 if CREDENTIALS_PATH and os.path.exists(CREDENTIALS_PATH):
     GS_CREDENTIALS = service_account.Credentials.from_service_account_file(CREDENTIALS_PATH)
 else:
-    GS_CREDENTIALS = None # Permite que la app funcione aunque no encuentre credenciales (útil para otros entornos)
+    GS_CREDENTIALS = None
 
-# Sintaxis moderna de Django 4.2+ para configurar el almacenamiento por defecto.
 STORAGES = {
     'default': {
         'BACKEND': 'storages.backends.gcloud.GoogleCloudStorage',
     },
-    'staticfiles': { # Mantenemos el default para archivos estáticos (se sirven localmente en DEV)
+    'staticfiles': {
         'BACKEND': 'django.contrib.staticfiles.storage.StaticFilesStorage',
     }
 }
 
-# Configuraciones adicionales de GCS
-GS_DEFAULT_ACL = None # Clave para que funcione con permisos de bucket "Uniforme" o "Preciso".
-GS_FILE_OVERWRITE = False # No sobreescribir archivos con el mismo nombre.
+GS_DEFAULT_ACL = None
+GS_FILE_OVERWRITE = False
 
-# URL pública de nuestros archivos multimedia ahora apunta directamente a GCS.
 MEDIA_URL = f'https://storage.googleapis.com/{GS_BUCKET_NAME}/'
-# MEDIA_ROOT ya no es necesario, Django Storages lo gestiona internamente.
 
-# ==========================================
-# CONFIGURACIÓN DE DJANGO REST FRAMEWORK
-# ==========================================
+
 REST_FRAMEWORK = {
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
     'PAGE_SIZE': 10,
@@ -171,6 +161,7 @@ AUTHENTICATION_BACKENDS = [
 ]
 
 CORS_ALLOWED_ORIGINS = os.getenv('CORS_ALLOWED_ORIGINS_LIST', 'http://localhost:5173').split(',')
+CSRF_TRUSTED_ORIGINS = os.getenv('CSRF_TRUSTED_ORIGINS_LIST', 'http://localhost:5173').split(',')
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = os.getenv('EMAIL_HOST')
@@ -182,10 +173,6 @@ DEFAULT_FROM_EMAIL = os.getenv('EMAIL_HOST_USER')
 
 SITE_ID = 1
 
-
-# ==========================================
-# CONFIGURACIÓN DE DJANGO-ALLAUTH Y DJ-REST-AUTH (SINTAXIS MODERNA)
-# ==========================================
 
 REST_USE_JWT = True
 ACCOUNT_UNIQUE_EMAIL = True
@@ -215,9 +202,7 @@ SOCIALACCOUNT_PROVIDERS = {
         }
     }
 }
-# ==========================================
-# CONFIGURACIÓN EXPLÍCITA DE DJ-REST-AUTH PARA USAR JWT
-# ==========================================
+
 REST_AUTH = {
     'SESSION_LOGIN': False,
     'JWT_SERIALIZER': 'dj_rest_auth.serializers.JWTSerializer',
