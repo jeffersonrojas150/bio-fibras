@@ -163,6 +163,8 @@ AUTHENTICATION_BACKENDS = [
 CORS_ALLOWED_ORIGINS = os.getenv('CORS_ALLOWED_ORIGINS_LIST', 'http://localhost:5173').split(',')
 CSRF_TRUSTED_ORIGINS = os.getenv('CSRF_TRUSTED_ORIGINS_LIST', 'http://localhost:5173').split(',')
 
+FRONTEND_URL = os.getenv('FRONTEND_URL', 'http://localhost:5173')
+
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = os.getenv('EMAIL_HOST')
 EMAIL_PORT = int(os.getenv('EMAIL_PORT', 587))

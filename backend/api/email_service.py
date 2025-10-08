@@ -2,6 +2,7 @@ from django.core.mail import send_mail
 from django.conf import settings
 from django.template.loader import render_to_string
 from django.urls import reverse
+from django.conf import settings
 
 def enviar_correo_confirmacion_orden(orden):
     """
@@ -109,7 +110,7 @@ def enviar_correo_password_reset(request, usuario, token, uid):
     Envía un correo al usuario con el enlace para restablecer su contraseña.
     """
     try:
-        url_frontend = f"http://localhost:5173/reset-password/{uid}/{token}/"
+        url_frontend = f"{settings.FRONTEND_URL}/reset-password/{uid}/{token}/"
 
         asunto = "Restablece tu contraseña en Bio-Fibras"
         contexto = {
@@ -211,6 +212,7 @@ def enviar_correo_orden_cancelada(orden):
         contexto = {
             'orden': orden,
             'usuario': orden.usuario,
+            'frontend_url': settings.FRONTEND_URL
         }
     
         mensaje_texto = render_to_string('emails/orden_cancelada.txt', contexto)

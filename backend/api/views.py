@@ -10,6 +10,7 @@ from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.utils.encoding import force_bytes
 from django.core.exceptions import ValidationError
 from .filters import ProductoFilter
+from django.conf import settings
 from allauth.socialaccount.providers.google.views import GoogleOAuth2Adapter
 from allauth.socialaccount.providers.oauth2.client import OAuth2Client
 from dj_rest_auth.registration.views import SocialLoginView
@@ -262,7 +263,10 @@ class PasswordResetConfirmView(generics.GenericAPIView):
 class GoogleLogin(SocialLoginView):
     adapter_class = GoogleOAuth2Adapter
     client_class = OAuth2Client
-    callback_url = "http://localhost:5173"
+
+    @property
+    def callback_url(self):
+        return settings.FRONTEND_URL
 
     def post(self, request, *args, **kwargs):
         response = super().post(request, *args, **kwargs)
