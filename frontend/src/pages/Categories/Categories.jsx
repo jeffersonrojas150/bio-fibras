@@ -24,8 +24,8 @@ const Categories = () => {
   if (loading && categories.length === 0) {
     return (
       <div className="categories-page text-center py-5">
-        <Spinner animation="border" variant="primary" />
-        <h2>Cargando categorías...</h2>
+        <Spinner animation="border" variant="success" />
+        <h3>Cargando categorías...</h3>
       </div>
     );
   }

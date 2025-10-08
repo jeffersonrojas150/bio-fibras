@@ -142,8 +142,8 @@ const ProductDetail = () => {
   if (loading) {
     return (
       <div className="product-detail-page text-center py-5">
-        <Spinner animation="border" variant="primary" />
-        <h2 className="mt-3">Cargando producto...</h2>
+        <Spinner animation="border" variant="success" />
+        <h3 className="mt-3">Cargando producto...</h3>
       </div>
     );
   }

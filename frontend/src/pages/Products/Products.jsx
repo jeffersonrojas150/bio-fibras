@@ -213,8 +213,8 @@ const Products = () => {
     if (loading && allProducts.length === 0) {
       return (
         <div className="text-center py-5">
-          <Spinner animation="border" role="status" variant="primary"><span className="visually-hidden">Cargando...</span></Spinner>
-          <p className="mt-2">Cargando productos...</p>
+          <Spinner animation="border" role="status" variant="success"><span className="visually-hidden">Cargando...</span></Spinner>
+          <h5 className="mt-2">Cargando productos...</h5>
         </div>
       );
     }
