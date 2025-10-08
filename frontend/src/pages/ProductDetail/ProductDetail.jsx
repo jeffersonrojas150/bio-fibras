@@ -128,7 +128,19 @@ const ProductDetail = () => {
         break;
       case 'instagram':
         navigator.clipboard.writeText(url);
-      toast.success('🔗 Enlace copiado. Pégalo en tu historia o bio de Instagram.');
+      toast.success('🔗 Enlace copiado. Pégalo en tu historia o bio de Instagram.', {
+          style: {
+            border: '1px solid #484406ff',
+            padding: '10px 16px',
+            color: '#000000ff',
+            background: '#f4e6c3ff',
+            fontWeight: 500,
+          },
+          iconTheme: {
+            primary: '#22c55e',
+            secondary: '#ffffff',
+          },
+        });
         break;
 
       default:
