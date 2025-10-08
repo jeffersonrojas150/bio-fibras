@@ -138,7 +138,7 @@ const AddressManagement = () => {
                         </Row>
                         <div className="d-flex justify-content-end gap-2 mt-3">
                             <Button variant="secondary" onClick={resetForm}>Cancelar</Button>
-                            <Button type="submit" variant="primary">Guardar Dirección</Button>
+                            <Button type="submit" variant="success">Guardar Dirección</Button>
                         </div>
                     </Form>
                 )}

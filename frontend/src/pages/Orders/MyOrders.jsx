@@ -77,7 +77,7 @@ const MyOrders = () => {
   if (loading) {
     return (
       <Container className="my-orders-page py-5 text-center">
-        <Spinner animation="border" variant="primary" />
+        <Spinner animation="border" variant="success" />
         <p className="mt-2">Cargando tus órdenes...</p>
       </Container>
     );
@@ -211,7 +211,7 @@ const MyOrders = () => {
                       <div className="order-actions">
                         {/* CAMBIO: El enlace ahora va al detalle de la orden real */}
                         <Button
-                          variant="outline-primary"
+                          variant="outline-success"
                           size="sm"
                           as={Link}
                           to={`/ordenes/${order.id}`} // Usamos el ID numérico de la orden para la URL

@@ -50,7 +50,7 @@ const OrderDetail = () => {
     if (loading) {
         return (
             <Container className="text-center py-5">
-                <Spinner animation="border" variant="primary" />
+                <Spinner animation="border" variant="success" />
                 <p className="mt-2">Cargando detalles de la orden...</p>
             </Container>
         );

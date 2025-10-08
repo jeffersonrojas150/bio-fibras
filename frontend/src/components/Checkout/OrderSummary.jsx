@@ -10,7 +10,7 @@ const OrderSummary = ({ items = [], subtotal = 0, shipping = 0, total = 0 }) => 
       <Card.Header as="h5">
         <FaShoppingCart className="me-2" />
         Resumen del Pedido
-        <Badge bg="secondary" className="ms-2">
+        <Badge bg="success" className="ms-2">
           {items.reduce((acc, item) => acc + item.quantity, 0)} producto(s)
         </Badge>
       </Card.Header>
