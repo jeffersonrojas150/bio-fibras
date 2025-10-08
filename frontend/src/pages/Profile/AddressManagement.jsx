@@ -116,7 +116,7 @@ const AddressManagement = () => {
             <Card.Header as="h5" className="d-flex justify-content-between align-items-center">
                 Mis Direcciones de Recojo
                 {!showForm && (
-                    <Button variant="primary" size="sm" onClick={() => setShowForm(true)}>
+                    <Button variant="success" size="sm" onClick={() => setShowForm(true)}>
                         <FaPlus className="me-2" /> Añadir Nueva
                     </Button>
                 )}

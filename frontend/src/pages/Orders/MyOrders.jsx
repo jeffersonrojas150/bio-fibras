@@ -105,11 +105,14 @@ const MyOrders = () => {
           {/* CAMBIO: Los filtros ahora reflejan los estados del backend */}
           <div className="orders-filters mb-4">
             <Button
-              variant={filter === 'all' ? 'primary' : 'outline-primary'}
+              variant={filter === 'all' ? 'mustard' : 'outline-mustard'}
               onClick={() => setFilter('all')}
+              className={filter === 'all' ? 'btn-mustard' : 'btn-outline-mustard'}
             >
               Todas
             </Button>
+
+
             <Button
               variant={filter === 'pendiente' ? 'warning' : 'outline-warning'}
               onClick={() => setFilter('pendiente')}
@@ -147,9 +150,10 @@ const MyOrders = () => {
                   : `No se encontraron órdenes con el estado seleccionado.`
                 }
               </p>
-              <Link to="/productos" className="btn btn-primary">
+              <Link to="/productos" className="btn btn-mustard">
                 Explorar Productos
               </Link>
+
             </Card>
           ) : (
             <div className="orders-list">

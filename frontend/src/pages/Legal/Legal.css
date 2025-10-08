@@ -3,7 +3,7 @@
 :root {
   --mustard-color: #c78b01;
   --dark-green: #2c3e32;
-  --primary-green: #096912;
+  --primary-green: #c78b01;
   --gray-text: #6c757d;
   --light-bg: #f8f9fa;
   --off-white-bg: #e9ecef;
@@ -28,7 +28,7 @@
    HERO SECTION
 ========================= */
 .legal-hero {
-  background: linear-gradient(135deg, var(--primary-green) 0%, #0a7d16 100%);
+  background: linear-gradient(135deg, var(--primary-green) 0%, #C8860D 100%);
   padding: 4rem 0 3rem;
   margin-bottom: 3rem;
   position: relative;

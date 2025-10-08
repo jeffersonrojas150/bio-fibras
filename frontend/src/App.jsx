@@ -29,6 +29,10 @@ import About from './pages/About/About';
 import ProfilePage from './pages/Profile/ProfilePage';
 import AddressManagement from './pages/Profile/AddressManagement';
 import PersonalData from './pages/Profile/PersonalData';
+import TermsConditions from './pages/Legal/TermsConditions';
+import PrivacyPolicy from './pages/Legal/PrivacyPolicy';
+import ScrollToTop from './components/ScrollToTop';
+
 
 import "./App.css";
 
@@ -46,7 +50,9 @@ function App() {
               <FavoritesProvider>
                 <CartProvider>
                   <OrderProvider>
+                    
                     <Router>
+                      <ScrollToTop  />
                       <Header />
 
                       <main id="page-content">
@@ -76,6 +82,9 @@ function App() {
                             path="/order-confirmation"
                             element={<OrderConfirmation />}
                           />
+                              {/* Rutas Legales */}
+                          <Route path="/terminos-y-condiciones" element={<TermsConditions />} />
+                          <Route path="/politica-de-privacidad" element={<PrivacyPolicy />} />
 
                           <Route path="/mis-ordenes" element={<MyOrders />} />
                           <Route path="/ordenes/:orderId" element={<OrderDetail />} />
@@ -85,6 +94,8 @@ function App() {
                             <Route index element={<Navigate to="datos" replace />} />
                             <Route path="datos" element={<PersonalData />} />
                             <Route path="direcciones" element={<AddressManagement />} />
+
+                        
                           </Route>
 
                           {/* futuras rutas */}

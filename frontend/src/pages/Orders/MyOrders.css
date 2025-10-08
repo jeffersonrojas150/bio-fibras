@@ -4,6 +4,17 @@
   min-height: calc(100vh - 200px);
 }
 
+.btn-mustard {
+  background-color: #b58900; /* mostaza café */
+  border-color: #a57800;
+  color: white;
+}
+
+.btn-mustard:hover {
+  background-color: #946a00;
+  border-color: #825c00;
+}
+
 .page-header {
   border-bottom: 2px solid #e2e8f0;
   padding-bottom: 1rem;

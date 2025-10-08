@@ -52,7 +52,7 @@ const PrivacyPolicy = () => {
                                     <h2>1. Introducción</h2>
                                 </div>
                                 <p>
-                                    En Bio Fibras J, valoramos y respetamos tu privacidad. Esta Política de Privacidad 
+                                    En BIOFIBRAS, valoramos y respetamos tu privacidad. Esta Política de Privacidad 
                                     describe cómo recopilamos, usamos, almacenamos y protegemos tu información personal 
                                     cuando utilizas nuestro sitio web y servicios.
                                 </p>
@@ -66,7 +66,7 @@ const PrivacyPolicy = () => {
                                         <li>Solo recopilamos información necesaria para brindarte nuestros servicios</li>
                                         <li>Nunca venderemos tu información personal a terceros</li>
                                         <li>Utilizamos medidas de seguridad avanzadas para proteger tus datos</li>
-                                        <li>Tienes derecho a acceder, corregir o eliminar tu información</li>
+                                        
                                     </ul>
                                 </div>
                             </section>
@@ -80,34 +80,20 @@ const PrivacyPolicy = () => {
                                 <h3>2.1 Información que nos Proporcionas Directamente</h3>
                                 <p>Recopilamos información que nos proporcionas cuando:</p>
                                 <ul>
-                                    <li><strong>Creas una cuenta:</strong> Nombre, apellido, correo electrónico, contraseña, 
-                                    número de teléfono, dirección de entrega</li>
-                                    <li><strong>Realizas una compra:</strong> Información de facturación, método de pago, 
+                                    <li><strong>Creas una cuenta:</strong> Nombre, apellido, correo electrónico, contraseña</li>
+                                    <li><strong>Realizas una compra:</strong> Número de teléfono, dirección de entrega, información de facturación, método de pago, 
                                     historial de pedidos</li>
                                     <li><strong>Contactas con nosotros:</strong> Mensajes, consultas, comentarios, 
                                     opiniones sobre productos</li>
-                                    <li><strong>Participas en promociones:</strong> Información de participación en 
-                                    sorteos, concursos o encuestas</li>
+                                    
                                 </ul>
 
                                 <h3>2.2 Información que Recopilamos Automáticamente</h3>
                                 <p>Cuando visitas nuestro sitio web, recopilamos automáticamente:</p>
                                 <ul>
-                                    <li><strong>Información del dispositivo:</strong> Dirección IP, tipo de navegador, 
-                                    sistema operativo, dispositivo utilizado</li>
-                                    <li><strong>Información de navegación:</strong> Páginas visitadas, tiempo de permanencia, 
-                                    enlaces clicados, productos visualizados</li>
-                                    <li><strong>Datos de interacción:</strong> Productos agregados al carrito, búsquedas 
-                                    realizadas, preferencias de usuario</li>
-                                    <li><strong>Ubicación geográfica:</strong> Ubicación aproximada basada en dirección IP 
-                                    (con tu consentimiento para ubicación precisa)</li>
+                                    <li><strong>Datos de interacción:</strong> Productos agregados al carrito, preferencias de usuario</li> 
                                 </ul>
 
-                                <h3>2.3 Información de Terceros</h3>
-                                <p>
-                                    Podemos recibir información sobre ti de servicios de terceros cuando utilizas opciones 
-                                    de inicio de sesión social (Google, Facebook) o servicios de pago externos.
-                                </p>
                             </section>
 
                             <section id="uso" className="legal-section">
@@ -147,7 +133,7 @@ const PrivacyPolicy = () => {
                                     <li>Detectar y prevenir actividades fraudulentas</li>
                                     <li>Proteger la seguridad del sitio web</li>
                                     <li>Cumplir con obligaciones legales y regulatorias</li>
-                                    <li>Resolver disputas y hacer cumplir nuestros términos</li>
+                                   
                                 </ul>
 
                                 <h3>3.5 Marketing (con tu consentimiento)</h3>
@@ -173,8 +159,8 @@ const PrivacyPolicy = () => {
                                     <li><strong>Procesadores de pago:</strong> Para procesar transacciones de forma segura</li>
                                     <li><strong>Servicios de envío:</strong> Para entregar tus pedidos (Olva Courier, Shalom, etc.)</li>
                                     <li><strong>Servicios de hosting:</strong> Para alojar nuestro sitio web y datos</li>
-                                    <li><strong>Herramientas de análisis:</strong> Para mejorar nuestro sitio (Google Analytics)</li>
-                                    <li><strong>Servicios de email:</strong> Para enviar comunicaciones (con tu consentimiento)</li>
+                                
+                                    <li><strong>Servicios de email:</strong> Para enviar comunicaciones</li>
                                 </ul>
 
                                 <h3>4.2 Requisitos Legales</h3>
@@ -193,48 +179,38 @@ const PrivacyPolicy = () => {
                                 </p>
                             </section>
 
-                            <section id="cookies" className="legal-section">
+                            <section id="almacenamiento" className="legal-section">
                                 <div className="legal-section-header">
-                                    <FaCookie className="legal-section-icon" />
-                                    <h2>5. Cookies y Tecnologías Similares</h2>
+                                    <FaDatabase className="legal-section-icon" />
+                                    <h2>5. Almacenamiento Local</h2>
                                 </div>
+
                                 <p>
-                                    Utilizamos cookies y tecnologías similares para mejorar tu experiencia en nuestro sitio web.
+                                    En nuestro sitio web no utilizamos cookies ni tecnologías de seguimiento similares. 
+                                    Sin embargo, empleamos <strong>almacenamiento local (LocalStorage)</strong> para guardar 
+                                    temporalmente cierta información en tu dispositivo.
                                 </p>
 
-                                <h3>5.1 ¿Qué son las Cookies?</h3>
+                                <h3>5.1 ¿Qué es el Almacenamiento Local?</h3>
                                 <p>
-                                    Las cookies son pequeños archivos de texto que se almacenan en tu dispositivo cuando 
-                                    visitas nuestro sitio web. Nos ayudan a recordar tus preferencias y mejorar tu experiencia.
+                                    El almacenamiento local permite que tu navegador guarde datos directamente en tu dispositivo. 
+                                    Esto se usa únicamente para recordar tus preferencias, mantener tu sesión iniciada o 
+                                    mejorar tu experiencia de navegación.
                                 </p>
 
-                                <h3>5.2 Tipos de Cookies que Utilizamos</h3>
+                                <h3>5.2 Qué Datos Guardamos</h3>
                                 <ul>
-                                    <li><strong>Cookies esenciales:</strong> Necesarias para el funcionamiento básico del sitio 
-                                    (inicio de sesión, carrito de compras)</li>
-                                    <li><strong>Cookies de rendimiento:</strong> Recopilan información sobre cómo utilizas 
-                                    el sitio (páginas visitadas, errores encontrados)</li>
-                                    <li><strong>Cookies de funcionalidad:</strong> Recuerdan tus preferencias (idioma, región, 
-                                    productos favoritos)</li>
-                                    <li><strong>Cookies de marketing:</strong> Rastrean tu actividad para mostrar anuncios 
-                                    relevantes (solo con tu consentimiento)</li>
+                                    
+                                    <li>Información temporal de sesión, favoritos y carrito.</li>
                                 </ul>
 
-                                <h3>5.3 Gestión de Cookies</h3>
+                                <h3>5.3 Control del Usuario</h3>
                                 <p>
-                                    Puedes controlar y eliminar cookies a través de la configuración de tu navegador. 
-                                    Ten en cuenta que deshabilitar ciertas cookies puede afectar la funcionalidad del sitio.
+                                    Puedes eliminar la información almacenada en cualquier momento desde la configuración de tu 
+                                    navegador o borrando los datos del sitio web.
                                 </p>
+                                </section>
 
-                                <h3>5.4 Otras Tecnologías</h3>
-                                <p>También utilizamos:</p>
-                                <ul>
-                                    <li><strong>Web beacons:</strong> Pequeñas imágenes que nos ayudan a entender el 
-                                    comportamiento del usuario</li>
-                                    <li><strong>Local storage:</strong> Para almacenar preferencias localmente en tu dispositivo</li>
-                                    <li><strong>Píxeles de seguimiento:</strong> Para medir la efectividad de campañas de marketing</li>
-                                </ul>
-                            </section>
 
                             <section id="seguridad" className="legal-section">
                                 <div className="legal-section-header">
@@ -331,8 +307,7 @@ const PrivacyPolicy = () => {
                                 <ul>
                                     <li>Acceder a la configuración de tu cuenta en el sitio web</li>
                                     <li>Enviarnos un correo a: <strong>bio.fibras.j@gmail.com</strong></li>
-                                    <li>Llamarnos al: <strong>+51 910 881 837</strong></li>
-                                    <li>Escribirnos a: Vichayal, La Arena, Piura, Perú</li>
+                                    
                                 </ul>
                                 <p>
                                     Responderemos a tu solicitud dentro de los 10 días hábiles. Puede que necesitemos 
@@ -362,24 +337,11 @@ const PrivacyPolicy = () => {
                                 </p>
                             </section>
 
-                            <section id="transferencias" className="legal-section">
-                                <div className="legal-section-header">
-                                    <h2>9. Transferencias Internacionales de Datos</h2>
-                                </div>
-                                <p>
-                                    Algunos de nuestros proveedores de servicios pueden estar ubicados fuera de Perú. Cuando 
-                                    transferimos tu información personal internacionalmente, nos aseguramos de que:
-                                </p>
-                                <ul>
-                                    <li>El país de destino tenga un nivel adecuado de protección de datos</li>
-                                    <li>Se implementen salvaguardias apropiadas (cláusulas contractuales estándar)</li>
-                                    <li>Cumplamos con todas las regulaciones aplicables de transferencia de datos</li>
-                                </ul>
-                            </section>
+                            
 
                             <section id="cambios" className="legal-section">
                                 <div className="legal-section-header">
-                                    <h2>10. Cambios a esta Política de Privacidad</h2>
+                                    <h2>9. Cambios a esta Política de Privacidad</h2>
                                 </div>
                                 <p>
                                     Podemos actualizar esta Política de Privacidad periódicamente para reflejar cambios en 
@@ -391,7 +353,7 @@ const PrivacyPolicy = () => {
                                 <ul>
                                     <li>Un aviso destacado en nuestro sitio web</li>
                                     <li>Un correo electrónico a la dirección registrada en tu cuenta</li>
-                                    <li>Una notificación en la aplicación (si aplica)</li>
+                                    
                                 </ul>
                                 <p>
                                     Te recomendamos revisar esta política periódicamente. La fecha de "Última actualización" 
@@ -405,18 +367,18 @@ const PrivacyPolicy = () => {
 
                             <section id="contacto" className="legal-section">
                                 <div className="legal-section-header">
-                                    <h2>11. Información de Contacto</h2>
+                                    <h2>10. Información de Contacto</h2>
                                 </div>
                                 <p>
                                     Si tienes preguntas, inquietudes o solicitudes relacionadas con esta Política de Privacidad 
                                     o el tratamiento de tus datos personales, contáctanos:
                                 </p>
                                 <div className="legal-contact-box">
-                                    <p><strong>Bio Fibras J</strong></p>
+                                    <p><strong>BIOFIBRAS</strong></p>
                                     <p><strong>Oficial de Protección de Datos</strong></p>
                                     <p>📍 Vichayal, La Arena, Piura, Perú</p>
                                     <p>📧 bio.fibras.j@gmail.com</p>
-                                    <p>📧 Privacidad: privacidad@biofibrasj.com</p>
+                                    
                                     <p>📱 +51 910 881 837</p>
                                     <p>⏰ Horario de Atención: Lunes a Viernes, 9:00 AM - 6:00 PM</p>
                                 </div>
