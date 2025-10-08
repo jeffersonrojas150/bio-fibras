@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate, Link} from 'react-router-dom';
 import { Container, Row, Col, Button, Form, Badge, Modal, Alert, Spinner } from 'react-bootstrap';
-import { FaHeart, FaRegHeart, FaShoppingCart, FaArrowLeft, FaMinus, FaPlus, FaShare, FaWhatsapp, FaFacebook, FaTwitter, FaBox, FaShippingFast, FaUndo } from 'react-icons/fa';
+import { FaHeart, FaRegHeart, FaShoppingCart, FaArrowLeft, FaMinus, FaPlus, FaShare, FaWhatsapp, FaFacebook, FaInstagram, FaBox, FaShippingFast, FaUndo } from 'react-icons/fa';
+
 import { useCart } from '../../context/cartContext';
 import apiClient from '../../api';
 import './ProductDetail.css';
 
+import toast from "react-hot-toast";
 
 import { useFavorites } from '../../context/favoritesContext';
 
@@ -84,11 +86,23 @@ const ProductDetail = () => {
     setQuantity(newQuantity);
   };
 
-  const handleAddToCart = () => {
-    addToCart(product, quantity);
-    setShowAddedAlert(true);
-    setTimeout(() => setShowAddedAlert(false), 3000);
-  };
+ const handleAddToCart = () => {
+  addToCart(product, quantity);
+
+  toast.success(`🛒 ¡"${product.name}" añadido al carrito!`, {
+    style: {
+      border: '1px solid #484406ff', // verde suave
+      padding: '10px 16px',
+      color: '#000000ff',
+      background: '#f4e6c3ff',
+      fontWeight: 500,
+    },
+    iconTheme: {
+      primary: '#22c55e',
+      secondary: '#ffffff',
+    },
+  });
+};
 
   // <--  Se reemplaza la función `toggleFavorite` por una que usa el contexto
   const handleToggleFavorite = () => {
@@ -109,11 +123,14 @@ const ProductDetail = () => {
         shareUrl = `https://wa.me/?text=${encodeURIComponent(text + ' ' + url)}`;
         break;
       case 'facebook':
-        shareUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`;
+        shareUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}&quote=${encodeURIComponent(text)}`;
+
         break;
-      case 'twitter':
-        shareUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent(url)}`;
+      case 'instagram':
+        navigator.clipboard.writeText(url);
+      toast.success('🔗 Enlace copiado. Pégalo en tu historia o bio de Instagram.');
         break;
+
       default:
         break;
     }
@@ -384,7 +401,13 @@ const ProductDetail = () => {
           <div className="share-buttons d-grid gap-2">
             <Button variant="success" className="share-modal-btn" onClick={() => handleShare('whatsapp')}><FaWhatsapp className="me-2" /> WhatsApp</Button>
             <Button variant="primary" className="share-modal-btn" onClick={() => handleShare('facebook')}><FaFacebook className="me-2" /> Facebook</Button>
-            <Button variant="info" className="share-modal-btn" onClick={() => handleShare('twitter')}><FaTwitter className="me-2" /> Twitter</Button>
+            <Button
+              style={{ backgroundColor: '#E1306C', borderColor: '#E1306C' }} 
+              className="share-modal-btn"
+              onClick={() => handleShare('instagram')}
+            >
+              <FaInstagram className="me-2" /> Instagram
+            </Button>
           </div>
         </Modal.Body>
       </Modal>

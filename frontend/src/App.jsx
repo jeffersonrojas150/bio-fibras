@@ -32,6 +32,7 @@ import PersonalData from './pages/Profile/PersonalData';
 import TermsConditions from './pages/Legal/TermsConditions';
 import PrivacyPolicy from './pages/Legal/PrivacyPolicy';
 import ScrollToTop from './components/ScrollToTop';
+import { Toaster } from "react-hot-toast";
 
 
 import "./App.css";
@@ -105,11 +106,13 @@ function App() {
                           {/* <Route path="/privacidad" element={<Privacy />} /> */}
                           {/* <Route path="/mi-perfil" element={<MyProfile />} /> */}
                           {/* <Route path="*" element={<NotFound />} /> */}
+                          
                         </Routes>
                       </main>
 
                       <Footer />
                       <Cart />
+                       <Toaster position="top-center" reverseOrder={false} />
                     </Router>
                   </OrderProvider>
                 </CartProvider>
