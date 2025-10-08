@@ -1,346 +1,172 @@
-/* Footer.css */
+/* --- Variables de Color para fácil personalización --- */
+:root {
+  --footer-bg: #C8860D;
+  --footer-title-color: #452A04;
+  --footer-text-light: #f8f9fa;
+  --footer-text-white: #ffffff;
+  --footer-divider-color: rgba(255, 255, 255, 0.2);
+  --footer-social-border: rgba(255, 255, 255, 0.3);
+  --footer-social-bg-hover: rgba(255, 255, 255, 0.15);
+}
 
+/* --- Estilo General del Footer --- */
 .biofibras-footer {
-  background: linear-gradient(135deg, #C8860D 25%, #C8860D 50%, #C8860D 100%);
-  color: #ffffff;
-  /* --- CAMBIO AQUÍ: Reducido el padding superior --- */
-  padding: 50px 0 20px; 
-  margin-top: auto;
-  position: relative;
-  overflow: hidden;
+  background-color: var(--footer-bg);
+  color: var(--footer-text-light);
+  padding: 60px 0 25px;
+  margin-top: auto; /* Empuja el footer hacia abajo en la página */
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
 }
 
-.biofibras-footer::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: url('data:image/svg+xml,<svg width="60" height="60" viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg"><g fill="none" fill-rule="evenodd"><g fill="%23ffffff" fill-opacity="0.03"><circle cx="30" cy="30" r="2"/></g></g></svg>') repeat;
-  pointer-events: none;
-}
-
-.footer-content {
-  position: relative;
-  z-index: 2;
-}
-
-/* Sección de marca */
+/* --- Sección de la Marca --- */
 .footer-brand-section {
-  margin-bottom: 20px; /* Reducido para compactar */
+  text-align: left;
 }
-
 .footer-brand-title {
-  font-size: 2rem;
+  font-size: 2.2rem;
   font-weight: 700;
-  color: #452A04;
-  margin-bottom: 15px;
-  letter-spacing: 1px;
-  text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  color: var(--footer-title-color);
+  margin-bottom: 1rem;
 }
-
 .footer-brand-description {
   font-size: 0.95rem;
-  line-height: 1.6;
-  color: #f8f9fa;
-  margin-bottom: 25px;
-  opacity: 0.9;
+  line-height: 1.7;
+  opacity: 0.95;
+  margin-bottom: 1.5rem;
+  max-width: 380px;
 }
 
-/* Redes sociales */
-.social-media-links {
+/* --- Contenedor de Enlaces (Solución a la alineación) --- */
+.footer-links-wrapper {
   display: flex;
-  gap: 15px;
-  flex-wrap: wrap;
+  justify-content: space-between; /* Distribuye las columnas de enlaces de manera uniforme */
+  width: 100%;
+  gap: 20px; /* Espacio mínimo entre columnas */
+}
+.footer-column {
+  flex: 1; /* Permite que las columnas crezcan y se encojan de forma flexible */
+  min-width: 180px; /* Ancho mínimo para evitar que se aplasten en pantallas medianas */
 }
 
-.social-link {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 45px;
-  height: 45px;
-  border-radius: 50%;
-  color: #ffffff;
-  text-decoration: none;
-  font-size: 1.3rem;
-  transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-  position: relative;
-  overflow: hidden;
-}
-
-.social-link::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: rgba(255, 255, 255, 0.1);
-  border-radius: 50%;
-  transform: scale(0);
-  transition: transform 0.3s ease;
-}
-
-.social-link:hover::before {
-  transform: scale(1);
-}
-
-.social-link:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
-}
-
-.social-link.facebook:hover { background-color: #1877f2; }
-.social-link.youtube:hover { background-color: #ff0000; }
-.social-link.instagram:hover { 
-  background: linear-gradient(45deg, #f09433 0%,#e6683c 25%,#dc2743 50%,#cc2366 75%,#bc1888 100%);
-}
-.social-link.whatsapp:hover { background-color: #25d366; }
-.social-link.tiktok:hover { background-color: #000000; }
-
-/* Secciones de enlaces */
-.footer-links-section,
-.footer-contact-section,
-.footer-info-section {
-  margin-bottom: 30px; /* Reducido para compactar */
-}
-
+/* --- Títulos de Sección y Listas --- */
 .footer-section-title {
-  font-size: 1.1rem;
-  font-weight: 700; /* Aumentado para más énfasis */
-  /* --- CAMBIO AQUÍ: Color del título --- */
-  color: #452A04; 
-  margin-bottom: 20px;
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--footer-title-color);
+  margin-bottom: 1.5rem;
   text-transform: uppercase;
-  letter-spacing: 0.5px;
-  position: relative;
-  padding-bottom: 10px;
-  text-shadow: 1px 1px 1px rgba(255, 255, 255, 0.1);
+  letter-spacing: 0.8px;
 }
-
-.footer-section-title::after {
-  content: '';
-  position: absolute;
-  bottom: 0;
-  left: 0;
- 
-  height: 3px; /* Un poco más grueso */
-  /* --- CAMBIO AQUÍ: Color de la línea bajo el título --- */
-  background-color: #fffefb; 
-  border-radius: 1px;
-}
-
 .footer-links-list {
   list-style: none;
   padding: 0;
   margin: 0;
 }
-
 .footer-links-list li {
-  margin-bottom: 12px;
+  margin-bottom: 1rem;
 }
 
+/* --- Estilo de Enlaces --- */
 .footer-link {
-  color: #f8f9fa;
+  color: var(--footer-text-light);
   text-decoration: none;
   font-size: 0.9rem;
-  transition: all 0.3s ease;
-  position: relative;
-  display: inline-block;
+  transition: color 0.3s ease, padding-left 0.3s ease;
 }
-
-.footer-link::before {
-  content: '';
-  position: absolute;
-  bottom: -2px;
-  left: 0;
-  width: 0;
-  height: 1px;
-  background-color: #ffffff;
-  transition: width 0.3s ease;
-}
-
 .footer-link:hover {
-  color: #ffffff;
-  transform: translateX(5px);
+  color: var(--footer-text-white);
+  padding-left: 5px; /* Sutil efecto al pasar el mouse */
 }
 
-.footer-link:hover::before {
-  width: 100%;
-}
-
-/* Información de contacto */
-.contact-info {
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
-}
-
+/* --- Estilos de Contacto --- */
 .contact-item {
   display: flex;
-  align-items: center;
-  gap: 10px;
-  font-size: 0.9rem;
+  align-items: flex-start;
+  gap: 12px;
 }
-
 .contact-icon {
-  color: #ffffff;
   font-size: 1rem;
-  width: 20px;
-  text-align: center;
+  margin-top: 3px;
+  color: var(--footer-text-white);
 }
 
-.contact-link {
-  color: #f8f9fa;
+/* --- Íconos de Redes Sociales --- */
+.social-media-links {
+  display: flex;
+  gap: 12px;
+}
+.social-link {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 42px;
+  height: 42px;
+  border: 1px solid var(--footer-social-border);
+  border-radius: 50%;
+  color: var(--footer-text-white);
+  font-size: 1.2rem;
   text-decoration: none;
-  transition: color 0.3s ease;
+  transition: background-color 0.3s ease, transform 0.3s ease;
+}
+.social-link:hover {
+  background-color: var(--footer-social-bg-hover);
+  transform: translateY(-3px); /* Efecto de elevación */
 }
 
-.contact-link:hover {
-  color: #ffffff;
-}
-
-/* Línea divisoria */
+/* --- Divisor y Copyright --- */
 .footer-divider {
   border: none;
   height: 1px;
-  background: rgba(255, 255, 255, 0.2);
-  /* --- CAMBIO AQUÍ: Reducidos drásticamente los márgenes --- */
-  margin: 10px 0 20px;
+  background: var(--footer-divider-color);
+  margin: 40px 0 25px;
 }
-
-/* Copyright */
-.footer-copyright {
-  /* --- CAMBIO AQUÍ: Eliminado el margen superior --- */
-  margin-top: 0;
-  font-size: 14px;
-}
-
 .copyright-text {
   margin: 0;
-  font-size: 1rem;
-  color: #f8f9fa;
+  font-size: 0.85rem;
   opacity: 0.8;
 }
 
-/* Responsive Design */
+/* --- Media Queries para Responsividad --- */
+
+/* Tablets (menor a 992px) */
 @media (max-width: 991.98px) {
-  .biofibras-footer {
-    padding: 40px 0 20px;
+  .footer-brand-section, .footer-column {
+    text-align: center; /* Centra todo en tablet */
   }
-  
-  .footer-brand-title {
-    font-size: 1.8rem;
+  .footer-brand-description {
+    margin-left: auto;
+    margin-right: auto;
   }
-  
-  .footer-brand-section {
-    margin-bottom: 35px;
-    text-align: center;
-  }
-  
   .social-media-links {
-    justify-content: center;
+    justify-content: center; /* Centra los íconos sociales */
+  }
+  .footer-links-wrapper {
+    flex-wrap: wrap; /* Permite que las columnas pasen a la siguiente línea */
+    justify-content: center; /* Centra los grupos de columnas */
+    gap: 30px 20px; /* Espacio vertical y horizontal */
+  }
+  .footer-column {
+    min-width: 220px; /* Más ancho para que quepan 2 por fila */
+    flex-basis: 45%; /* Ocupa casi la mitad del espacio disponible */
   }
 }
 
+/* Teléfonos (menor a 767.98px) */
 @media (max-width: 767.98px) {
   .biofibras-footer {
-    padding: 40px 0 20px;
+    padding-top: 40px;
+    text-align: center; /* Asegura centrado en móviles */
   }
-  
-  .footer-brand-title {
-    font-size: 1.6rem;
+  .footer-links-wrapper {
+    flex-direction: column; /* Apila las columnas de enlaces */
+    align-items: center; /* Centra las columnas apiladas */
+    gap: 35px;
   }
-  
-  .footer-links-section,
-  .footer-contact-section,
-  .footer-info-section {
-    margin-bottom: 30px;
-    text-align: center;
+  .footer-column {
+    width: 100%;
+    max-width: 300px;
   }
-  
-  .footer-section-title::after {
-    left: 50%;
-    transform: translateX(-50%);
-  }
-  
-  .contact-info {
-    align-items: center;
-  }
-  
-  .social-link {
-    width: 40px;
-    height: 40px;
-    font-size: 1.2rem;
-  }
-}
-
-@media (max-width: 575.98px) {
-  .biofibras-footer {
-    padding: 30px 0 15px;
-  }
-  
-  .footer-brand-title {
-    font-size: 1.4rem;
-  }
-  
-  .footer-brand-description {
-    font-size: 0.9rem;
-  }
-  
-  .social-media-links {
-    gap: 12px;
-  }
-  
-  .social-link {
-    width: 38px;
-    height: 38px;
-    font-size: 1.1rem;
-  }
-  
-  .footer-section-title {
-    font-size: 1rem;
-  }
-  
-  .footer-link,
   .contact-item {
-    font-size: 0.85rem;
+    justify-content: center; /* Centra los items de contacto dentro de su contenedor */
   }
-  
-  .copyright-text {
-    font-size: 0.8rem;
-  }
-}
-
-/* Animaciones */
-@keyframes fadeInUp {
-  from {
-    opacity: 0;
-    transform: translateY(30px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-.footer-brand-section,
-.footer-links-section,
-.footer-contact-section,
-.footer-info-section {
-  animation: fadeInUp 0.6s ease-out;
-}
-
-.footer-links-section {
-  animation-delay: 0.1s;
-}
-
-.footer-contact-section {
-  animation-delay: 0.2s;
-}
-
-.footer-info-section {
-  animation-delay: 0.3s;
 }

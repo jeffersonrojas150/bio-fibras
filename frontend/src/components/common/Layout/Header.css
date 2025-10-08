@@ -43,9 +43,14 @@
 }
 
 /* Logo y Nombre */
-.brand-container { display: flex !important; align-items: center; gap: 0px !important; }
-.logo-image { height: 40px; }
-.brand-name { font-family: var(--font-body), sans-serif; font-size: 24px; font-weight: 800; color: #2c5530; letter-spacing: -0.5px; }
+/* Logo y Nombre */
+.brand-container {
+  display: flex !important;
+  align-items: center !important; 
+  gap: 5px !important;   
+}
+.logo-image { height: 50px !important; }
+.brand-name { font-family: var(--font-body), sans-serif; font-size: 32px; font-weight: 600; color: #2c5530; letter-spacing: -0.5px !important; }
 
 
 /* ==========================================
