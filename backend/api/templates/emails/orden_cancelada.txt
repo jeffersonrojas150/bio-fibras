@@ -11,7 +11,7 @@ Si ya realizaste el pago y crees que esto es un error, por favor, contáctanos d
 
 Puedes usar este enlace: https://wa.me/51910881837?text=Hola,%20creo%20que%20mi%20pedido%20%23{{ orden.numero_orden }}%20fue%20cancelado%20por%20error.
 
-¡No te preocupes! El stock de los productos ha sido restaurado y puedes volver a realizar tu compra cuando lo desees visitando nuestra tienda: http://localhost:5173/productos
+¡No te preocupes! El stock de los productos ha sido restaurado y puedes volver a realizar tu compra cuando lo desees visitando nuestra tienda: {{ frontend_url }}/productos
 
 Gracias,
 El equipo de Bio-Fibras
