@@ -84,36 +84,22 @@
 }
 
 .about__title {
-  font-size: clamp(2.9rem, 9vw, 6rem);
-  font-weight: 800;
+  font-size: clamp(2.9rem, 12vw, 5.5rem);
+  font-weight: 200;                       
   margin-bottom: 1rem;
-  text-shadow: 0 4px 10px rgba(0,0,0,0.4);
-  animation: pulse 2s infinite; 
+  color: #075b10;                         
 }
 
-@keyframes pulse {
-  0%, 100% {
-    transform: scale(1);
-  }
-  50% {
-    transform: scale(1.05); 
-  }
-}
 
-.about__title--highlight {
-  font-size: 6rem;
-  font-weight: 200;
-  color: #096912;
-  
-}
+
 
 
 
 
 
 .about__subtitle {
-  font-size: clamp(1rem, 4vw, 1.5rem);
-  color: rgba(0, 0, 0, 0.9);
+  font-size: clamp(0.9rem, 4vw, 1.4rem);
+  color: rgba(51, 51, 51, 0.9);
   max-width: 600px;
   margin: 0 auto;
  
@@ -369,21 +355,70 @@
  
 
 }
+
+
+
+@media (max-width: 480px) {
+  .about__title--highlight {
+    font-size: 4rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .about__title--highlight {
+    font-size: 4rem;
+  }
+}
 @media (max-width: 768px) {
-  .about__title--highlight {
-    font-size: 4rem;  
+  .about__header {
+    height: auto;
+    min-height: 2vh;
+    padding: 1rem 1rem;
   }
+
+  .about__title {
+    font-size: clamp(2.5rem, 12vw, 4rem);
+  }
+
+  .about__subtitle {
+    font-size: clamp(0.9rem, 4vw, 1.1rem);
+  }
+
+  .about__story,
+  .about__materials,
+  .about__founder,
+  .about__products,
+  .about__cta {
+    padding-top: 2rem;
+    padding-bottom: 2rem;
+  }
+
+  
 }
 
-
-@media (max-width: 480px) {
-  .about__title--highlight {
-    font-size: 4rem;
+@media (min-width: 769px) and (max-width: 1024px) {
+  .about__header {
+    height: auto;
+    min-height: 30vh;
+    padding: 3rem 2rem;
   }
-}
 
-@media (max-width: 480px) {
-  .about__title--highlight {
-    font-size: 4rem;
+  .about__title {
+    font-size: clamp(3rem, 8vw, 4.5rem);
   }
+
+  .about__subtitle {
+    font-size: clamp(1rem, 2.5vw, 1.4rem);
+  }
+
+  .about__story,
+  .about__materials,
+  .about__founder,
+  .about__products,
+  .about__cta {
+    padding-top: 2rem;
+    padding-bottom: 2rem;
+  }
+
+  
 }

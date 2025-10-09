@@ -209,7 +209,7 @@ const MyOrders = () => {
                         <strong className="total-amount">S/ {parseFloat(order.total).toFixed(2)}</strong>
                       </div>
                       <div className="order-actions">
-                        {/* CAMBIO: El enlace ahora va al detalle de la orden real */}
+                        
                         <Button
                           variant="outline-success"
                           size="sm"

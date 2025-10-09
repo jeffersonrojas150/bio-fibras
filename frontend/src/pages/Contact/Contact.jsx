@@ -94,11 +94,12 @@ const Contact = () => {
         <div className="contact-page">
             <Container>
                 <div className="contact-header text-center">
-                    <FaEnvelope className="contact-header-icon" />
+                     <FaEnvelope className="contact-header-icon" />
                     <h1 className="contact-page-title">Contáctanos</h1>
                     <p className="contact-page-subtitle">
-                        ¿Tienes alguna pregunta, sugerencia o problema? Estamos aquí para ayudarte.
+                        ¿Tienes alguna pregunta, sugerencia o problema? Estamos aquí para ayudarte😊
                     </p>
+                    
                 </div>
 
                 <Row className="contact-main-content">

@@ -276,9 +276,15 @@ const Header = () => {
         <div className="mobile-menu-footer">
           <p>Síguenos en redes</p>
           <div className="social-icons">
-            <a href="#"><i className="bi bi-facebook"></i></a>
-            <a href="#"><i className="bi bi-instagram"></i></a>
-            <a href="#"><i className="bi bi-tiktok"></i></a>
+            <a href="https://www.facebook.com/profile.php?id=100009194640365&mibextid=wwXIfr&mibextid=wwXIfr" target="_blank" rel="noopener noreferrer" className="social-link" aria-label="Facebook">
+                <i className="bi bi-facebook"></i>
+              </a>
+              <a href="https://www.instagram.com/biofibras_artesania?igsh=NTJoZXJheGJidzV0&utm_source=qr" target="_blank" rel="noopener noreferrer" className="social-link" aria-label="Instagram">
+                <i className="bi bi-instagram"></i>
+              </a>
+              <a href="https://www.tiktok.com/@biofibras?_t=ZS-90IwoipsWGe&_r=1" target="_blank" rel="noopener noreferrer" className="social-link" aria-label="TikTok">
+                <i className="bi bi-tiktok"></i>
+              </a>
           </div>
         </div>
       </div>
