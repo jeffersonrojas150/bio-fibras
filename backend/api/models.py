@@ -52,7 +52,7 @@ class Producto(models.Model):
     es_activo = models.BooleanField(default=True, verbose_name="¿Está activo en la tienda?")
     es_destacado = models.BooleanField(default=False, verbose_name="¿Es un producto destacado?")
     
-    # --- Relaciones (Claves Foráneas y Muchos a Muchos) ---
+    
     
     # Relación 1 a Muchos con Categoria
     categoria = models.ForeignKey(Categoria, on_delete=models.SET_NULL, null=True, blank=True, related_name='productos', verbose_name="Categoría")
