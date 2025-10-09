@@ -67,7 +67,7 @@ class ProductosPorCategoriaView(generics.ListAPIView):
         categoria_slug = self.kwargs['slug']
         return Producto.objects.filter(es_activo=True, categoria__slug=categoria_slug)
 
-class UserProfileView(generics.RetrieveAPIView):
+class UserProfileView(generics.RetrieveUpdateAPIView):
 
     serializer_class = UserSerializer
     permission_classes = [IsAuthenticated]
