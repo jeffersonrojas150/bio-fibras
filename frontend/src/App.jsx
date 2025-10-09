@@ -52,7 +52,6 @@ function App() {
               <FavoritesProvider>
                 <CartProvider>
                   <OrderProvider>
-                    
                     <Router>
                       <ScrollToTop  />
                       <Header />

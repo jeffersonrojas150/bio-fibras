@@ -1,7 +1,7 @@
 from django.db import models
 from django.conf import settings
 import time, random
-from .email_service import enviar_correo_actualizacion_estado, enviar_correo_orden_cancelada
+from .email_service import enviar_correo_actualizacion_estado, enviar_correo_orden_cancelada, enviar_correo_voucher_disponible
 
 # =================================================================
 # 🏷️ TABLA: CATEGORIA
@@ -190,15 +190,13 @@ class Orden(models.Model):
 
     def save(self, *args, **kwargs):
         is_new = self._state.adding
-
+        estado_anterior = None
+        
         if not is_new:
             try:
                 estado_anterior = Orden.objects.get(pk=self.pk)
-                estado_pago_anterior = estado_anterior.estado_pago
-                estado_orden_anterior = estado_anterior.estado_orden
             except Orden.DoesNotExist:
-                estado_pago_anterior = None
-                estado_orden_anterior = None
+                pass
 
         if is_new:
             timestamp = int(time.time() * 1000)
@@ -207,16 +205,23 @@ class Orden(models.Model):
 
         super().save(*args, **kwargs)
 
-        if not is_new and estado_pago_anterior is not None:
-            hubo_cambio_estado = (self.estado_pago != estado_pago_anterior or self.estado_orden != estado_orden_anterior)
-            
-            if hubo_cambio_estado:
+        if not is_new and estado_anterior:
+            hubo_cambio_estado_general = (
+                self.estado_pago != estado_anterior.estado_pago or 
+                self.estado_orden != estado_anterior.estado_orden
+            )
+           
+            if hubo_cambio_estado_general:
                 print("¡El estado de la orden ha cambiado! Decidiendo qué correo enviar...")
-                
                 if self.estado_pago == self.EstadoPago.CANCELADO:
                     enviar_correo_orden_cancelada(self)
                 else:
-                    enviar_correo_actualizacion_estado(self)
+                    if not (not estado_anterior.comprobante_envio and self.comprobante_envio):
+                         enviar_correo_actualizacion_estado(self)
+
+            if not estado_anterior.comprobante_envio and self.comprobante_envio:
+                print(f"¡Se ha subido un nuevo comprobante de envío para la orden #{self.numero_orden}! Enviando correo...")
+                enviar_correo_voucher_disponible(self)
 
     def __str__(self):
         return f"Orden #{self.numero_orden} de {self.usuario.username if self.usuario else 'Usuario Eliminado'}"
