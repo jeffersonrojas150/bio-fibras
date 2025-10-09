@@ -253,14 +253,28 @@
   }
 
   .order-items-table tbody td {
-    display: block;
+    display: flex; 
+    justify-content: space-between; 
+    align-items: center;
     border: none;
-    padding: 0.25rem 0;
+    padding: 0.5rem 0;
+    text-align: right !important;
+    border-bottom: 1px solid #f1f3f4;
+  }
+
+   .order-items-table tbody td:first-child {
+    display: block;
     text-align: left !important;
+    padding-bottom: 0.5rem;
+    border-bottom: none;
+  }
+
+  .order-items-table tbody td:last-child {
+      border-bottom: none; 
   }
 
   .order-items-table tbody td:before {
-    content: attr(data-label) ": ";
+    content: attr(data-label);
     font-weight: bold;
     color: #2c3e32;
   }

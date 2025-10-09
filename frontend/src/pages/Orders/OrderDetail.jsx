@@ -103,9 +103,9 @@ const OrderDetail = () => {
                                                         <span>{item.producto_nombre}</span>
                                                     </div>
                                                 </td>
-                                                <td className="text-center">{item.cantidad}</td>
-                                                <td className="text-center">S/ {parseFloat(item.precio_unitario).toFixed(2)}</td>
-                                                <td className="text-end">S/ {parseFloat(item.precio_total).toFixed(2)}</td>
+                                                <td className="text-center" data-label="Cantidad">{item.cantidad}</td>
+                                                <td className="text-center" data-label="Precio Unit.">S/ {parseFloat(item.precio_unitario).toFixed(2)}</td>
+                                                <td className="text-end" data-label="Subtotal">S/ {parseFloat(item.precio_total).toFixed(2)}</td>
                                             </tr>
                                         ))}
                                     </tbody>
