@@ -230,7 +230,7 @@
     transform: scale(1);
   }
   50% {
-    transform: scale(1.05); /* se agranda un poco */
+    transform: scale(1.05); 
   }
 }
 .about__founder-name { font-size: 2.5rem; font-weight: 700; margin-bottom: 1rem; line-height: 1.2; }
@@ -242,7 +242,7 @@
     transform: scale(1);
   }
   50% {
-    transform: scale(1.05); /* se agranda un poco */
+    transform: scale(1.05); 
   }
 }
 
@@ -352,11 +352,8 @@
   .about__story-card {
     grid-template-columns: 400px 1fr;
   }
- 
 
 }
-
-
 
 @media (max-width: 480px) {
   .about__title--highlight {
