@@ -234,3 +234,38 @@ def enviar_correo_orden_cancelada(orden):
     except Exception as e:
         print(f"ERROR al enviar correo de cancelación para la orden #{orden.numero_orden}: {e}")
         return False
+
+def enviar_correo_voucher_disponible(orden):
+    """
+    Envía un correo al usuario cuando se sube el comprobante de envío.
+    """
+    try:
+        usuario = orden.usuario
+        if not usuario:
+            print(f"ERROR: La orden #{orden.numero_orden} no tiene un usuario asociado. No se puede enviar correo.")
+            return False
+
+        asunto = f"¡Tu pedido #{orden.numero_orden} está en camino!"
+        
+        contexto = {
+            'usuario': usuario,
+            'orden': orden,
+            'frontend_url': settings.FRONTEND_URL
+        }
+
+        mensaje_html = render_to_string('emails/voucher_disponible.html', contexto)
+
+        send_mail(
+            asunto,
+            '',
+            settings.DEFAULT_FROM_EMAIL,
+            [usuario.email],
+            fail_silently=False,
+            html_message=mensaje_html
+        )
+        print(f"Correo de voucher disponible enviado a {usuario.email}")
+        return True
+
+    except Exception as e:
+        print(f"ERROR al enviar correo de voucher disponible para la orden #{orden.numero_orden}: {e}")
+        return False
