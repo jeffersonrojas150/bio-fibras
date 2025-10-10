@@ -44,7 +44,6 @@ const GOOGLE_CLIENT_ID =
 function App() {
   return (
     <div className="App">
-      {/* AuthProvider maneja login, tokens y refresh */}
       <AuthProvider>
         <GoogleOAuthProvider clientId={GOOGLE_CLIENT_ID}>
           <CategoryProvider>
