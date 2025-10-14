@@ -6,6 +6,7 @@ import './HeroBanner.css';
 
 
 import localImage from '../../../assets/herobiofibra.jpg'; 
+import localImage2 from '../../../assets/herobanner2.jpg';
 
 const HeroBanner = () => {
   
@@ -17,7 +18,7 @@ const HeroBanner = () => {
     },
     {
       id: 2,
-      src: 'https://scontent.flim28-1.fna.fbcdn.net/v/t39.30808-6/544891723_4045894202393695_2790372615599446348_n.jpg?stp=cp6_dst-jpg_tt6&_nc_cat=103&ccb=1-7&_nc_sid=833d8c&_nc_eui2=AeEpk_NdbNmRy16FKIm_Y3pQn3nNYjelKQGfec1iN6UpAdnFfzwNUTZ4uR4CFUp7nr9x8us3RRpdEEazeWGIvGYe&_nc_ohc=musgR2JThSUQ7kNvwEsUFe8&_nc_oc=AdmTxo3e2DkajjTNIiFVTjReqljSY_VZwyvJT4dOWz4EkxtrUmQXHA8aOT4axbrsBPk&_nc_zt=23&_nc_ht=scontent.flim28-1.fna&_nc_gid=xzjD9LSzTuVa0YM2ijEwSA&oh=00_Afe6GSg9Hl_TgRYtOaUNzuYaft_dBygafbXakWd2naoX8A&oe=68EDA3F4',
+      src: localImage2,
       alt: 'Detalle de un producto artesanal'
     }
   ];
