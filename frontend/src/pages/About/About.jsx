@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Leaf, Award, Heart, Users, MapPin, Sparkles } from 'lucide-react';
 import './About.css';
 import { useNavigate } from 'react-router-dom';
+import founderImage from '../../assets/about.jpg';
 
 
 export default function About() {
@@ -109,17 +110,17 @@ const navigate = useNavigate();
         </div>
       </section>
 
-      {/* Sección Fundador */}
+            {/* Sección Fundador */}
       <section className="about__founder">
         <div className="about__container">
           <div className="about__founder-card">
             <div className="about__founder-grid">
               <div className="about__founder-photo">
+                
                 <img 
-                  src="/assets/images/jairo-fundador.jpg"
+                  src={founderImage}
                   alt="Jairo Jhanpier Villegas Solano - Fundador de Biofibras"
                   className="about__founder-image"
-                  onError={(e) => { e.target.src = "https://scontent.flim28-2.fna.fbcdn.net/v/t39.30808-6/536147577_4028248204158295_3973783032091909658_n.jpg?_nc_cat=109&ccb=1-7&_nc_sid=833d8c&_nc_eui2=AeHI5NGv-LBPxkvH9Eg8hqTU1sG1COKtm8zWwbUI4q2bzFLTPYpl0skb45YMIR0C7wmJ-UVMVFzKcujcEAcZHFvn&_nc_ohc=Gjhj8CO3W9UQ7kNvwFYEcf_&_nc_oc=Adnl8pNLHGCMOuoQSfJH51C_uPXr8fFDZ5p6gtGKzflw-wPCtRB-jzK21FzPa-mxqZ0&_nc_zt=23&_nc_ht=scontent.flim28-2.fna&_nc_gid=bx6uC9SqESrTxhXoxtFRSg&oh=00_AffQTkS0Km6lB1QSdg9er4jiKyTFheyNMd-L837-jNFeBQ&oe=68E87064"; }}
                 />
               </div>
               <div className="about__founder-content">
