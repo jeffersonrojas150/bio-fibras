@@ -22,7 +22,6 @@ const HeroBanner = () => {
       alt: 'Detalle de un producto artesanal'
     }
   ];
-
   return (
     <section className="hero-banner">
       
