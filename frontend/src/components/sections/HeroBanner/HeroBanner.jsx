@@ -10,13 +10,10 @@ import localImage from '../../../assets/herobiofibra.jpg';
 const HeroBanner = () => {
   const [currentSlide, setCurrentSlide] = React.useState(0);
   
-  
   const carouselImages = [
     {
       id: 1,
       src: 'https://scontent.flim28-1.fna.fbcdn.net/v/t39.30808-6/516433285_3988554351461014_7467849132525422307_n.jpg?stp=cp6_dst-jpg_tt6&_nc_cat=106&ccb=1-7&_nc_sid=833d8c&_nc_eui2=AeG2km5nyBV5VPqpodBIrv81HkKDP_pXOTkeQoM_-lc5OXWPt5mZUCkxAVpBdQRWE2LUmOH34C4-8rPeMz0JuEk_&_nc_ohc=QdLSVGzWpHIQ7kNvwGK6viH&_nc_oc=AdkSzfPQiwL0GboXOTlhsEL6GPR2V-MRA20AoxyI6a85MVk125SU74Tpc6zI8ErS_Bw&_nc_zt=23&_nc_ht=scontent.flim28-1.fna&_nc_gid=S3f8uz7Bx42AyM8cqXe1LA&oh=00_AfeeE5YfRqnAC_Wo3nJSu4WHKWaFGhQM14D4Rt_n8g0-ig&oe=68F79AAB', 
-      
-       
       alt: 'Artesanías de biofibras',
       category: 'ARTESANÍAS',
       title: 'Arte natural, hecho',

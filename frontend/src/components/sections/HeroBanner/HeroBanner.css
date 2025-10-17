@@ -145,7 +145,7 @@
   font-size: 14px;
   font-weight: 600;
   letter-spacing: 3px;
-  color: #be8c0d;
+  color: #ffffff;
   margin-bottom: 20px;
   text-transform: uppercase;
   animation: fadeInUp 1s ease-out 0.2s both;
@@ -199,16 +199,17 @@
 }
 
 .btn-hero-primary {
-  background: transparent;
-  border: 2px solid white;
-  color: white;
-}
-
-.btn-hero-primary:hover {
   background: white;
   color: #000;
   transform: translateY(-3px);
   box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+
+}
+
+.btn-hero-primary:hover {
+    background: transparent;
+  border: 2px solid white;
+  color: white;
 }
 
 .btn-hero-secondary {
