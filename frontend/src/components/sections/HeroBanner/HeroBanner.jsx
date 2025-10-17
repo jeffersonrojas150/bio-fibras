@@ -6,7 +6,6 @@ import './HeroBanner.css';
 import localImage from '../../../assets/herobiofibra.jpg'; 
 //import localImage2 from '../../../assets/herobanner2.jpg';
 //import localImage3 from '../../../assets/herobanner3.jpg'; 
-
 const HeroBanner = () => {
   const [currentSlide, setCurrentSlide] = React.useState(0);
   
