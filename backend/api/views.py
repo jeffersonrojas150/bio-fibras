@@ -39,6 +39,7 @@ from .serializers import (
     PasswordResetConfirmSerializer,
     ContactFormSerializer,
     )
+from django.db.models import F 
 
 from .email_service import enviar_correo_confirmacion_orden, enviar_correo_nueva_orden_admin, enviar_correo_password_reset, enviar_correo_contacto
 
@@ -303,3 +304,24 @@ class ContactFormView(generics.GenericAPIView):
             {"detail": "Mensaje enviado exitosamente. Nos pondremos en contacto contigo pronto."},
             status=status.HTTP_200_OK
         )
+        
+        
+class ProductosDestacadosView(generics.ListAPIView):
+    """
+    Lista productos marcados como destacados (es_destacado=True).
+    """
+    queryset = Producto.objects.filter(es_activo=True, es_destacado=True).order_by('-fecha_creacion')
+    serializer_class = ProductoListSerializer
+
+class ProductosEnOfertaView(generics.ListAPIView):
+    """
+    Lista productos que tienen un precio_oferta definido y menor al precio_unitario.
+    """
+    queryset = Producto.objects.filter(
+        es_activo=True,
+        # Asegura que el campo precio_oferta no sea nulo
+        precio_oferta__isnull=False,
+        # Asegura que precio_oferta sea menor que precio_unitario
+        precio_oferta__lt=F('precio_unitario') 
+    ).order_by('-fecha_actualizacion')
+    serializer_class = ProductoListSerializer

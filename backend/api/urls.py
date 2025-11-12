@@ -11,6 +11,8 @@ from .views import (
     ProductosPorCategoriaView, 
     UserProfileView, 
     RegisterView,
+    ProductosDestacadosView, 
+    ProductosEnOfertaView,
     FavoritoViewSet,
     CarritoViewSet,
     DireccionViewSet,
@@ -36,7 +38,9 @@ urlpatterns = [
     path('auth/password-reset-confirm/<uidb64>/<token>/', PasswordResetConfirmView.as_view(), name='password-reset-confirm'),
 
     path('contacto/', ContactFormView.as_view(), name='contacto'),
-
+    
+    path('productos/destacados/', ProductosDestacadosView.as_view(), name='productos-destacados'),
+    path('productos/ofertas/', ProductosEnOfertaView.as_view(), name='productos-en-oferta'),
     path('productos/', ProductoListView.as_view(), name='lista-productos'),
     path('productos/<slug:slug>/', ProductoDetailView.as_view(), name='detalle-producto'),
     path('categorias/', CategoriaListView.as_view(), name='lista-categorias'),
