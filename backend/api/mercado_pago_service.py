@@ -14,19 +14,13 @@ class MercadoPagoService:
     def crear_preferencia_pago(self, orden_data, usuario, items_carrito, request):
         """
         Crea una preferencia de pago en Mercado Pago.
-        
-        Args:
-            orden_data: Diccionario con datos de la orden (total, direccion_id, etc.)
-            usuario: Usuario que está comprando
-            items_carrito: QuerySet de items del carrito
-            request: Request de Django para construir URLs
-            
-        Returns:
-            dict: Respuesta de Mercado Pago con preference_id e init_point
         """
         
-        # Construimos las URLs de retorno
+        # IMPORTANTE: Usar el FRONTEND_URL para las URLs de retorno
+        from django.conf import settings
         base_url = settings.FRONTEND_URL
+        
+        print(f"🔵 Base URL para retorno: {base_url}")
         
         # Items para Mercado Pago
         items_mp = []
@@ -35,16 +29,16 @@ class MercadoPagoService:
             items_mp.append({
                 "title": item.producto.nombre,
                 "quantity": item.cantidad,
-                "unit_price": float(precio),  # MP requiere float
-                "currency_id": "PEN",  # Soles peruanos
+                "unit_price": float(precio),
+                "currency_id": "PEN",
             })
         
         # Datos de la preferencia
         preference_data = {
             "items": items_mp,
             "payer": {
-                "name": usuario.first_name,
-                "surname": usuario.last_name,
+                "name": usuario.first_name or "Cliente",
+                "surname": usuario.last_name or "Bio-Fibras",
                 "email": usuario.email,
             },
             "back_urls": {
@@ -52,14 +46,18 @@ class MercadoPagoService:
                 "failure": f"{base_url}/pago/failure",
                 "pending": f"{base_url}/pago/pending",
             },
-            "auto_return": "approved",  # Redirección automática cuando se aprueba
-            "notification_url": f"{request.build_absolute_uri('/api/pagos/webhook/')}",  # Webhook para notificaciones
-            "statement_descriptor": "BIO-FIBRAS",  # Aparece en el resumen de la tarjeta
-            "external_reference": f"pending_{usuario.id}_{orden_data.get('direccion_id')}",  # Referencia temporal
+            "auto_return": "approved",
+            "notification_url": f"{request.build_absolute_uri('/api/pagos/webhook')}",
+            "statement_descriptor": "BIO-FIBRAS",
+            "external_reference": f"pending_{usuario.id}_{orden_data.get('direccion_id')}",
         }
+        
+        print(f"🔵 Preferencia a enviar: {preference_data}")
         
         # Creamos la preferencia en Mercado Pago
         preference_response = self.sdk.preference().create(preference_data)
+        
+        print(f"🔵 Respuesta completa de MP: {preference_response}")
         
         return preference_response
     

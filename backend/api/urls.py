@@ -52,8 +52,7 @@ urlpatterns = [
     path('ordenes/<int:pk>/', OrdenDetailView.as_view(), name='detalle-orden'),
 
     path('pagos/crear-preferencia/', CrearPreferenciaPagoView.as_view(), name='crear-preferencia-pago'),
-    path('pagos/webhook/', MercadoPagoWebhookView.as_view(), name='mercado-pago-webhook'),
-    path('pagos/webhook', MercadoPagoWebhookView.as_view(), name='mercado-pago-webhook-no-slash'),
+    path('pagos/webhook', MercadoPagoWebhookView.as_view(), name='mercado-pago-webhook'),
 
     path('', include(router.urls)),
 ]

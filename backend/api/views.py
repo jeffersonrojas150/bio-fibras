@@ -48,6 +48,12 @@ from django.views.decorators.csrf import csrf_exempt
 from django.utils.decorators import method_decorator
 import json
 
+
+# Al inicio del archivo, después de los imports
+print("=" * 50)
+print(f"🔍 DEBUG está en: {settings.DEBUG}")
+print("=" * 50)
+
 class ProductoListView(generics.ListAPIView):
     queryset = Producto.objects.filter(es_activo=True)
     serializer_class = ProductoListSerializer
@@ -333,74 +339,80 @@ class ProductosEnOfertaView(generics.ListAPIView):
 
 
 class CrearPreferenciaPagoView(generics.GenericAPIView):
-    """
-    Vista para crear una preferencia de pago en Mercado Pago.
-    El usuario debe estar autenticado y tener items en su carrito.
-    """
     permission_classes = [IsAuthenticated]
     
     @transaction.atomic
     def post(self, request, *args, **kwargs):
-        usuario = request.user
-        
-        items_carrito = Carrito.objects.filter(usuario=usuario)
-        if not items_carrito.exists():
-            return Response(
-                {"error": "Tu carrito está vacío."},
-                status=status.HTTP_400_BAD_REQUEST
-            )
-        
-        direccion_id = request.data.get('direccion_id')
-        
-        if not direccion_id:
-            return Response(
-                {"error": "Debes proporcionar una dirección de envío."},
-                status=status.HTTP_400_BAD_REQUEST
-            )
-        
         try:
-            direccion = Direccion.objects.get(id=direccion_id, usuario=usuario)
-        except Direccion.DoesNotExist:
-            return Response(
-                {"error": "La dirección especificada no es válida."},
-                status=status.HTTP_400_BAD_REQUEST
-            )
-        
-        total_orden = 0
-        cantidad_total_items = 0
-        
-        for item in items_carrito:
-            if item.cantidad > item.producto.stock:
+            usuario = request.user
+            
+            # Verificar que el carrito tenga items
+            items_carrito = Carrito.objects.filter(usuario=usuario)
+            if not items_carrito.exists():
                 return Response(
-                    {"error": f"Stock insuficiente para '{item.producto.nombre}'. Disponible: {item.producto.stock}"},
+                    {"error": "Tu carrito está vacío."},
                     status=status.HTTP_400_BAD_REQUEST
                 )
-            precio = item.producto.precio_oferta or item.producto.precio_unitario
-            total_orden += item.cantidad * precio
-            cantidad_total_items += item.cantidad
-        
-        nueva_orden = Orden.objects.create(
-            usuario=usuario,
-            direccion=direccion,
-            total=total_orden,
-            metodo_pago=Orden.MetodoPago.MERCADO_PAGO,
-            estado_pago=Orden.EstadoPago.PENDIENTE,
-            cantidad_compra=cantidad_total_items
-        )
-        
-        for item in items_carrito:
-            precio = item.producto.precio_oferta or item.producto.precio_unitario
-            OrdenItem.objects.create(
-                orden=nueva_orden,
-                producto=item.producto,
-                cantidad=item.cantidad,
-                precio_unitario=precio,
-                precio_total=item.cantidad * precio
+            
+            # Obtener datos del request
+            direccion_id = request.data.get('direccion_id')
+            
+            if not direccion_id:
+                return Response(
+                    {"error": "Debes proporcionar una dirección de envío."},
+                    status=status.HTTP_400_BAD_REQUEST
+                )
+            
+            # Verificar que la dirección pertenezca al usuario
+            try:
+                direccion = Direccion.objects.get(id=direccion_id, usuario=usuario)
+            except Direccion.DoesNotExist:
+                return Response(
+                    {"error": "La dirección especificada no es válida."},
+                    status=status.HTTP_400_BAD_REQUEST
+                )
+            
+            # Calcular total y verificar stock
+            total_orden = 0
+            cantidad_total_items = 0
+            
+            for item in items_carrito:
+                if item.cantidad > item.producto.stock:
+                    return Response(
+                        {"error": f"Stock insuficiente para '{item.producto.nombre}'. Disponible: {item.producto.stock}"},
+                        status=status.HTTP_400_BAD_REQUEST
+                    )
+                precio = item.producto.precio_oferta or item.producto.precio_unitario
+                total_orden += item.cantidad * precio
+                cantidad_total_items += item.cantidad
+            
+            # Crear orden temporal con estado PENDIENTE
+            nueva_orden = Orden.objects.create(
+                usuario=usuario,
+                direccion=direccion,
+                total=total_orden,
+                metodo_pago=Orden.MetodoPago.MERCADO_PAGO,
+                estado_pago=Orden.EstadoPago.PENDIENTE,
+                cantidad_compra=cantidad_total_items
             )
-        
-        try:
+            
+            # Crear items de la orden
+            for item in items_carrito:
+                precio = item.producto.precio_oferta or item.producto.precio_unitario
+                OrdenItem.objects.create(
+                    orden=nueva_orden,
+                    producto=item.producto,
+                    cantidad=item.cantidad,
+                    precio_unitario=precio,
+                    precio_total=item.cantidad * precio
+                )
+            
+            # Crear preferencia en Mercado Pago
+            print("🔵 Iniciando creación de preferencia en Mercado Pago...")
+            
             mp_service = MercadoPagoService()
             
+            # Preparar datos para MP
             orden_data = {
                 'total': total_orden,
                 'direccion_id': direccion_id,
@@ -413,13 +425,18 @@ class CrearPreferenciaPagoView(generics.GenericAPIView):
                 request=request
             )
             
+            print(f"🔵 Respuesta de MP: {preference_response}")
+            
+            # Verificar respuesta de MP
             if preference_response["status"] == 201:
                 preference_id = preference_response["response"]["id"]
                 init_point = preference_response["response"]["init_point"]
                 
+                # Guardar preference_id en la orden
                 nueva_orden.mercado_pago_preference_id = preference_id
                 nueva_orden.save()
                 
+                # Limpiar carrito
                 items_carrito.delete()
                 
                 return Response({
@@ -429,15 +446,27 @@ class CrearPreferenciaPagoView(generics.GenericAPIView):
                     "numero_orden": nueva_orden.numero_orden,
                 }, status=status.HTTP_201_CREATED)
             else:
+                # Error al crear preferencia
                 nueva_orden.delete()
                 return Response(
                     {"error": "Error al crear la preferencia de pago en Mercado Pago."},
                     status=status.HTTP_500_INTERNAL_SERVER_ERROR
                 )
-                
+        
         except Exception as e:
-            nueva_orden.delete()
-            print(f"Error al crear preferencia de MP: {e}")
+            import traceback
+            print("=" * 80)
+            print("❌ ERROR COMPLETO EN CREAR PREFERENCIA:")
+            print(traceback.format_exc())
+            print("=" * 80)
+            
+            # Eliminar orden si fue creada
+            try:
+                if 'nueva_orden' in locals():
+                    nueva_orden.delete()
+            except:
+                pass
+            
             return Response(
                 {"error": f"Error al procesar el pago: {str(e)}"},
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR
@@ -460,7 +489,7 @@ class MercadoPagoWebhookView(APIView):
             print(f"🔔 WEBHOOK RECIBIDO - Headers: {request.headers}")
             print(f"🔔 WEBHOOK RECIBIDO - Body: {request.body}")
             print(f"🔔 WEBHOOK RECIBIDO - GET params: {request.GET}")
-            
+
             data = request.data if request.data else json.loads(request.body)
             
             print(f"📩 Webhook recibido de Mercado Pago: {data}")
