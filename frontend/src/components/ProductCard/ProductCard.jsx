@@ -3,9 +3,9 @@ import { Col, Card, Button, Badge } from 'react-bootstrap';
 import { FaHeart, FaRegHeart, FaShoppingCart } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
 import { useFavorites } from '../../context/favoritesContext';
-import './ProductCard.css'; // Asegúrate de que este CSS también exista
+import './ProductCard.css'; 
 
-// Este componente auxiliar puede quedarse aquí o moverse si se usa en otros sitios.
+
 const ProductPriceDisplay = ({ product }) => {
   const precioMostrado = product.precio_oferta ? parseFloat(product.precio_oferta) : parseFloat(product.precio_unitario);
   const precioOriginal = product.precio_oferta ? parseFloat(product.precio_unitario) : null;

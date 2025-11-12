@@ -2,7 +2,7 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-d
 import React from "react";
 import { GoogleOAuthProvider } from "@react-oauth/google";
 
-// Importar páginas
+
 import Home from "./pages/Home/Home";
 import Products from "./pages/Products/Products";
 import ProductDetail from "./pages/ProductDetail/ProductDetail";
@@ -63,7 +63,7 @@ function App() {
                           <Route path="/categorias" element={<Categories />} />
 
 
-                          {/* Ruta para la página de productos con un filtro de categoría */}
+      
                           <Route path="/productos/categoria/:categorySlug" element={<Products />} />
                           <Route path="/contacto" element={<Contact />} />
 
@@ -98,13 +98,6 @@ function App() {
                         
                           </Route>
 
-                          {/* futuras rutas */}
-                          {/* <Route path="/nosotros" element={<About />} /> */}
-                          {/* <Route path="/contacto" element={<Contact />} /> */}
-                          {/* <Route path="/terminos" element={<Terms />} /> */}
-                          {/* <Route path="/privacidad" element={<Privacy />} /> */}
-                          {/* <Route path="/mi-perfil" element={<MyProfile />} /> */}
-                          {/* <Route path="*" element={<NotFound />} /> */}
                           
                         </Routes>
                       </main>

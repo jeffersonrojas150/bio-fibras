@@ -5,7 +5,7 @@ import AuthLayout from './AuthLayout';
 import { useAuth } from '../../context/authContext';
 import { useGoogleLogin } from '@react-oauth/google';
 
-// Los componentes de iconos (EyeIcon, etc.) se mantienen igual, no los incluyo para abreviar
+
 
 const EyeIcon = () => (
   <svg viewBox="0 0 24 24" fill="currentColor" className="password-icon">

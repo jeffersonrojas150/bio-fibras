@@ -1,16 +1,12 @@
 import HeroBanner from '../../components/sections/HeroBanner/HeroBanner';
-
+import DualCarousel from '../../components/sections/DualCarousel/DualCarousel';
 import './Home.css';
 
 const Home = () => {
   return (
- 
     <>
-      
-
-      {/* El <main> ahora está en App.js, así que aquí solo va el contenido */}
       <HeroBanner />
-      
+      <DualCarousel />
     </>
   );
 };

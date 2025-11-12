@@ -33,30 +33,35 @@ body {
 
 /* Container principal */
 .auth-container {
-  display: flex;
-  min-height: 100vh;
+  display: flex !important;
+  min-height: auto !important;
   width: 100%;
+  padding-bottom: 0rem !important;
 }
 
 /* Sección de imagen (lado izquierdo) */
 .auth-image-section {
   flex: 1;
-  position: relative;
-  overflow: hidden;
-  background: linear-gradient(135deg, var(--biofibras-green-dark), var(--biofibras-brown-dark));
+
   display: flex;
-  align-items: center;
+  align-items:flex-start;;
   justify-content: center;
+  padding-top: 5rem !important;
+  padding: 50px;
+   padding-bottom: 0rem !important;
 }
 
 .auth-background-image {
-  width: 100%;
-  height: 100%;
+ 
+  width: 90%;   /* Más ancho que alto */
+  height: 75%;  /* Menos alto */
+  
+  
+  border-radius: 30px; 
+  
   object-fit: cover;
-  position: absolute;
-  top: 0;
-  left: 0;
-  z-index: 1;
+  box-shadow: 0 10px 35px rgba(0, 0, 0, 0.08); 
+   padding-bottom: 0rem !important;
 }
 
 .auth-image-overlay {
@@ -103,10 +108,12 @@ body {
 .auth-form-section {
   flex: 1;
   display: flex;
-  align-items: center;
+  align-items: flex-start !important;
   justify-content: center;
   background-color: var(--biofibras-white);
   padding: 2rem;
+  padding-top: 4rem !important;
+   padding-bottom: 0rem !important;
 }
 
 .auth-form-container {
@@ -118,13 +125,13 @@ body {
 /* Header del formulario */
 .auth-header {
   text-align: center;
-  margin-bottom: 2rem;
+  margin-bottom: 1rem;
 }
 
 
 
 .biofibras-logo {
-   width: 100px; /* O el tamaño que prefieras */
+  width: 50px; /* O el tamaño que prefieras */
   height: auto;
   
 }
@@ -133,7 +140,7 @@ body {
   font-size: 2rem;
   font-weight: 600;
   color: var(--biofibras-brown-dark);
-  margin-bottom: 0.5rem;
+  margin-bottom: 0.4rem;
 }
 
 .auth-subtitle {
