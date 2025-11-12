@@ -53,15 +53,16 @@
 
 /* Navegación del carousel */
 .carousel-nav {
-  position: absolute;
+   position: absolute;
   top: 50%;
   transform: translateY(-50%);
-  background: rgba(255, 255, 255, 0.1);
-  border: 2px solid rgba(255, 255, 255, 0.3);
+  
+  
+  background: rgba(0, 0, 0, 0.3);
+  border: none;
   color: white;
-  font-size: 48px;
-  width: 60px;
-  height: 60px;
+  padding: 15px 15px;
+  font-size: 24px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -69,11 +70,11 @@
   z-index: 5;
   transition: all 0.3s ease;
   backdrop-filter: blur(10px);
-  border-radius: 50%;
+  border-radius: 4px; 
 }
 
 .carousel-nav:hover {
-  background: rgba(255, 255, 255, 0.2);
+  background: rgba(0, 0, 0, 0.2);
   border-color: rgba(218, 165, 32, 0.8);
   transform: translateY(-50%) scale(1.1);
 }
@@ -178,11 +179,12 @@
 
 /* Botones del hero */
 .hero-buttons {
-  display: flex;
+  display: flex !important;
   gap: 16px;
-  flex-wrap: wrap;
+  flex-wrap: wrap !important;
   animation: fadeInUp 1s ease-out 0.8s both;
-  justify-content: center;
+  justify-content: center !important;
+  align-items: flex-start !important; 
 }
 
 .btn-hero-primary,
@@ -196,26 +198,29 @@
   text-decoration: none;
   display: inline-block;
   text-transform: uppercase;
+  border: 2px solid transparent; 
+  
 }
 
 .btn-hero-primary {
   background: white;
   color: #000;
-  transform: translateY(-3px);
   box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
-
 }
 
 .btn-hero-primary:hover {
-    background: transparent;
+  background: transparent;
   border: 2px solid white;
   color: white;
+  box-shadow: none;
+  transform: translateY(-3px);
 }
 
 .btn-hero-secondary {
   background: transparent;
   border: 2px solid rgba(255, 255, 255, 0.8);
   color: #ffffff;
+  border-color: rgba(255, 255, 255, 0.8); 
 }
 
 .btn-hero-secondary:hover {
@@ -310,6 +315,40 @@
   }
 }
 
+/* Efecto de escritura tipo typewriter */
+@keyframes typing {
+  from {
+    clip-path: inset(0 100% 0 0);
+  }
+  to {
+    clip-path: inset(0 0 0 0);
+  }
+}
+
+@keyframes blink {
+  50% {
+    border-color: transparent;
+  }
+}
+
+.typing-animation {
+  overflow: hidden;
+ 
+
+  animation: 
+    typing 2s steps(40, end),
+    blink 0.75s step-end infinite;
+}
+
+.typing-animation-delay {
+  overflow: hidden;
+  
+ 
+  animation: 
+    typing 2.5s steps(50, end) 0.5s both,
+    blink 0.75s step-end infinite 0.5s;
+}
+
 /* ==========================================
    RESPONSIVE DESIGN
    ========================================== */
@@ -352,6 +391,28 @@
   .hero-description {
     font-size: 1rem;
     margin-bottom: 28px;
+  }
+
+  .typing-animation {
+   
+    white-space: normal;
+    border-right: none; 
+    
+ 
+    animation: 
+        typing 2s steps(40, end),
+       
+        fadeInUp 0.1s;
+  }
+
+  .typing-animation-delay {
+    white-space: normal;
+    border-right: none; 
+
+    animation: 
+        typing 2.5s steps(50, end) 0.5s both,
+        
+        fadeInUp 0.1s 0.5s; 
   }
   
   .hero-buttons {
