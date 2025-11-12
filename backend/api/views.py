@@ -43,6 +43,11 @@ from django.db.models import F
 
 from .email_service import enviar_correo_confirmacion_orden, enviar_correo_nueva_orden_admin, enviar_correo_password_reset, enviar_correo_contacto
 
+from .mercado_pago_service import MercadoPagoService
+from django.views.decorators.csrf import csrf_exempt
+from django.utils.decorators import method_decorator
+import json
+
 class ProductoListView(generics.ListAPIView):
     queryset = Producto.objects.filter(es_activo=True)
     serializer_class = ProductoListSerializer
@@ -325,3 +330,193 @@ class ProductosEnOfertaView(generics.ListAPIView):
         precio_oferta__lt=F('precio_unitario') 
     ).order_by('-fecha_actualizacion')
     serializer_class = ProductoListSerializer
+
+
+class CrearPreferenciaPagoView(generics.GenericAPIView):
+    """
+    Vista para crear una preferencia de pago en Mercado Pago.
+    El usuario debe estar autenticado y tener items en su carrito.
+    """
+    permission_classes = [IsAuthenticated]
+    
+    @transaction.atomic
+    def post(self, request, *args, **kwargs):
+        usuario = request.user
+        
+        items_carrito = Carrito.objects.filter(usuario=usuario)
+        if not items_carrito.exists():
+            return Response(
+                {"error": "Tu carrito está vacío."},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+        
+        direccion_id = request.data.get('direccion_id')
+        
+        if not direccion_id:
+            return Response(
+                {"error": "Debes proporcionar una dirección de envío."},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+        
+        try:
+            direccion = Direccion.objects.get(id=direccion_id, usuario=usuario)
+        except Direccion.DoesNotExist:
+            return Response(
+                {"error": "La dirección especificada no es válida."},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+        
+        total_orden = 0
+        cantidad_total_items = 0
+        
+        for item in items_carrito:
+            if item.cantidad > item.producto.stock:
+                return Response(
+                    {"error": f"Stock insuficiente para '{item.producto.nombre}'. Disponible: {item.producto.stock}"},
+                    status=status.HTTP_400_BAD_REQUEST
+                )
+            precio = item.producto.precio_oferta or item.producto.precio_unitario
+            total_orden += item.cantidad * precio
+            cantidad_total_items += item.cantidad
+        
+        nueva_orden = Orden.objects.create(
+            usuario=usuario,
+            direccion=direccion,
+            total=total_orden,
+            metodo_pago=Orden.MetodoPago.MERCADO_PAGO,
+            estado_pago=Orden.EstadoPago.PENDIENTE,
+            cantidad_compra=cantidad_total_items
+        )
+        
+        for item in items_carrito:
+            precio = item.producto.precio_oferta or item.producto.precio_unitario
+            OrdenItem.objects.create(
+                orden=nueva_orden,
+                producto=item.producto,
+                cantidad=item.cantidad,
+                precio_unitario=precio,
+                precio_total=item.cantidad * precio
+            )
+        
+        try:
+            mp_service = MercadoPagoService()
+            
+            orden_data = {
+                'total': total_orden,
+                'direccion_id': direccion_id,
+            }
+            
+            preference_response = mp_service.crear_preferencia_pago(
+                orden_data=orden_data,
+                usuario=usuario,
+                items_carrito=items_carrito,
+                request=request
+            )
+            
+            if preference_response["status"] == 201:
+                preference_id = preference_response["response"]["id"]
+                init_point = preference_response["response"]["init_point"]
+                
+                nueva_orden.mercado_pago_preference_id = preference_id
+                nueva_orden.save()
+                
+                items_carrito.delete()
+                
+                return Response({
+                    "preference_id": preference_id,
+                    "init_point": init_point,
+                    "orden_id": nueva_orden.id,
+                    "numero_orden": nueva_orden.numero_orden,
+                }, status=status.HTTP_201_CREATED)
+            else:
+                nueva_orden.delete()
+                return Response(
+                    {"error": "Error al crear la preferencia de pago en Mercado Pago."},
+                    status=status.HTTP_500_INTERNAL_SERVER_ERROR
+                )
+                
+        except Exception as e:
+            nueva_orden.delete()
+            print(f"Error al crear preferencia de MP: {e}")
+            return Response(
+                {"error": f"Error al procesar el pago: {str(e)}"},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
+
+
+@method_decorator(csrf_exempt, name='dispatch')
+class MercadoPagoWebhookView(APIView):
+    """
+    Vista para recibir notificaciones de Mercado Pago (Webhook).
+    MP nos notifica cuando un pago es procesado.
+    """
+    permission_classes = [AllowAny]
+    
+    def post(self, request, *args, **kwargs):
+        """
+        Mercado Pago envía notificaciones POST cuando cambia el estado de un pago.
+        """
+        try:
+            data = request.data if request.data else json.loads(request.body)
+            
+            print(f"📩 Webhook recibido de Mercado Pago: {data}")
+            
+            tipo_notificacion = data.get("type")
+            
+            if tipo_notificacion == "payment":
+                payment_id = data.get("data", {}).get("id")
+                
+                if not payment_id:
+                    return Response({"status": "payment_id no encontrado"}, status=status.HTTP_400_BAD_REQUEST)
+                
+                mp_service = MercadoPagoService()
+                payment_info = mp_service.obtener_informacion_pago(payment_id)
+                
+                if payment_info["status"] == 200:
+                    payment_data = payment_info["response"]
+                    
+                    preference_id = payment_data.get("preference_id")
+                    payment_status = payment_data.get("status")
+                    status_detail = payment_data.get("status_detail")
+                    
+                    print(f"💳 Pago {payment_id} - Estado: {payment_status} - Preference: {preference_id}")
+                    
+                    try:
+                        orden = Orden.objects.get(mercado_pago_preference_id=preference_id)
+                        
+                        orden.mercado_pago_payment_id = str(payment_id)
+                        orden.mercado_pago_status = payment_status
+                        orden.mercado_pago_status_detail = status_detail
+                        
+                        if payment_status == "approved":
+                            orden.estado_pago = Orden.EstadoPago.PAGADO
+                            
+                            for item in orden.items.all():
+                                producto = item.producto
+                                producto.stock -= item.cantidad
+                                producto.save()
+                            
+                            enviar_correo_confirmacion_orden(orden)
+                            enviar_correo_nueva_orden_admin(orden, request)
+                            
+                            print(f"✅ Orden #{orden.numero_orden} marcada como PAGADA")
+                            
+                        elif payment_status == "rejected":
+                            orden.estado_pago = Orden.EstadoPago.RECHAZADO
+                            print(f"❌ Orden #{orden.numero_orden} - Pago RECHAZADO")
+                            
+                        elif payment_status == "pending":
+                            orden.estado_pago = Orden.EstadoPago.PENDIENTE
+                            print(f"⏳ Orden #{orden.numero_orden} - Pago PENDIENTE")
+                        
+                        orden.save()
+                        
+                    except Orden.DoesNotExist:
+                        print(f"⚠️ No se encontró orden con preference_id: {preference_id}")
+                        return Response({"status": "orden no encontrada"}, status=status.HTTP_404_NOT_FOUND)
+                
+            return Response({"status": "ok"}, status=status.HTTP_200_OK)
+            
+        except Exception as e:
+            print(f"❌ Error en webhook de Mercado Pago: {e}")
+            return Response({"status": "error", "message": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)

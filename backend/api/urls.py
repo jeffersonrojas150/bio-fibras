@@ -21,6 +21,8 @@ from .views import (
     PasswordResetRequestView,
     PasswordResetConfirmView,
     ContactFormView,
+    CrearPreferenciaPagoView,
+    MercadoPagoWebhookView,
 )
 
 router = routers.DefaultRouter()
@@ -48,6 +50,9 @@ urlpatterns = [
 
     path('ordenes/', OrdenListCreateView.as_view(), name='listar-crear-ordenes'),
     path('ordenes/<int:pk>/', OrdenDetailView.as_view(), name='detalle-orden'),
+
+    path('pagos/crear-preferencia/', CrearPreferenciaPagoView.as_view(), name='crear-preferencia-pago'),
+    path('pagos/webhook/', MercadoPagoWebhookView.as_view(), name='mercado-pago-webhook'),
 
     path('', include(router.urls)),
 ]

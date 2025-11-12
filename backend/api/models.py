@@ -7,7 +7,6 @@ from .email_service import enviar_correo_actualizacion_estado, enviar_correo_ord
 # 🏷️ TABLA: CATEGORIA
 # =================================================================
 class Categoria(models.Model):
-    # ID_categoria es creado automáticamente por Django como 'id' (AutoField)
     nombre = models.CharField(max_length=100, verbose_name="Nombre de la categoría")
     slug = models.SlugField(max_length=100, unique=True, verbose_name="URL Slug")
     imagen = models.ImageField(upload_to='categorias/', null=True, blank=True, verbose_name="Imagen representativa")
@@ -22,7 +21,6 @@ class Categoria(models.Model):
 # 🧵 TABLA: MATERIAL
 # =================================================================
 class Material(models.Model):
-    # ID_material es creado automáticamente por Django como 'id'
     nombre = models.CharField(max_length=100, verbose_name="Nombre del material")
     descripcion = models.TextField(verbose_name="Descripción")
     imagen = models.ImageField(upload_to='materiales/', null=True, blank=True, verbose_name="Foto del material")
@@ -37,12 +35,10 @@ class Material(models.Model):
 # 🛍️ TABLA: PRODUCTO
 # =================================================================
 class Producto(models.Model):
-    # ID_producto es creado automáticamente por Django
     nombre = models.CharField(max_length=200, verbose_name="Nombre del producto")
     slug = models.SlugField(max_length=200, unique=True, verbose_name="URL Slug")
     descripcion = models.TextField(verbose_name="Descripción completa")
     
-    # Precios - Usamos DecimalField para evitar errores de punto flotante con dinero
     precio_unitario = models.DecimalField(max_digits=10, decimal_places=2, verbose_name="Precio unitario")
     precio_mayor = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True, verbose_name="Precio al por mayor")
     cantidad_minima_mayor = models.PositiveIntegerField(null=True, blank=True, verbose_name="Cantidad mínima para precio mayor")
@@ -52,12 +48,8 @@ class Producto(models.Model):
     es_activo = models.BooleanField(default=True, verbose_name="¿Está activo en la tienda?")
     es_destacado = models.BooleanField(default=False, verbose_name="¿Es un producto destacado?")
     
-    
-    
-    # Relación 1 a Muchos con Categoria
     categoria = models.ForeignKey(Categoria, on_delete=models.SET_NULL, null=True, blank=True, related_name='productos', verbose_name="Categoría")
     
-    # Relación Muchos a Muchos con Material. Django creará la tabla intermedia automáticamente.
     materiales = models.ManyToManyField(Material, blank=True, related_name='productos', verbose_name="Materiales")
     
     fecha_creacion = models.DateTimeField(auto_now_add=True, verbose_name="Fecha de creación")
@@ -78,9 +70,7 @@ class ImagenProducto(models.Model):
     fecha_actualizacion = models.DateTimeField(auto_now=True, verbose_name="Fecha de actualización")
 
     def save(self, *args, **kwargs):
-        # Si esta imagen se está marcando como principal...
         if self.es_principal:
-            # ...busca todas las otras imágenes del mismo producto que también sean principales...
             ImagenProducto.objects.filter(producto=self.producto, es_principal=True).exclude(pk=self.pk).update(es_principal=False)
         
         super().save(*args, **kwargs)
@@ -93,7 +83,6 @@ class ImagenProducto(models.Model):
 # 🏠 TABLA: DIRECCION
 # =================================================================
 class Direccion(models.Model):
-    # ID_direccion es creado automáticamente por Django
     usuario = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='direcciones', verbose_name="Usuario")
     nombres = models.CharField(max_length=100, verbose_name="Nombres de quien recibe")
     apellidos = models.CharField(max_length=100, verbose_name="Apellidos de quien recibe")
@@ -116,7 +105,6 @@ class Direccion(models.Model):
 # 🛒 TABLA: CARRITO
 # =================================================================
 class Carrito(models.Model):
-    # ID_carrito es creado automáticamente por Django
     usuario = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='carrito_items', verbose_name="Usuario")
     producto = models.ForeignKey(Producto, on_delete=models.CASCADE, verbose_name="Producto")
     cantidad = models.PositiveIntegerField(default=1, verbose_name="Cantidad")
@@ -124,8 +112,6 @@ class Carrito(models.Model):
     fecha_actualizacion = models.DateTimeField(auto_now=True)
 
     class Meta:
-        # Esto asegura que un usuario no pueda tener el mismo producto dos veces en el carrito
-        # En su lugar, se debería actualizar la cantidad del item existente.
         unique_together = ('usuario', 'producto')
 
     def __str__(self):
@@ -141,7 +127,6 @@ class Favorito(models.Model):
     fecha_agregado = models.DateTimeField(auto_now_add=True, verbose_name="Fecha en que se marcó como favorito")
 
     class Meta:
-        # PK Compuesta: Un usuario solo puede marcar como favorito un producto una sola vez.
         unique_together = ('usuario', 'producto')
         
     def __str__(self):
@@ -153,14 +138,17 @@ class Favorito(models.Model):
 # =================================================================
 class Orden(models.Model):
 
-    # Opciones para los campos de estado (choices)
+    # MODIFICADO: Nuevos métodos de pago incluyendo Mercado Pago
     class MetodoPago(models.TextChoices):
         TRANSFERENCIA = 'transferencia', 'Transferencia Bancaria'
         YAPE = 'yape', 'Yape'
+        MERCADO_PAGO = 'mercado_pago', 'Mercado Pago'  # ← NUEVO
 
+    # MODIFICADO: Estados de pago más claros para MP
     class EstadoPago(models.TextChoices):
-        PENDIENTE_COMPROBANTE = 'pendiente_comprobante', 'Pendiente de Comprobante'
+        PENDIENTE = 'pendiente', 'Pendiente de Pago'  # ← RENOMBRADO
         PAGADO = 'pagado', 'Pagado'
+        RECHAZADO = 'rechazado', 'Pago Rechazado'  # ← NUEVO
         CANCELADO = 'cancelado', 'Cancelado'
 
     class EstadoOrden(models.TextChoices):
@@ -168,7 +156,6 @@ class Orden(models.Model):
         ENVIADO = 'enviado', 'Enviado'
         ENTREGADO = 'entregado', 'Entregado'
 
-    # ID_ordenes es creado automáticamente por Django
     numero_orden = models.CharField(max_length=20, unique=True, editable=False, verbose_name="Número de Orden")
 
     usuario = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True, related_name='ordenes', verbose_name="Usuario")
@@ -176,12 +163,46 @@ class Orden(models.Model):
     
     total = models.DecimalField(max_digits=10, decimal_places=2, verbose_name="Monto total de la compra")
     metodo_pago = models.CharField(max_length=50, choices=MetodoPago.choices, default=MetodoPago.TRANSFERENCIA, verbose_name="Método de pago")
-    estado_pago = models.CharField(max_length=50, choices=EstadoPago.choices, default=EstadoPago.PENDIENTE_COMPROBANTE, verbose_name="Estado del pago")
+    estado_pago = models.CharField(max_length=50, choices=EstadoPago.choices, default=EstadoPago.PENDIENTE, verbose_name="Estado del pago")  # ← MODIFICADO default
     estado_orden = models.CharField(max_length=50, choices=EstadoOrden.choices, default=EstadoOrden.PENDIENTE, verbose_name="Estado de la orden")
     
     cantidad_compra = models.PositiveIntegerField(verbose_name="Total de productos en la orden")
     comprobante_pago = models.ImageField(upload_to='comprobantes_pago/', null=True, blank=True, verbose_name="Imagen del comprobante de PAGO")
     comprobante_envio = models.ImageField(upload_to='comprobantes_envio/', null=True, blank=True, verbose_name="Imagen del comprobante de ENVÍO")
+
+    # ========== NUEVOS CAMPOS PARA MERCADO PAGO ==========
+    mercado_pago_preference_id = models.CharField(
+        max_length=100, 
+        null=True, 
+        blank=True, 
+        verbose_name="ID de Preferencia de Mercado Pago",
+        help_text="ID de la preferencia de pago creada en Mercado Pago"
+    )
+    
+    mercado_pago_payment_id = models.CharField(
+        max_length=100, 
+        null=True, 
+        blank=True, 
+        verbose_name="ID de Pago de Mercado Pago",
+        help_text="ID del pago confirmado por Mercado Pago"
+    )
+    
+    mercado_pago_status = models.CharField(
+        max_length=50, 
+        null=True, 
+        blank=True, 
+        verbose_name="Estado en Mercado Pago",
+        help_text="Estado del pago según Mercado Pago (approved, pending, rejected, etc.)"
+    )
+    
+    mercado_pago_status_detail = models.CharField(
+        max_length=100, 
+        null=True, 
+        blank=True, 
+        verbose_name="Detalle del estado MP",
+        help_text="Información adicional sobre el estado del pago"
+    )
+    # =====================================================
 
     recordatorio_enviado = models.BooleanField(default=False, verbose_name="¿Recordatorio de pago enviado?")
     
@@ -230,7 +251,6 @@ class Orden(models.Model):
 # 📦 TABLA: ORDEN_ITEMS
 # =================================================================
 class OrdenItem(models.Model):
-    # ID_orden_items es creado automáticamente por Django
     orden = models.ForeignKey(Orden, on_delete=models.CASCADE, related_name='items', verbose_name="Orden")
     producto = models.ForeignKey(Producto, on_delete=models.SET_NULL, null=True, verbose_name="Producto")
     
