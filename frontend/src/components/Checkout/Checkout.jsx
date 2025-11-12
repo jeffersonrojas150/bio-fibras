@@ -8,7 +8,7 @@ import { useNavigate, Link } from 'react-router-dom';
 import apiClient from '../../api';
 import OrderSummary from './OrderSummary';
 import PaymentMethods from './PaymentMethods';
-import AddressForm from './AddressForm'; // Importamos el nuevo formulario
+import AddressForm from './AddressForm';
 import './Checkout.css';
 
 const Checkout = () => {
@@ -171,6 +171,7 @@ const Checkout = () => {
             onPrev={handlePrevStep}
             isProcessing={isProcessing}
             finalTotal={finalTotal}
+            selectedAddressId={selectedAddressId}
           />
         );
       default:

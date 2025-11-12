@@ -1,0 +1,119 @@
+/* src/pages/Payment/Payment.css */
+
+.payment-status-container {
+    min-height: 80vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem 1rem;
+    background: linear-gradient(135deg, #ffffff 0%, #ffffff 100%);
+}
+
+.payment-status-card {
+    max-width: 600px;
+    width: 100%;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    border: none;
+    border-radius: 15px;
+    background: white;
+    overflow: hidden;
+}
+
+.payment-status-card .card-body {
+    padding: 3rem 2rem;
+}
+
+.success-icon,
+.error-icon,
+.pending-icon {
+    animation: scaleIn 0.5s ease-out;
+    margin-bottom: 1.5rem;
+}
+
+@keyframes scaleIn {
+    from {
+        transform: scale(0);
+        opacity: 0;
+    }
+
+    to {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+.payment-status-card h2 {
+    font-weight: 700;
+    color: #2c3e32;
+    margin-bottom: 1rem;
+}
+
+.payment-status-card .lead {
+    font-size: 1.1rem;
+    color: #6c757d;
+    margin-bottom: 1.5rem;
+}
+
+.payment-status-card .alert {
+    border-radius: 10px;
+    padding: 1rem;
+}
+
+.payment-status-card .btn {
+    min-width: 180px;
+    border-radius: 8px;
+    padding: 0.75rem 1.5rem;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.payment-status-card .btn-fiofibras {
+    background: linear-gradient(135deg, #d7ad44 0%, #b8941a 100%);
+    border: 2px solid #3d2809;
+    color: white;
+}
+
+.payment-status-card .btn-fiofibras:hover {
+    background: linear-gradient(135deg, #b8941a 0%, #996f0d 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(215, 173, 68, 0.3);
+}
+
+.payment-status-card .btn-outline-secondary {
+    border: 2px solid #6c757d;
+    color: #6c757d;
+}
+
+.payment-status-card .btn-outline-secondary:hover {
+    background: #6c757d;
+    color: white;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(108, 117, 125, 0.2);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .payment-status-container {
+        padding: 1rem;
+    }
+
+    .payment-status-card .card-body {
+        padding: 2rem 1.5rem;
+    }
+
+    .payment-status-card .btn {
+        min-width: 100%;
+        margin-bottom: 0.75rem;
+    }
+
+    .payment-status-card h2 {
+        font-size: 1.5rem;
+    }
+
+    .success-icon svg,
+    .error-icon svg,
+    .pending-icon svg {
+        width: 60px;
+        height: 60px;
+    }
+}

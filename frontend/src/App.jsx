@@ -17,6 +17,9 @@ import { CartProvider } from "./context/cartContext";
 import Cart from "./components/Cart/Cart";
 import Checkout from "./components/Checkout/Checkout";
 import OrderConfirmation from "./pages/Orders/OrderConfirmation";
+import PaymentSuccess from './pages/Payment/PaymentSuccess';
+import PaymentFailure from './pages/Payment/PaymentFailure';
+import PaymentPending from './pages/Payment/PaymentPending';
 import { OrderProvider } from "./context/orderContext";
 import { AuthProvider } from "./context/authContext";
 import MyOrders from "./pages/Orders/MyOrders";
@@ -52,7 +55,7 @@ function App() {
                 <CartProvider>
                   <OrderProvider>
                     <Router>
-                      <ScrollToTop  />
+                      <ScrollToTop />
                       <Header />
 
                       <main id="page-content">
@@ -63,7 +66,7 @@ function App() {
                           <Route path="/categorias" element={<Categories />} />
 
 
-      
+
                           <Route path="/productos/categoria/:categorySlug" element={<Products />} />
                           <Route path="/contacto" element={<Contact />} />
 
@@ -82,7 +85,11 @@ function App() {
                             path="/order-confirmation"
                             element={<OrderConfirmation />}
                           />
-                              {/* Rutas Legales */}
+                          {/* ← AGREGAR ESTAS 3 RUTAS AQUÍ */}
+                          <Route path="/pago/success" element={<PaymentSuccess />} />
+                          <Route path="/pago/failure" element={<PaymentFailure />} />
+                          <Route path="/pago/pending" element={<PaymentPending />} />
+                          {/* Rutas Legales */}
                           <Route path="/terminos-y-condiciones" element={<TermsConditions />} />
                           <Route path="/politica-de-privacidad" element={<PrivacyPolicy />} />
 
@@ -95,16 +102,16 @@ function App() {
                             <Route path="datos" element={<PersonalData />} />
                             <Route path="direcciones" element={<AddressManagement />} />
 
-                        
+
                           </Route>
 
-                          
+
                         </Routes>
                       </main>
 
                       <Footer />
                       <Cart />
-                       <Toaster position="top-center" reverseOrder={false} />
+                      <Toaster position="top-center" reverseOrder={false} />
                     </Router>
                   </OrderProvider>
                 </CartProvider>
