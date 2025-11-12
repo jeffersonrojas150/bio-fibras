@@ -105,7 +105,7 @@ const PaymentSuccess = () => {
                     <div className="d-grid gap-2 d-md-flex justify-content-md-center">
                         <Button
                             variant="primary"
-                            onClick={() => navigate('/perfil/ordenes')}
+                            onClick={() => navigate('/mis-ordenes')}
                             className="btn-fiofibras"
                         >
                             <FaShoppingBag className="me-2" />

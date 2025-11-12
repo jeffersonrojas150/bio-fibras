@@ -457,6 +457,10 @@ class MercadoPagoWebhookView(APIView):
         Mercado Pago envía notificaciones POST cuando cambia el estado de un pago.
         """
         try:
+            print(f"🔔 WEBHOOK RECIBIDO - Headers: {request.headers}")
+            print(f"🔔 WEBHOOK RECIBIDO - Body: {request.body}")
+            print(f"🔔 WEBHOOK RECIBIDO - GET params: {request.GET}")
+            
             data = request.data if request.data else json.loads(request.body)
             
             print(f"📩 Webhook recibido de Mercado Pago: {data}")
