@@ -131,7 +131,11 @@ const OrderDetail = () => {
                                 </p>
                                 <hr />
                                 <h6><FaCreditCard className="me-2" />Método de Pago</h6>
-                                <p>{order?.metodo_pago === 'transferencia' ? 'Transferencia Bancaria' : 'Yape'}</p>
+                                <p>
+                                    {order?.metodo_pago === 'transferencia' && '💳 Transferencia Bancaria'}
+                                    {order?.metodo_pago === 'yape' && '📱 Yape'}
+                                    {order?.metodo_pago === 'mercado_pago' && '💰 Mercado Pago'}
+                                </p>
                             </Card.Body>
                         </Card>
 

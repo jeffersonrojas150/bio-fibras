@@ -25,7 +25,7 @@ const OrderConfirmation = () => {
 
   // Mientras el efecto redirige, no renderizamos nada.
   if (!order) {
-    return null; 
+    return null;
   }
 
   const formatDate = (dateString) => {
@@ -56,7 +56,13 @@ const OrderConfirmation = () => {
         {/* === RENDERIZADO CONDICIONAL DE INSTRUCCIONES DE PAGO === */}
         {order.metodo_pago === 'yape' && <YapeInstructions orderNumber={order.numero_orden} />}
         {order.metodo_pago === 'transferencia' && <TransferInstructions orderNumber={order.numero_orden} />}
-        
+        {order.metodo_pago === 'mercado_pago' && (
+          <Alert variant="success" className="mt-4">
+            <strong>✅ Pago procesado con Mercado Pago</strong>
+            <p className="mb-0 mt-2">Tu pago fue confirmado exitosamente. No necesitas realizar ninguna acción adicional.</p>
+          </Alert>
+        )}
+
         <Row className="mt-5">
           {/* Columna Izquierda: Detalles del Pedido */}
           <Col lg={7}>
@@ -92,24 +98,24 @@ const OrderConfirmation = () => {
                 <h6><strong>Recoge:</strong> {order.direccion.nombres} {order.direccion.apellidos}</h6>
                 <p className="mb-1"><strong>DNI:</strong> {order.direccion.dni}</p>
                 <p className="mb-1"><strong>Teléfono:</strong> {order.direccion.telefono}</p>
-                <hr/>
+                <hr />
                 <p className="mb-1"><strong>Agencia:</strong> {order.direccion.agencia_recojo}</p>
                 <p className="mb-0"><strong>Dirección de Agencia:</strong> {order.direccion.direccion_agencia}</p>
               </Card.Body>
             </Card>
           </Col>
         </Row>
-        
+
         <Alert variant="info" className="email-confirmation mt-4">
           <FaEnvelope className="me-2" />
-          <strong>Confirmación enviada:</strong> Hemos enviado los detalles de tu pedido a tu correo electrónico. 
+          <strong>Confirmación enviada:</strong> Hemos enviado los detalles de tu pedido a tu correo electrónico.
           Ahí también encontrarás las instrucciones de pago.
         </Alert>
 
         <div className="text-center mt-4">
-            <Button variant="primary" onClick={() => navigate('/productos')} className="btn-fiofibras">
-                <FaHome className="me-2" /> Seguir Comprando
-            </Button>
+          <Button variant="primary" onClick={() => navigate('/productos')} className="btn-fiofibras">
+            <FaHome className="me-2" /> Seguir Comprando
+          </Button>
         </div>
       </Container>
     </div>
