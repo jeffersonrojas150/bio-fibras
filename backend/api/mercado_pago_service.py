@@ -47,7 +47,7 @@ class MercadoPagoService:
                 "pending": f"{base_url}/pago/pending",
             },
             "auto_return": "approved",
-            "notification_url": f"{request.build_absolute_uri('/api/pagos/webhook')}",
+            "notification_url": f"{request.build_absolute_uri('/api/pagos/webhook').replace('http://', 'https://')}",
             "statement_descriptor": "BIO-FIBRAS",
             "external_reference": f"pending_{usuario.id}_{orden_data.get('direccion_id')}",
         }
