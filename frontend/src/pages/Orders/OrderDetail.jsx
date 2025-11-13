@@ -137,6 +137,7 @@ const OrderDetail = () => {
                                     {order?.metodo_pago === 'mercado_pago' && '💰 Mercado Pago'}
                                 </p>
                             </Card.Body>
+                            
                         </Card>
 
                         <Card className="shipping-info-card mb-4">
