@@ -515,7 +515,25 @@ class MercadoPagoWebhookView(APIView):
                     print(f"💳 Pago {payment_id} - Estado: {payment_status} - Preference: {preference_id}")
                     
                     try:
-                        orden = Orden.objects.get(mercado_pago_preference_id=preference_id)
+                        # Buscar por external_reference si preference_id es None
+                        if preference_id:
+                            orden = Orden.objects.get(mercado_pago_preference_id=preference_id)
+                        else:
+                            # Usar external_reference como fallback
+                            external_reference = payment_data.get("external_reference")
+                            if external_reference and external_reference.startswith("pending_"):
+                                # El external_reference es "pending_USUARIO_ID_DIRECCION_ID"
+                                orden = Orden.objects.filter(
+                                    estado_pago=Orden.EstadoPago.PENDIENTE,
+                                    metodo_pago=Orden.MetodoPago.MERCADO_PAGO
+                                ).order_by('-fecha_creacion').first()
+                                
+                                if not orden:
+                                    print(f"⚠️ No se encontró orden pendiente")
+                                    return Response({"status": "orden no encontrada"}, status=status.HTTP_404_NOT_FOUND)
+                            else:
+                                print(f"⚠️ No se pudo determinar la orden (preference_id y external_reference vacíos)")
+                                return Response({"status": "datos insuficientes"}, status=status.HTTP_400_BAD_REQUEST)
                         
                         orden.mercado_pago_payment_id = str(payment_id)
                         orden.mercado_pago_status = payment_status
