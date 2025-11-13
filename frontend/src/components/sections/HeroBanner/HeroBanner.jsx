@@ -2,7 +2,6 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import './HeroBanner.css';
 
-// 1. Importa tus imágenes locales aquí
 import localImage from '../../../assets/herobiofibra.jpg'; 
 import localImage3 from '../../../assets/herobanner3.jpg';
 import localImage4 from '../../../assets/herobanner4.jpg';

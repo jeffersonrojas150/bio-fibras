@@ -11,15 +11,30 @@
     <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
     <meta name="apple-mobile-web-app-title" content="Biofibras" />
     <link rel="manifest" href="/site.webmanifest" />
-  
+
     <!-- Bootstrap Icons -->
     <link
       rel="stylesheet"
       href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
     />
   </head>
+
   <body>
     <div id="root"></div>
     <script type="module" src="/src/main.jsx"></script>
+
+    <!-- Chatfuel Widget -->
+    <script>
+      (function() {
+        var script = document.createElement('script');
+        script.dataset.bot = "6916568db6184261a9655bee";
+        script.dataset.zindex = "99999";
+        script.src = "https://panel.chatfuel.com/widgets/chat-widget/chat-widget.js";
+        script.async = true;
+        script.defer = true;
+        document.getElementsByTagName('head')[0].appendChild(script);
+      })()
+    </script>
+
   </body>
 </html>
