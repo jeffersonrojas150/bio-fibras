@@ -280,25 +280,36 @@ def enviar_correo_confirmacion_mercadopago(orden):
         usuario = orden.usuario
         items = orden.items.all()
         
-        # Renderizar el template
-        html_message = render_to_string('emails/confirmacion_orden_mercadopago.html', {
+        # Contexto para el template
+        contexto = {
             'usuario': usuario,
             'orden': orden,
             'items': items,
-        })
+        }
+        
+        # Renderizar el template HTML
+        html_message = render_to_string('emails/confirmacion_orden_mercadopago.html', contexto)
         
         # Crear mensaje de correo
         subject = f'¡Pago Confirmado! - Pedido #{orden.numero_orden}'
         from_email = settings.DEFAULT_FROM_EMAIL
         recipient_list = [usuario.email]
         
-        msg = EmailMultiAlternatives(subject, '', from_email, recipient_list)
-        msg.attach_alternative(html_message, "text/html")
-        msg.send()
+        # Usar send_mail en lugar de EmailMultiAlternatives
+        send_mail(
+            subject,
+            '',  # Mensaje de texto plano (vacío)
+            from_email,
+            recipient_list,
+            fail_silently=False,
+            html_message=html_message
+        )
         
         print(f"Correo de confirmación de Mercado Pago enviado exitosamente para la orden #{orden.numero_orden}")
+        return True
         
     except Exception as e:
         print(f"Error al enviar correo de confirmación de Mercado Pago: {e}")
         import traceback
         traceback.print_exc()
+        return False
