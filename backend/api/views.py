@@ -41,7 +41,13 @@ from .serializers import (
     )
 from django.db.models import F 
 
-from .email_service import enviar_correo_confirmacion_orden, enviar_correo_nueva_orden_admin, enviar_correo_password_reset, enviar_correo_contacto
+from .email_service import (
+    enviar_correo_confirmacion_orden, 
+    enviar_correo_nueva_orden_admin, 
+    enviar_correo_password_reset, 
+    enviar_correo_contacto, 
+    enviar_correo_confirmacion_mercadopago
+    )
 
 from .mercado_pago_service import MercadoPagoService
 from django.views.decorators.csrf import csrf_exempt
@@ -569,7 +575,7 @@ class MercadoPagoWebhookView(APIView):
                             print(f"✅ Orden #{nueva_orden.numero_orden} creada y marcada como PAGADA")
                             
                             # Enviar correos
-                            enviar_correo_confirmacion_orden(nueva_orden)
+                            enviar_correo_confirmacion_mercadopago(nueva_orden)
                             enviar_correo_nueva_orden_admin(nueva_orden, request)
                     
                     elif payment_status == "rejected":

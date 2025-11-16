@@ -1,4 +1,4 @@
-from django.core.mail import send_mail
+from django.core.mail import send_mail, EmailMultiAlternatives
 from django.conf import settings
 from django.template.loader import render_to_string
 from django.urls import reverse
@@ -269,3 +269,36 @@ def enviar_correo_voucher_disponible(orden):
     except Exception as e:
         print(f"ERROR al enviar correo de voucher disponible para la orden #{orden.numero_orden}: {e}")
         return False
+
+
+def enviar_correo_confirmacion_mercadopago(orden):
+    """
+    Envía un correo de confirmación específico para pagos con Mercado Pago.
+    Este correo indica que el pago ya fue procesado exitosamente.
+    """
+    try:
+        usuario = orden.usuario
+        items = orden.items.all()
+        
+        # Renderizar el template
+        html_message = render_to_string('emails/confirmacion_orden_mercadopago.html', {
+            'usuario': usuario,
+            'orden': orden,
+            'items': items,
+        })
+        
+        # Crear mensaje de correo
+        subject = f'¡Pago Confirmado! - Pedido #{orden.numero_orden}'
+        from_email = settings.DEFAULT_FROM_EMAIL
+        recipient_list = [usuario.email]
+        
+        msg = EmailMultiAlternatives(subject, '', from_email, recipient_list)
+        msg.attach_alternative(html_message, "text/html")
+        msg.send()
+        
+        print(f"Correo de confirmación de Mercado Pago enviado exitosamente para la orden #{orden.numero_orden}")
+        
+    except Exception as e:
+        print(f"Error al enviar correo de confirmación de Mercado Pago: {e}")
+        import traceback
+        traceback.print_exc()
