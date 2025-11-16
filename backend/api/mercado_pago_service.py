@@ -49,7 +49,7 @@ class MercadoPagoService:
             "auto_return": "approved",
             "notification_url": f"{request.build_absolute_uri('/api/pagos/webhook').replace('http://', 'https://')}",
             "statement_descriptor": "BIO-FIBRAS",
-            "external_reference": f"pending_{usuario.id}_{orden_data.get('direccion_id')}",
+            "external_reference": orden_data.get('external_reference'),
         }
         
         print(f"🔵 Preferencia a enviar: {preference_data}")
