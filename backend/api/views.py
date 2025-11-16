@@ -15,6 +15,7 @@ from allauth.socialaccount.providers.google.views import GoogleOAuth2Adapter
 from allauth.socialaccount.providers.oauth2.client import OAuth2Client
 from dj_rest_auth.registration.views import SocialLoginView
 from rest_framework_simplejwt.tokens import RefreshToken
+from django.utils import timezone
 from .models import (
     Producto, 
     Categoria, 
@@ -23,7 +24,8 @@ from .models import (
     Direccion, 
     Orden, 
     OrdenItem,
-    Direccion
+    Direccion,
+    PaymentProcessed,
     )
 from .serializers import (
     ProductoListSerializer, 
@@ -467,7 +469,6 @@ class MercadoPagoWebhookView(APIView):
             data = request.data if request.data else json.loads(request.body)
             
             print(f"🔔 WEBHOOK RECIBIDO - Headers: {request.headers}")
-            # print(f"🔔 WEBHOOK RECIBIDO - Body: {request.body}")
             print(f"🔔 WEBHOOK RECIBIDO - GET params: {request.GET}")
             print(f"📩 Webhook recibido de Mercado Pago: {data}")
             
@@ -494,53 +495,69 @@ class MercadoPagoWebhookView(APIView):
                     
                     # Solo procesar si el pago fue aprobado
                     if payment_status == "approved":
-                        
-                        # Verificar que no exista ya una orden con este payment_id
-                        if Orden.objects.filter(mercado_pago_payment_id=str(payment_id)).exists():
-                            print(f"⚠️ Ya existe una orden con payment_id {payment_id}. Ignorando webhook duplicado.")
-                            return Response({"status": "orden ya procesada"}, status=status.HTTP_200_OK)
-                        
-                        # Extraer datos del external_reference
-                        # Formato: "mp_{usuario_id}_{direccion_id}_{timestamp}"
-                        if not external_reference or not external_reference.startswith("mp_"):
-                            print(f"⚠️ External reference inválido: {external_reference}")
-                            return Response({"status": "external_reference inválido"}, status=status.HTTP_400_BAD_REQUEST)
-                        
-                        try:
-                            parts = external_reference.split("_")
-                            usuario_id = int(parts[1])
-                            direccion_id = int(parts[2])
-                        except (IndexError, ValueError) as e:
-                            print(f"❌ Error parseando external_reference: {e}")
-                            return Response({"status": "error parseando reference"}, status=status.HTTP_400_BAD_REQUEST)
-                        
-                        # Obtener usuario y dirección
-                        try:
-                            from django.contrib.auth.models import User
-                            usuario = User.objects.get(id=usuario_id)
-                            direccion = Direccion.objects.get(id=direccion_id, usuario=usuario)
-                        except (User.DoesNotExist, Direccion.DoesNotExist):
-                            print(f"❌ Usuario o dirección no encontrados")
-                            return Response({"status": "usuario/dirección no encontrados"}, status=status.HTTP_404_NOT_FOUND)
-                        
-                        # Obtener items del carrito
-                        items_carrito = Carrito.objects.filter(usuario=usuario)
-                        
-                        if not items_carrito.exists():
-                            print(f"⚠️ El carrito está vacío para el usuario {usuario_id}")
-                            return Response({"status": "carrito vacío"}, status=status.HTTP_400_BAD_REQUEST)
-                        
-                        # Calcular total
-                        total_orden = 0
-                        cantidad_total_items = 0
-                        
-                        for item in items_carrito:
-                            precio = item.producto.precio_oferta or item.producto.precio_unitario
-                            total_orden += item.cantidad * precio
-                            cantidad_total_items += item.cantidad
-                        
-                        # CREAR LA ORDEN AHORA
+                                                
+                        # Usar transacción atómica con lock para evitar duplicados
                         with transaction.atomic():
+                            # Intentar crear un registro de payment procesado
+                            # Si ya existe, lanzará IntegrityError
+                            try:
+                                # Esto crea el registro o devuelve el existente
+                                payment_record, created = PaymentProcessed.objects.get_or_create(
+                                    payment_id=str(payment_id),
+                                    defaults={'processed_at': timezone.now()}
+                                )
+                                
+                                if not created:
+                                    # Ya existe, significa que otro webhook ya procesó este pago
+                                    print(f"⚠️ Pago {payment_id} ya fue procesado previamente. Ignorando webhook duplicado.")
+                                    return Response({"status": "pago ya procesado"}, status=status.HTTP_200_OK)
+                                
+                                print(f"🔒 Lock adquirido para payment_id: {payment_id}")
+                                
+                            except Exception as e:
+                                print(f"⚠️ Error al verificar payment procesado: {e}. Ignorando webhook.")
+                                return Response({"status": "error verificando pago"}, status=status.HTTP_200_OK)
+                            
+                            # Extraer datos del external_reference
+                            # Formato: "mp_{usuario_id}_{direccion_id}_{timestamp}"
+                            if not external_reference or not external_reference.startswith("mp_"):
+                                print(f"⚠️ External reference inválido: {external_reference}")
+                                return Response({"status": "external_reference inválido"}, status=status.HTTP_400_BAD_REQUEST)
+                            
+                            try:
+                                parts = external_reference.split("_")
+                                usuario_id = int(parts[1])
+                                direccion_id = int(parts[2])
+                            except (IndexError, ValueError) as e:
+                                print(f"❌ Error parseando external_reference: {e}")
+                                return Response({"status": "error parseando reference"}, status=status.HTTP_400_BAD_REQUEST)
+                            
+                            # Obtener usuario y dirección
+                            try:
+                                from django.contrib.auth.models import User
+                                usuario = User.objects.get(id=usuario_id)
+                                direccion = Direccion.objects.get(id=direccion_id, usuario=usuario)
+                            except (User.DoesNotExist, Direccion.DoesNotExist):
+                                print(f"❌ Usuario o dirección no encontrados")
+                                return Response({"status": "usuario/dirección no encontrados"}, status=status.HTTP_404_NOT_FOUND)
+                            
+                            # Obtener items del carrito
+                            items_carrito = Carrito.objects.filter(usuario=usuario)
+                            
+                            if not items_carrito.exists():
+                                print(f"⚠️ El carrito está vacío para el usuario {usuario_id}")
+                                return Response({"status": "carrito vacío"}, status=status.HTTP_400_BAD_REQUEST)
+                            
+                            # Calcular total
+                            total_orden = 0
+                            cantidad_total_items = 0
+                            
+                            for item in items_carrito:
+                                precio = item.producto.precio_oferta or item.producto.precio_unitario
+                                total_orden += item.cantidad * precio
+                                cantidad_total_items += item.cantidad
+                            
+                            # CREAR LA ORDEN AHORA
                             nueva_orden = Orden.objects.create(
                                 usuario=usuario,
                                 direccion=direccion,
@@ -552,6 +569,10 @@ class MercadoPagoWebhookView(APIView):
                                 mercado_pago_status=payment_status,
                                 mercado_pago_status_detail=status_detail,
                             )
+                            
+                            # Asociar la orden al payment_record
+                            payment_record.orden = nueva_orden
+                            payment_record.save()
                             
                             # Crear items de la orden
                             for item in items_carrito:
@@ -574,7 +595,8 @@ class MercadoPagoWebhookView(APIView):
                             
                             print(f"✅ Orden #{nueva_orden.numero_orden} creada y marcada como PAGADA")
                             
-                            # Enviar correos
+                            # Enviar correos (específico para Mercado Pago)
+                            from .email_service import enviar_correo_confirmacion_mercadopago
                             enviar_correo_confirmacion_mercadopago(nueva_orden)
                             enviar_correo_nueva_orden_admin(nueva_orden, request)
                     

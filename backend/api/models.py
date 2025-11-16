@@ -264,3 +264,20 @@ class OrdenItem(models.Model):
     def __str__(self):
         nombre_producto = self.producto.nombre if self.producto else "[Producto Eliminado]"
         return f"{self.cantidad} x {nombre_producto} en Orden #{self.orden.id}"
+    
+class PaymentProcessed(models.Model):
+    """
+    Modelo para trackear qué payment_ids de Mercado Pago ya fueron procesados.
+    Evita crear órdenes duplicadas cuando llegan múltiples webhooks.
+    """
+    payment_id = models.CharField(max_length=255, unique=True, db_index=True)
+    processed_at = models.DateTimeField(auto_now_add=True)
+    orden = models.ForeignKey(Orden, on_delete=models.CASCADE, null=True, blank=True)
+    
+    class Meta:
+        db_table = 'api_payment_processed'
+        verbose_name = 'Pago Procesado'
+        verbose_name_plural = 'Pagos Procesados'
+    
+    def __str__(self):
+        return f"Payment {self.payment_id} - Orden {self.orden.numero_orden if self.orden else 'N/A'}"
