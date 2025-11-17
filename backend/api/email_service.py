@@ -83,6 +83,8 @@ def enviar_correo_actualizacion_estado(orden):
         contexto = {
             'orden': orden,
             'usuario': orden.usuario,
+            'items': orden.items.all(),
+            'frontend_url': settings.FRONTEND_URL,
         }
         
         mensaje_texto = render_to_string('emails/actualizacion_estado.txt', contexto)
