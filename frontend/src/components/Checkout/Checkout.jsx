@@ -22,7 +22,7 @@ const Checkout = () => {
   const [addresses, setAddresses] = useState([]);
   const [loadingAddresses, setLoadingAddresses] = useState(true);
   const [selectedAddressId, setSelectedAddressId] = useState(null);
-  const [paymentMethod, setPaymentMethod] = useState('transferencia');
+  const [paymentMethod, setPaymentMethod] = useState('mercado_pago');
 
   const totalPrice = getTotalPrice();
   const shipping = 0;
