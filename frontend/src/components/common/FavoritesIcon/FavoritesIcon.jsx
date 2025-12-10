@@ -12,8 +12,8 @@ export const FavoritesIcon = () => {
 
   const handleClick = (e) => {
     if (!isAuthenticated) {
-      e.preventDefault(); // Evita que vaya directo a /favoritos
-      navigate('/login'); // Lo mandamos al login
+      e.preventDefault(); 
+      navigate('/login'); 
       alert('Debes iniciar sesión para ver tus favoritos'); 
     }
   };
