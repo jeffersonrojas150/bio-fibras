@@ -147,36 +147,71 @@ const TermsConditions = () => {
                                     Al realizar un pedido, se generará automáticamente un código único de pedido y recibirás un 
                                     correo electrónico de confirmación. Este correo no representa la aceptación final del pedido, 
                                     sino la confirmación de que hemos recibido tu solicitud correctamente.
-                                    </p>
+                                </p>
 
-                                    <p>
-                                    Durante el proceso, podrás elegir tu método de pago: <strong>Yape</strong> o 
-                                    <strong> transferencia bancaria</strong>. Deberás enviar el comprobante o 
-                                    captura del pago por <strong>WhatsApp</strong> o <strong>correo electrónico</strong>, 
-                                    indicando el código de tu pedido.
-                                    </p>
+                                <p>
+                                    Durante el proceso podrás elegir entre tres métodos de pago: 
+                                    <strong> Mercado Pago</strong>, <strong> Yape</strong> o 
+                                    <strong> transferencia bancaria</strong>.
+                                </p>
 
-                                    <p>
-                                    Una vez verificado el pago, te enviaremos una notificación confirmando que tu pedido ha sido 
-                                    aceptado y procederemos con el envío correspondiente.
-                                    </p>
+                                <p>
+                                    Si eliges pagar mediante <strong>Mercado Pago</strong>, la validación del pago es 
+                                    automática y tu pedido pasará inmediatamente al estado <strong>"Confirmado"</strong>.
+                                </p>
+
+                                <p>
+                                    Si eliges pagar por <strong>Yape</strong> o <strong>transferencia bancaria</strong>, 
+                                    deberás enviar el comprobante o voucher por <strong>WhatsApp</strong> o 
+                                    <strong> correo electrónico</strong>, indicando el código de tu pedido. 
+                                    Solo después de verificar el pago, tu pedido será aceptado y procederemos con el envío.
+                                </p>
+
 
 
                                 <h3>4.2 Métodos de Pago</h3>
-                                <p>Por ahora estamos aceptando los siguientes métodos de pago:</p>
+                                <p>Actualmente aceptamos los siguientes métodos de pago:</p>
+
                                 <ul>
-                                    <li>Transferencias bancarias</li>
-                                    <li>Yape</li>
-                                    
+                                <li>
+                                    <strong>Pago online con Mercado Pago:</strong> podrás pagar con tarjeta de crédito,
+                                    débito, Yape, Plin o saldo en Mercado Pago. Es un proceso totalmente seguro y
+                                    automático. Una vez completado el pago, tu pedido se confirma inmediatamente.
+                                </li>
+
+                                <li>
+                                    <strong>Yape:</strong> puedes realizar el pago manualmente escaneando nuestro código QR o
+                                    enviando el monto directamente. Después del pago, deberás enviar el comprobante por
+                                    WhatsApp o correo electrónico para validar la operación.
+                                </li>
+
+                                <li>
+                                    <strong>Transferencia bancaria:</strong> disponible para clientes que prefieren no usar
+                                    plataformas online. Luego de realizar la transferencia, deberás enviar el voucher por
+                                    WhatsApp o correo con el código de tu pedido.
+                                </li>
                                 </ul>
-                                {/* 
+
+                                <p>
+                                Los métodos de pago por Yape y transferencia están dirigidos especialmente a clientes que
+                                prefieren realizar sus pagos de forma manual o que desconfían de plataformas digitales.
+                                En estos casos, el pedido se confirmará únicamente después de verificar el comprobante
+                                enviado.
+                                </p>
+
+                                <p>
+                                En el caso del pago online mediante Mercado Pago, el sistema valida automáticamente la
+                                transacción y el pedido pasa a estado "Confirmado" de inmediato.
+                                </p>
+
+                              
 
                                 <h3>4.3 Seguridad de Pagos</h3>
                                 <p>
                                     Utilizamos tecnología de encriptación SSL para proteger tu información de pago. 
                                     No almacenamos datos completos de tarjetas de crédito en nuestros servidores.
                                 </p>
-
+                                     {/* 
                                 <h3>4.4 Facturación</h3>
                                 <p>
                                     Emitimos boletas o facturas electrónicas según lo solicitado. Para factura, debes 
