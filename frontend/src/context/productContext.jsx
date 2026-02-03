@@ -16,18 +16,32 @@ export const ProductProvider = ({ children }) => {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
 
-    const fetchProducts = useCallback(async () => {
-        if (loading || products.length > 0) {
+    // ✅ Función para cargar productos (con opción de forzar recarga)
+    const fetchProducts = useCallback(async (forceRefresh = false) => {
+        // Si ya está cargando, no hacer nada
+        if (loading) {
             return;
         }
 
-        console.log("ProductContext: No hay productos en el estado global. Realizando llamada a la API...");
+        // Si ya hay productos y NO se fuerza el refresh, no recargar
+        if (products.length > 0 && !forceRefresh) {
+            console.log("ProductContext: Productos ya cargados en caché.");
+            return;
+        }
+
+        console.log("ProductContext: Cargando productos desde la API...");
         setLoading(true);
         setError(null);
 
         try {
-            const response = await apiClient.get('/productos/');
-            setProducts(response.data.results || response.data);
+            // ✅ SOLUCIÓN: Traer hasta 1000 productos en una sola página
+            const response = await apiClient.get('/productos/?page_size=1000');
+            
+            // Django devuelve los productos en 'results' cuando hay paginación
+            const productsData = response.data.results || response.data;
+            
+            setProducts(productsData);
+            console.log(`ProductContext: ${productsData.length} productos cargados exitosamente.`);
         } catch (err) {
             console.error("Error al cargar productos en ProductContext:", err);
             setError('No se pudieron cargar los productos. Intenta refrescar la página.');
@@ -36,11 +50,26 @@ export const ProductProvider = ({ children }) => {
         }
     }, [loading, products.length]);
 
+    // ✅ Función para refrescar productos manualmente (útil después de crear productos)
+    const refreshProducts = useCallback(() => {
+        console.log("ProductContext: Forzando recarga de productos...");
+        return fetchProducts(true);
+    }, [fetchProducts]);
+
+    // ✅ Función para limpiar caché (útil para logout)
+    const clearProducts = useCallback(() => {
+        console.log("ProductContext: Limpiando caché de productos...");
+        setProducts([]);
+        setError(null);
+    }, []);
+
     const value = {
         products,
         loading,
         error,
         fetchProducts,
+        refreshProducts,  // ✅ Nueva función expuesta
+        clearProducts,    // ✅ Nueva función expuesta
     };
 
     return (
