@@ -31,12 +31,12 @@ class ProductoListSerializer(serializers.ModelSerializer):
         ]
         
     def get_imagen_principal(self, obj):
-        imagen = ImagenProducto.objects.filter(producto=obj, es_principal=True).first()
-        if imagen:
-            request = self.context.get('request')
-            if request:
-                return request.build_absolute_uri(imagen.imagen.url)
-            return imagen.imagen.url
+        for imagen in obj.imagenes.all():
+            if imagen.es_principal:
+                request = self.context.get('request')
+                if request:
+                    return request.build_absolute_uri(imagen.imagen.url)
+                return imagen.imagen.url
         return None
 
 class ImagenProductoSerializer(serializers.ModelSerializer):

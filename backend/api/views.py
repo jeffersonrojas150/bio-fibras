@@ -63,8 +63,14 @@ print(f"🔍 DEBUG está en: {settings.DEBUG}")
 print("=" * 50)
 
 class ProductoListView(generics.ListAPIView):
-    queryset = Producto.objects.filter(es_activo=True)
     serializer_class = ProductoListSerializer
+    
+    # ✅ OPTIMIZACIÓN: Precarga la categoría y las imágenes
+    queryset = Producto.objects.filter(es_activo=True).select_related(
+        'categoria'
+    ).prefetch_related(
+        'imagenes'  # Precarga todas las imágenes
+    )
 
     filter_backends = [filters.SearchFilter, DjangoFilterBackend]
     filterset_class = ProductoFilter
@@ -335,21 +341,23 @@ class ProductosDestacadosView(generics.ListAPIView):
     """
     Lista productos marcados como destacados (es_destacado=True).
     """
-    queryset = Producto.objects.filter(es_activo=True, es_destacado=True).order_by('-fecha_creacion')
     serializer_class = ProductoListSerializer
+    queryset = Producto.objects.filter(
+        es_activo=True, 
+        es_destacado=True
+    ).select_related('categoria').prefetch_related('imagenes').order_by('-fecha_creacion')
+
 
 class ProductosEnOfertaView(generics.ListAPIView):
     """
     Lista productos que tienen un precio_oferta definido y menor al precio_unitario.
     """
+    serializer_class = ProductoListSerializer
     queryset = Producto.objects.filter(
         es_activo=True,
-        # Asegura que el campo precio_oferta no sea nulo
         precio_oferta__isnull=False,
-        # Asegura que precio_oferta sea menor que precio_unitario
-        precio_oferta__lt=F('precio_unitario') 
-    ).order_by('-fecha_actualizacion')
-    serializer_class = ProductoListSerializer
+        precio_oferta__lt=F('precio_unitario')
+    ).select_related('categoria').prefetch_related('imagenes').order_by('-fecha_actualizacion')
 
 
 class CrearPreferenciaPagoView(generics.GenericAPIView):
