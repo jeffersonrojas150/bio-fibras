@@ -1,5 +1,6 @@
 from rest_framework import serializers
 from django.contrib.auth.models import User
+from django.db.models import Sum, Count
 from .models import (
     Producto, 
     Categoria, 
@@ -251,3 +252,115 @@ class ContactFormSerializer(serializers.Serializer):
 
     class Meta:
         fields = ['name', 'email', 'subject', 'message']
+
+# =============================================
+# SERIALIZERS PARA EL PANEL DE ADMINISTRACIÓN
+# =============================================
+
+# --- Gestión de imágenes de producto ---
+class AdminImagenProductoSerializer(serializers.ModelSerializer):
+    imagen_url = serializers.SerializerMethodField()
+
+    class Meta:
+        model = ImagenProducto
+        fields = ['id', 'imagen', 'imagen_url', 'es_principal', 'orden']
+
+    def get_imagen_url(self, obj):
+        request = self.context.get('request')
+        if request:
+            return request.build_absolute_uri(obj.imagen.url)
+        return obj.imagen.url
+
+
+# --- CRUD completo de productos ---
+class AdminProductoSerializer(serializers.ModelSerializer):
+    imagenes = AdminImagenProductoSerializer(many=True, read_only=True)
+    categoria_nombre = serializers.SerializerMethodField()
+    materiales_nombres = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Producto
+        fields = [
+            'id', 'nombre', 'slug', 'descripcion',
+            'precio_unitario', 'precio_oferta', 'precio_mayor',
+            'cantidad_minima_mayor', 'stock', 'es_activo',
+            'es_destacado', 'categoria', 'categoria_nombre',
+            'materiales', 'materiales_nombres',
+            'imagenes', 'fecha_creacion', 'fecha_actualizacion',
+        ]
+
+    def get_categoria_nombre(self, obj):
+        return obj.categoria.nombre if obj.categoria else None
+
+    def get_materiales_nombres(self, obj):
+        return [m.nombre for m in obj.materiales.all()]
+
+
+# --- CRUD de categorías ---
+class AdminCategoriaSerializer(serializers.ModelSerializer):
+    imagen_url = serializers.SerializerMethodField()
+    total_productos = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Categoria
+        fields = [
+            'id', 'nombre', 'slug', 'imagen', 'imagen_url',
+            'activo', 'total_productos',
+            'fecha_creacion', 'fecha_actualizacion',
+        ]
+
+    def get_imagen_url(self, obj):
+        request = self.context.get('request')
+        if obj.imagen:
+            if request:
+                return request.build_absolute_uri(obj.imagen.url)
+            return obj.imagen.url
+        return None
+
+    def get_total_productos(self, obj):
+        return obj.productos.filter(es_activo=True).count()
+
+
+# --- Lista de órdenes para admin (con info completa) ---
+class AdminOrdenSerializer(serializers.ModelSerializer):
+    items = OrdenItemSerializer(many=True, read_only=True)
+    usuario_email = serializers.SerializerMethodField()
+    usuario_nombre = serializers.SerializerMethodField()
+    direccion = DireccionSerializer(read_only=True)
+
+    class Meta:
+        model = Orden
+        fields = [
+            'id', 'numero_orden', 'usuario', 'usuario_email',
+            'usuario_nombre', 'direccion', 'total', 'metodo_pago',
+            'estado_pago', 'estado_orden', 'cantidad_compra',
+            'comprobante_pago', 'comprobante_envio',
+            'mercado_pago_payment_id', 'mercado_pago_status',
+            'fecha_creacion', 'fecha_actualizacion', 'items',
+        ]
+        read_only_fields = [
+            'numero_orden', 'usuario', 'total',
+            'cantidad_compra', 'fecha_creacion',
+        ]
+
+    def get_usuario_email(self, obj):
+        return obj.usuario.email if obj.usuario else None
+
+    def get_usuario_nombre(self, obj):
+        if obj.usuario:
+            return f"{obj.usuario.first_name} {obj.usuario.last_name}".strip() or obj.usuario.username
+        return None
+
+
+# --- Dashboard: métricas generales ---
+class DashboardSerializer(serializers.Serializer):
+    total_ordenes = serializers.IntegerField()
+    ordenes_pendientes = serializers.IntegerField()
+    ordenes_enviadas = serializers.IntegerField()
+    ordenes_entregadas = serializers.IntegerField()
+    ingresos_totales = serializers.DecimalField(max_digits=12, decimal_places=2)
+    ingresos_pagados = serializers.DecimalField(max_digits=12, decimal_places=2)
+    total_productos = serializers.IntegerField()
+    productos_sin_stock = serializers.IntegerField()
+    total_usuarios = serializers.IntegerField()
+    ordenes_recientes = AdminOrdenSerializer(many=True)

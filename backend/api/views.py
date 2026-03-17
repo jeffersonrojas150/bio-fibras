@@ -5,6 +5,7 @@ from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from django.db import transaction
 from django.contrib.auth.models import User
+from django.contrib.auth.models import User as UserModel
 from django.contrib.auth.tokens import PasswordResetTokenGenerator
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode 
 from django.utils.encoding import force_bytes
@@ -16,6 +17,7 @@ from allauth.socialaccount.providers.oauth2.client import OAuth2Client
 from dj_rest_auth.registration.views import SocialLoginView
 from rest_framework_simplejwt.tokens import RefreshToken
 from django.utils import timezone
+from .permissions import IsAdminUser
 from .models import (
     Producto, 
     Categoria, 
@@ -40,8 +42,13 @@ from .serializers import (
     PasswordResetRequestSerializer,
     PasswordResetConfirmSerializer,
     ContactFormSerializer,
+    AdminProductoSerializer,
+    AdminCategoriaSerializer,
+    AdminOrdenSerializer,
+    AdminImagenProductoSerializer,
+    DashboardSerializer,
     )
-from django.db.models import F 
+from django.db.models import F, Sum, Count, Q
 
 from .email_service import (
     enviar_correo_confirmacion_orden, 
@@ -625,3 +632,154 @@ class MercadoPagoWebhookView(APIView):
             import traceback
             traceback.print_exc()
             return Response({"status": "error", "message": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+# =============================================
+# VISTAS PARA EL PANEL DE ADMINISTRACIÓN
+# =============================================
+
+# --- Dashboard con métricas ---
+class AdminDashboardView(generics.GenericAPIView):
+    permission_classes = [IsAdminUser]
+
+    def get(self, request, *args, **kwargs):
+        from .models import Producto, Orden
+
+        total_ordenes = Orden.objects.count()
+        ordenes_pendientes = Orden.objects.filter(estado_orden='pendiente').count()
+        ordenes_enviadas = Orden.objects.filter(estado_orden='enviado').count()
+        ordenes_entregadas = Orden.objects.filter(estado_orden='entregado').count()
+
+        ingresos_totales = Orden.objects.aggregate(
+            total=Sum('total')
+        )['total'] or 0
+
+        ingresos_pagados = Orden.objects.filter(
+            estado_pago='pagado'
+        ).aggregate(total=Sum('total'))['total'] or 0
+
+        total_productos = Producto.objects.filter(es_activo=True).count()
+        productos_sin_stock = Producto.objects.filter(es_activo=True, stock=0).count()
+        total_usuarios = UserModel.objects.filter(is_staff=False).count()
+
+        ordenes_recientes = Orden.objects.select_related(
+            'usuario', 'direccion'
+        ).prefetch_related('items__producto').order_by('-fecha_creacion')[:10]
+
+        data = {
+            'total_ordenes': total_ordenes,
+            'ordenes_pendientes': ordenes_pendientes,
+            'ordenes_enviadas': ordenes_enviadas,
+            'ordenes_entregadas': ordenes_entregadas,
+            'ingresos_totales': ingresos_totales,
+            'ingresos_pagados': ingresos_pagados,
+            'total_productos': total_productos,
+            'productos_sin_stock': productos_sin_stock,
+            'total_usuarios': total_usuarios,
+            'ordenes_recientes': AdminOrdenSerializer(
+                ordenes_recientes, many=True, context={'request': request}
+            ).data,
+        }
+
+        return Response(data, status=status.HTTP_200_OK)
+
+
+# --- CRUD de Productos ---
+class AdminProductoListCreateView(generics.ListCreateAPIView):
+    permission_classes = [IsAdminUser]
+    serializer_class = AdminProductoSerializer
+
+    def get_queryset(self):
+        return Producto.objects.select_related('categoria').prefetch_related(
+            'imagenes', 'materiales'
+        ).order_by('-fecha_creacion')
+
+
+class AdminProductoDetailView(generics.RetrieveUpdateDestroyAPIView):
+    permission_classes = [IsAdminUser]
+    serializer_class = AdminProductoSerializer
+
+    def get_queryset(self):
+        return Producto.objects.select_related('categoria').prefetch_related(
+            'imagenes', 'materiales'
+        )
+
+
+# --- Gestión de imágenes de producto ---
+class AdminImagenProductoView(generics.CreateAPIView):
+    permission_classes = [IsAdminUser]
+    serializer_class = AdminImagenProductoSerializer
+
+    def perform_create(self, serializer):
+        from .models import ImagenProducto
+        producto_id = self.kwargs['producto_id']
+        producto = Producto.objects.get(id=producto_id)
+        serializer.save(producto=producto)
+
+
+class AdminImagenProductoDeleteView(generics.DestroyAPIView):
+    permission_classes = [IsAdminUser]
+    serializer_class = AdminImagenProductoSerializer
+
+    def get_queryset(self):
+        from .models import ImagenProducto
+        return ImagenProducto.objects.filter(
+            producto_id=self.kwargs['producto_id']
+        )
+
+
+# --- CRUD de Categorías ---
+class AdminCategoriaListCreateView(generics.ListCreateAPIView):
+    permission_classes = [IsAdminUser]
+    serializer_class = AdminCategoriaSerializer
+    queryset = Categoria.objects.all().order_by('-fecha_creacion')
+
+
+class AdminCategoriaDetailView(generics.RetrieveUpdateDestroyAPIView):
+    permission_classes = [IsAdminUser]
+    serializer_class = AdminCategoriaSerializer
+    queryset = Categoria.objects.all()
+
+
+# --- Gestión de Órdenes ---
+class AdminOrdenListView(generics.ListAPIView):
+    permission_classes = [IsAdminUser]
+    serializer_class = AdminOrdenSerializer
+
+    def get_queryset(self):
+        queryset = Orden.objects.select_related(
+            'usuario', 'direccion'
+        ).prefetch_related('items__producto').order_by('-fecha_creacion')
+
+        estado_orden = self.request.query_params.get('estado_orden')
+        estado_pago = self.request.query_params.get('estado_pago')
+        metodo_pago = self.request.query_params.get('metodo_pago')
+
+        if estado_orden:
+            queryset = queryset.filter(estado_orden=estado_orden)
+        if estado_pago:
+            queryset = queryset.filter(estado_pago=estado_pago)
+        if metodo_pago:
+            queryset = queryset.filter(metodo_pago=metodo_pago)
+
+        return queryset
+
+
+class AdminOrdenDetailView(generics.RetrieveUpdateAPIView):
+    permission_classes = [IsAdminUser]
+    serializer_class = AdminOrdenSerializer
+
+    def get_queryset(self):
+        return Orden.objects.select_related(
+            'usuario', 'direccion'
+        ).prefetch_related('items__producto')
+
+
+# --- Lista de Usuarios ---
+class AdminUsuarioListView(generics.ListAPIView):
+    permission_classes = [IsAdminUser]
+    serializer_class = UserSerializer
+
+    def get_queryset(self):
+        return UserModel.objects.filter(
+            is_staff=False
+        ).order_by('-date_joined')
