@@ -138,6 +138,10 @@ STORAGES = {
 GS_DEFAULT_ACL = None
 GS_FILE_OVERWRITE = False
 
+GS_OBJECT_PARAMETERS = {
+    'cache_control': 'public, max-age=86400',
+}
+
 MEDIA_URL = f'https://storage.googleapis.com/{GS_BUCKET_NAME}/'
 
 

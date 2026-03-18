@@ -2,6 +2,7 @@ from django.db import models
 from django.conf import settings
 import time, random
 from .email_service import enviar_correo_actualizacion_estado, enviar_correo_orden_cancelada, enviar_correo_voucher_disponible
+from .utils.image_utils import comprimir_imagen
 
 # =================================================================
 # 🏷️ TABLA: CATEGORIA
@@ -13,6 +14,13 @@ class Categoria(models.Model):
     activo = models.BooleanField(default=True, verbose_name="¿Está activa?")
     fecha_creacion = models.DateTimeField(auto_now_add=True, verbose_name="Fecha de creación")
     fecha_actualizacion = models.DateTimeField(auto_now=True, verbose_name="Fecha de actualización")
+
+    def save(self, *args, **kwargs):
+        if self.imagen and hasattr(self.imagen, 'file'):
+            imagen_comprimida = comprimir_imagen(self.imagen)
+            if imagen_comprimida:
+                self.imagen = imagen_comprimida
+        super().save(*args, **kwargs)
 
     def __str__(self):
         return self.nombre
@@ -27,6 +35,13 @@ class Material(models.Model):
     es_sostenible = models.BooleanField(default=False, verbose_name="¿Es sostenible?")
     fecha_creacion = models.DateTimeField(auto_now_add=True, verbose_name="Fecha de creación")
     fecha_actualizacion = models.DateTimeField(auto_now=True, verbose_name="Fecha de actualización")
+
+    def save(self, *args, **kwargs):
+        if self.imagen and hasattr(self.imagen, 'file'):
+            imagen_comprimida = comprimir_imagen(self.imagen)
+            if imagen_comprimida:
+                self.imagen = imagen_comprimida
+        super().save(*args, **kwargs)
 
     def __str__(self):
         return self.nombre
@@ -70,10 +85,20 @@ class ImagenProducto(models.Model):
     fecha_actualizacion = models.DateTimeField(auto_now=True, verbose_name="Fecha de actualización")
 
     def save(self, *args, **kwargs):
+        # Comprimir imagen nueva antes de subir
+        if self.imagen and hasattr(self.imagen, 'file'):
+            imagen_comprimida = comprimir_imagen(self.imagen)
+            if imagen_comprimida:
+                self.imagen = imagen_comprimida
+
+        # Lógica existente de imagen principal
         if self.es_principal:
-            ImagenProducto.objects.filter(producto=self.producto, es_principal=True).exclude(pk=self.pk).update(es_principal=False)
-        
+            ImagenProducto.objects.filter(
+                producto=self.producto, es_principal=True
+            ).exclude(pk=self.pk).update(es_principal=False)
+
         super().save(*args, **kwargs)
+
 
     def __str__(self):
         return f"Imagen de {self.producto.nombre} ({self.id})"
