@@ -29,7 +29,7 @@ const Products = () => {
 
   // === ESTADOS PARA LA PAGINACIÓN  ===
   const [currentPage, setCurrentPage] = useState(1);
-  const PRODUCTS_PER_PAGE = 6; 
+  const PRODUCTS_PER_PAGE = 24; 
 
   // === CONSTANTES DE CONFIGURACIÓN ===
   const priceRanges = [
@@ -188,26 +188,71 @@ const Products = () => {
   );
   
   // Componente de paginación que se mostrará
-  const PaginationComponent = () => {
-    if (totalPages <= 1) return null;
+const PaginationComponent = () => {
+  if (totalPages <= 1) return null;
+
+  const renderPaginationItems = () => {
     let items = [];
-    for (let number = 1; number <= totalPages; number++) {
+    const maxVisiblePages = 3; // Número de páginas a mostrar en el centro
+    
+    // Lógica para determinar el rango de páginas a mostrar
+    let startPage = Math.max(1, currentPage - Math.floor(maxVisiblePages / 2));
+    let endPage = Math.min(totalPages, startPage + maxVisiblePages - 1);
+
+    if (endPage - startPage + 1 < maxVisiblePages) {
+      startPage = Math.max(1, endPage - maxVisiblePages + 1);
+    }
+
+    // Botón de Primera Página (opcional)
+    if (startPage > 1) {
       items.push(
-        <Pagination.Item key={number} active={number === currentPage} onClick={() => paginate(number)}>
+        <Pagination.Item key={1} onClick={() => paginate(1)}>1</Pagination.Item>
+      );
+      if (startPage > 2) items.push(<Pagination.Ellipsis key="start-elips" />);
+    }
+
+    // Páginas centrales
+    for (let number = startPage; number <= endPage; number++) {
+      items.push(
+        <Pagination.Item 
+          key={number} 
+          active={number === currentPage} 
+          onClick={() => paginate(number)}
+        >
           {number}
-        </Pagination.Item>,
+        </Pagination.Item>
       );
     }
-    return (
-      <div className="d-flex justify-content-center mt-4">
-        <Pagination>
-          <Pagination.Prev onClick={() => paginate(currentPage - 1)} disabled={currentPage === 1} />
-          {items}
-          <Pagination.Next onClick={() => paginate(currentPage + 1)} disabled={currentPage === totalPages} />
-        </Pagination>
-      </div>
-    );
+
+    // Botón de Última Página
+    if (endPage < totalPages) {
+      if (endPage < totalPages - 1) items.push(<Pagination.Ellipsis key="end-elips" />);
+      items.push(
+        <Pagination.Item key={totalPages} onClick={() => paginate(totalPages)}>
+          {totalPages}
+        </Pagination.Item>
+      );
+    }
+
+    return items;
   };
+
+  return (
+    <div className="d-flex justify-content-center mt-4">
+      <Pagination className="custom-pagination">
+        <Pagination.Prev 
+          onClick={() => paginate(currentPage - 1)} 
+          disabled={currentPage === 1} 
+        />
+        {renderPaginationItems()}
+        <Pagination.Next 
+          onClick={() => paginate(currentPage + 1)} 
+          disabled={currentPage === totalPages} 
+        />
+      </Pagination>
+    </div>
+  );
+};
 
   const renderContent = () => {
     if (loading && allProducts.length === 0) {
@@ -234,8 +279,9 @@ const Products = () => {
     }
 
     // Se renderiza el `map` sobre `currentProducts` 
+  
     return (
-      <Row className="products-grid">
+      <Row className="products-grid gx-2 gy-3 g-md-4"> 
         {currentProducts.map((product) => (
           <ProductCard key={product.id} product={product} />
         ))}
