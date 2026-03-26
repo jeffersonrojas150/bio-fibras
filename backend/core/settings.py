@@ -137,6 +137,7 @@ STORAGES = {
 
 GS_DEFAULT_ACL = None
 GS_FILE_OVERWRITE = False
+GS_QUERYSTRING_AUTH = False
 
 GS_OBJECT_PARAMETERS = {
     'cache_control': 'public, max-age=86400',
