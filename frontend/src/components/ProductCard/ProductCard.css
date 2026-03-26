@@ -544,7 +544,7 @@ box-shadow: 0 0 0 0.25rem rgba(200, 134, 13, 0.25) !important;
 /* === GRID DE PRODUCTOS MEJORADO === */
 @media (max-width: 767.98px) {
   .products-grid .col-md-6 {
-    margin-bottom: 1.5rem; /* Era 2rem por defecto */
+    margin-bottom: 1.5rem;
   }
 }
 

@@ -20,7 +20,7 @@ const ProductPriceDisplay = ({ product }) => {
       </div>
       {product.precio_mayor && product.cantidad_minima_mayor && (
         <div className="wholesale-price-info">
-          A partir de {product.cantidad_minima_mayor} unid. a <strong>S/ {parseFloat(product.precio_mayor).toFixed(2)} c/u</strong>
+          A partir de {product.cantidad_minima_mayor} unid. a:  <strong>S/ {parseFloat(product.precio_mayor).toFixed(2)} c/u</strong>
         </div>
       )}
     </>

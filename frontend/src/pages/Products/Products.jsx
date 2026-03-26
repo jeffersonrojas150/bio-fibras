@@ -29,7 +29,7 @@ const Products = () => {
 
   // === ESTADOS PARA LA PAGINACIÓN  ===
   const [currentPage, setCurrentPage] = useState(1);
-  const PRODUCTS_PER_PAGE = 6; 
+  const PRODUCTS_PER_PAGE = 24; 
 
   // === CONSTANTES DE CONFIGURACIÓN ===
   const priceRanges = [
@@ -188,26 +188,57 @@ const Products = () => {
   );
   
   // Componente de paginación que se mostrará
-  const PaginationComponent = () => {
-    if (totalPages <= 1) return null;
+const PaginationComponent = () => {
+  if (totalPages <= 1) return null;
+
+  const renderPaginationItems = () => {
     let items = [];
-    for (let number = 1; number <= totalPages; number++) {
+    const maxVisible = 5; // Máximo de números a mostrar
+    let start = Math.max(1, currentPage - Math.floor(maxVisible / 2));
+    let end = Math.min(totalPages, start + maxVisible - 1);
+
+    // Ajuste si estamos cerca del final
+    if (end - start + 1 < maxVisible) {
+      start = Math.max(1, end - maxVisible + 1);
+    }
+
+    for (let number = start; number <= end; number++) {
       items.push(
-        <Pagination.Item key={number} active={number === currentPage} onClick={() => paginate(number)}>
+        <Pagination.Item
+          key={number}
+          active={number === currentPage}
+          onClick={() => paginate(number)}
+        >
           {number}
-        </Pagination.Item>,
+        </Pagination.Item>
       );
     }
-    return (
-      <div className="d-flex justify-content-center mt-4">
-        <Pagination>
-          <Pagination.Prev onClick={() => paginate(currentPage - 1)} disabled={currentPage === 1} />
-          {items}
-          <Pagination.Next onClick={() => paginate(currentPage + 1)} disabled={currentPage === totalPages} />
-        </Pagination>
-      </div>
-    );
+    return items;
   };
+
+  return (
+    <div className="pagination-wrapper">
+      <Pagination >
+        <Pagination.Prev 
+          onClick={() => paginate(currentPage - 1)} 
+          disabled={currentPage === 1}
+        >
+          Anterior
+        </Pagination.Prev>
+
+        {renderPaginationItems()}
+
+        <Pagination.Next 
+          onClick={() => paginate(currentPage + 1)} 
+          disabled={currentPage === totalPages}
+        >
+          Siguiente
+        </Pagination.Next>
+      </Pagination>
+    </div>
+  );
+};
+
 
   const renderContent = () => {
     if (loading && allProducts.length === 0) {
@@ -234,8 +265,9 @@ const Products = () => {
     }
 
     // Se renderiza el `map` sobre `currentProducts` 
+  
     return (
-      <Row className="products-grid">
+      <Row className="products-grid gx-2 gy-3 g-md-4"> 
         {currentProducts.map((product) => (
           <ProductCard key={product.id} product={product} />
         ))}
