@@ -14,9 +14,9 @@ const ProductPriceDisplay = ({ product }) => {
     <>
       <div className="product-price">
         {precioOriginal && (
-          <span className="original-price">S/ {precioOriginal.toFixed(2)}</span>
+          <span className="original-price">S/{precioOriginal.toFixed(2)}</span>
         )}
-        <span className="current-price">S/ {precioMostrado.toFixed(2)}</span>
+        <span className="current-price">S/{precioMostrado.toFixed(2)}</span>
       </div>
       {product.precio_mayor && product.cantidad_minima_mayor && (
         <div className="wholesale-price-info">
