@@ -193,66 +193,52 @@ const PaginationComponent = () => {
 
   const renderPaginationItems = () => {
     let items = [];
-    const maxVisiblePages = 3; // Número de páginas a mostrar en el centro
-    
-    // Lógica para determinar el rango de páginas a mostrar
-    let startPage = Math.max(1, currentPage - Math.floor(maxVisiblePages / 2));
-    let endPage = Math.min(totalPages, startPage + maxVisiblePages - 1);
+    const maxVisible = 5; // Máximo de números a mostrar
+    let start = Math.max(1, currentPage - Math.floor(maxVisible / 2));
+    let end = Math.min(totalPages, start + maxVisible - 1);
 
-    if (endPage - startPage + 1 < maxVisiblePages) {
-      startPage = Math.max(1, endPage - maxVisiblePages + 1);
+    // Ajuste si estamos cerca del final
+    if (end - start + 1 < maxVisible) {
+      start = Math.max(1, end - maxVisible + 1);
     }
 
-    // Botón de Primera Página (opcional)
-    if (startPage > 1) {
+    for (let number = start; number <= end; number++) {
       items.push(
-        <Pagination.Item key={1} onClick={() => paginate(1)}>1</Pagination.Item>
-      );
-      if (startPage > 2) items.push(<Pagination.Ellipsis key="start-elips" />);
-    }
-
-    // Páginas centrales
-    for (let number = startPage; number <= endPage; number++) {
-      items.push(
-        <Pagination.Item 
-          key={number} 
-          active={number === currentPage} 
+        <Pagination.Item
+          key={number}
+          active={number === currentPage}
           onClick={() => paginate(number)}
         >
           {number}
         </Pagination.Item>
       );
     }
-
-    // Botón de Última Página
-    if (endPage < totalPages) {
-      if (endPage < totalPages - 1) items.push(<Pagination.Ellipsis key="end-elips" />);
-      items.push(
-        <Pagination.Item key={totalPages} onClick={() => paginate(totalPages)}>
-          {totalPages}
-        </Pagination.Item>
-      );
-    }
-
     return items;
   };
 
   return (
-    <div className="d-flex justify-content-center mt-4">
-      <Pagination className="custom-pagination">
+    <div className="pagination-wrapper">
+      <Pagination >
         <Pagination.Prev 
           onClick={() => paginate(currentPage - 1)} 
-          disabled={currentPage === 1} 
-        />
+          disabled={currentPage === 1}
+        >
+          Anterior
+        </Pagination.Prev>
+
         {renderPaginationItems()}
+
         <Pagination.Next 
           onClick={() => paginate(currentPage + 1)} 
-          disabled={currentPage === totalPages} 
-        />
+          disabled={currentPage === totalPages}
+        >
+          Siguiente
+        </Pagination.Next>
       </Pagination>
     </div>
   );
 };
+
 
   const renderContent = () => {
     if (loading && allProducts.length === 0) {
