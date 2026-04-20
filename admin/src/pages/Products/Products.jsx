@@ -73,9 +73,10 @@ function Products() {
           <p className="text-sm text-white/80">Administra el catálogo de productos de tu empresa</p>
         </div>
         <button
-          onClick={() => navigate('/products/new')}
-          className="flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-semibold text-white transition-colors"
-          style={{ backgroundColor: '#92590a' }}
+          className="flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-semibold border bg-white transition-colors"
+            style={{ borderColor: '#92590a', color: '#92590a' }}
+            onMouseEnter={e => { e.currentTarget.style.backgroundColor = '#92590a'; e.currentTarget.style.color = 'white' }}
+            onMouseLeave={e => { e.currentTarget.style.backgroundColor = 'white'; e.currentTarget.style.color = '#92590a' }}
         >
           <Plus size={16} />
           Agregar Producto
@@ -142,7 +143,9 @@ function Products() {
                 </tr>
               ) : paginated.map((p, i) => (
                 <tr key={p.id}
-                  className={`border-t border-gray-100 hover:bg-amber-50 transition-colors ${i % 2 === 0 ? 'bg-white' : 'bg-gray-50'}`}>
+                  className={`border-t border-gray-100 transition-colors ${i % 2 === 0 ? 'bg-white' : 'bg-gray-50'}`}
+                    onMouseEnter={e => e.currentTarget.style.backgroundColor = '#f0fdf4'}
+                    onMouseLeave={e => e.currentTarget.style.backgroundColor = i % 2 === 0 ? 'white' : '#f9f9f9'}>
                   <td className="px-4 py-3 text-amber-700 font-medium">#{p.id}</td>
                   <td className="px-4 py-3 text-gray-800 font-medium">{p.nombre}</td>
                   <td className="px-4 py-3 text-amber-600">
