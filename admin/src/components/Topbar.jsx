@@ -8,9 +8,12 @@ function Topbar() {
   style={{ backgroundColor: '#b8860b' }}
 >
       <div className="flex items-center gap-2">
-        <img src={logo} alt="Biofibras" className="h-10 w-auto" />
-        <h1 className="font-semibold tracking-widest text-lg" style={{ color: '#2c5530' }}>BIOFIBRAS</h1>
+      <img src={logo} alt="Biofibras" className="h-10 w-auto" />
+      <div>
+        <h1 className="font-semibold tracking-widest text-lg text-white">BIOFIBRAS</h1>
+        <p className="text-xs tracking-wide text-white" >Panel Administrativo</p>
       </div>
+    </div>
      
 
       <div className="flex items-center gap-4">

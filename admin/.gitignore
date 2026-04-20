@@ -14,6 +14,7 @@ dist-ssr
 
 admin/node_modules
 admin/dist
+.env
 
 # Editor directories and files
 .vscode/*
