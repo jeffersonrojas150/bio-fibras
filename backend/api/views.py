@@ -47,6 +47,7 @@ from .serializers import (
     AdminOrdenSerializer,
     AdminImagenProductoSerializer,
     DashboardSerializer,
+    AdminLoginSerializer
     )
 from django.db.models import F, Sum, Count, Q
 
@@ -783,3 +784,24 @@ class AdminUsuarioListView(generics.ListAPIView):
         return UserModel.objects.filter(
             is_staff=False
         ).order_by('-date_joined')
+
+class AdminLoginView(generics.GenericAPIView):
+    permission_classes = [AllowAny]
+    serializer_class = AdminLoginSerializer
+
+    def post(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        user = serializer.validated_data['user']
+
+        refresh = RefreshToken.for_user(user)
+
+        return Response({
+            'refresh': str(refresh),
+            'access': str(refresh.access_token),
+            'user': {
+                'id': user.id,
+                'username': user.username,
+                'email': user.email,
+            }
+        }, status=status.HTTP_200_OK)
