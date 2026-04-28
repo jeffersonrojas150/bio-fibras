@@ -92,8 +92,8 @@ function Sidebar() {
         <button
           onClick={handleLogout}
           className="flex items-center gap-3 px-4 py-3 rounded-lg w-full text-sm font-semibold transition-all border"
-          style={{ backgroundColor: '#cc0000', borderColor: '#cc0000', color: '#cc0000' }}
-          onMouseEnter={e => { e.currentTarget.style.backgroundColor = '#fff0f0'; e.currentTarget.style.color = '#cc0000' }}
+          style={{ backgroundColor: '#cc0000', borderColor: '#cc0000', color: 'white' }}
+          onMouseEnter={e => { e.currentTarget.style.backgroundColor = 'white'; e.currentTarget.style.color = '#cc0000' }}
           onMouseLeave={e => { e.currentTarget.style.backgroundColor = '#cc0000'; e.currentTarget.style.color = 'white' }}
         >
           <LogOut size={17} strokeWidth={2} />
