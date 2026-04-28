@@ -1,6 +1,7 @@
 from rest_framework import serializers
 from django.contrib.auth.models import User
 from django.db.models import Sum, Count
+from django.contrib.auth import authenticate
 from .models import (
     Producto, 
     Categoria, 
@@ -351,6 +352,22 @@ class AdminOrdenSerializer(serializers.ModelSerializer):
             return f"{obj.usuario.first_name} {obj.usuario.last_name}".strip() or obj.usuario.username
         return None
 
+# --- Login admin ---
+class AdminLoginSerializer(serializers.Serializer):
+    username = serializers.CharField()
+    password = serializers.CharField(write_only=True)
+
+    def validate(self, data):
+        user = authenticate(username=data['username'], password=data['password'])
+        
+        if not user:
+            raise serializers.ValidationError("Credenciales inválidas.")
+        
+        if not (user.is_staff or user.is_superuser):
+            raise serializers.ValidationError("No tienes permisos de administrador.")
+        
+        data['user'] = user
+        return data
 
 # --- Dashboard: métricas generales ---
 class DashboardSerializer(serializers.Serializer):

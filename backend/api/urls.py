@@ -34,6 +34,8 @@ from .views import (
     AdminOrdenListView,
     AdminOrdenDetailView,
     AdminUsuarioListView,
+    AdminLoginView,
+
 )
 
 router = routers.DefaultRouter()
@@ -84,6 +86,8 @@ urlpatterns = [
 
     path('admin-api/ordenes/', AdminOrdenListView.as_view(), name='admin-ordenes'),
     path('admin-api/ordenes/<int:pk>/', AdminOrdenDetailView.as_view(), name='admin-orden-detail'),
+
+    path('admin-api/login/', AdminLoginView.as_view(), name='admin-login'),
 
     path('admin-api/usuarios/', AdminUsuarioListView.as_view(), name='admin-usuarios'),
 
