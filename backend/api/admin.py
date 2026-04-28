@@ -44,7 +44,23 @@ class ProductoAdmin(admin.ModelAdmin):
     inlines = [ImagenProductoInline]
 
     def save_model(self, request, obj, form, change):
-        obj.slug = slugify(obj.nombre)
+        base_slug = slugify(obj.nombre)
+        slug = base_slug
+        
+        if not change or slugify(obj.nombre) != obj.slug:
+            counter = 1
+            while Producto.objects.filter(slug=slug).exclude(pk=obj.pk).exists():
+                slug = f"{base_slug}-{counter}"
+                counter += 1
+            obj.slug = slug
+        
+        # Mensaje informativo si el slug fue ajustado
+        if obj.slug != base_slug:
+            self.message_user(
+                request,
+                f"Ya existía un producto con un nombre similar. Se guardó con el identificador único: '{obj.slug}'.",
+                level='warning'
+            )
         
         super().save_model(request, obj, form, change)
 
