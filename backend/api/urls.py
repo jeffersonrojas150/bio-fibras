@@ -28,7 +28,7 @@ from .views import (
     AdminProductoListCreateView,
     AdminProductoDetailView,
     AdminImagenProductoView,
-    AdminImagenProductoDeleteView,
+    AdminImagenProductoUpdateDeleteView,
     AdminCategoriaListCreateView,
     AdminCategoriaDetailView,
     AdminOrdenListView,
@@ -79,7 +79,7 @@ urlpatterns = [
     path('admin-api/productos/', AdminProductoListCreateView.as_view(), name='admin-productos'),
     path('admin-api/productos/<int:pk>/', AdminProductoDetailView.as_view(), name='admin-producto-detail'),
     path('admin-api/productos/<int:producto_id>/imagenes/', AdminImagenProductoView.as_view(), name='admin-producto-imagenes'),
-    path('admin-api/productos/<int:producto_id>/imagenes/<int:pk>/', AdminImagenProductoDeleteView.as_view(), name='admin-producto-imagen-delete'),
+    path('admin-api/productos/<int:producto_id>/imagenes/<int:pk>/', AdminImagenProductoUpdateDeleteView.as_view(), name='admin-producto-imagen-detail'),
 
     path('admin-api/categorias/', AdminCategoriaListCreateView.as_view(), name='admin-categorias'),
     path('admin-api/categorias/<int:pk>/', AdminCategoriaDetailView.as_view(), name='admin-categoria-detail'),

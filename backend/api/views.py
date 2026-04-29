@@ -717,7 +717,7 @@ class AdminImagenProductoView(generics.CreateAPIView):
         serializer.save(producto=producto)
 
 
-class AdminImagenProductoDeleteView(generics.DestroyAPIView):
+class AdminImagenProductoUpdateDeleteView(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = [IsAdminUser]
     serializer_class = AdminImagenProductoSerializer
 
@@ -726,6 +726,14 @@ class AdminImagenProductoDeleteView(generics.DestroyAPIView):
         return ImagenProducto.objects.filter(
             producto_id=self.kwargs['producto_id']
         )
+
+    def perform_update(self, serializer):
+        from .models import ImagenProducto
+        if serializer.validated_data.get('es_principal', False):
+            ImagenProducto.objects.filter(
+                producto_id=self.kwargs['producto_id']
+            ).update(es_principal=False)
+        serializer.save()
 
 
 # --- CRUD de Categorías ---
