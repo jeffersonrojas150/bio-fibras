@@ -1,13 +1,10 @@
-import { NavLink } from 'react-router-dom'
+import { NavLink, useNavigate } from 'react-router-dom'
+import { useState } from 'react'
 import {
-  LayoutDashboard,
-  Package,
-  Tag,
-  ShoppingCart,
-  Users,
-  Layers,
-  Moon,
+  LayoutDashboard, Package, Tag, ShoppingCart,
+  Users, Layers, Moon, Sun, LogOut,
 } from 'lucide-react'
+import { useAuth } from '../context/AuthContext'
 
 const navItems = [
   { to: '/', label: 'Inicio', icon: LayoutDashboard },
@@ -19,8 +16,17 @@ const navItems = [
 ]
 
 function Sidebar() {
+  const [darkMode, setDarkMode] = useState(false)
+  const { logout } = useAuth()
+  const navigate = useNavigate()
+
+  const handleLogout = () => {
+    logout()
+    navigate('/login')
+  }
+
   return (
-    <aside className="w-52 flex flex-col bg-white border-r border-gray-200">
+    <aside className="w-56 flex flex-col bg-white border-r border-gray-200">
 
       {/* Nav */}
       <nav className="flex-1 px-3 py-4 space-y-2">
@@ -29,29 +35,72 @@ function Sidebar() {
             key={to}
             to={to}
             end={to === '/'}
-            className={({ isActive }) =>
-              `flex items-center gap-3 px-4 py-2.5 rounded-lg transition-all text-sm font-semibold w-full ${
-                isActive ? 'text-white' : 'text-white'
-              }`
-            }
+            className="flex items-center gap-3 px-4 py-3 rounded-lg transition-all text-sm font-semibold w-full text-white"
             style={({ isActive }) => ({
-              backgroundColor: isActive ? '#92590a' : '#b8860b',
-            })}
+            backgroundColor: isActive ? 'white' : '#b8860b',
+            border: isActive ? '1px solid #92590a' : '2px solid transparent',
+            color: isActive ? '#92590a' : 'white',
+          })}
+            onMouseEnter={e => {
+              const isActive = e.currentTarget.getAttribute('aria-current') === 'page'
+              if (!isActive) e.currentTarget.style.backgroundColor = '#92590a'
+            }}
+            onMouseLeave={e => {
+              const isActive = e.currentTarget.getAttribute('aria-current') === 'page'
+              if (!isActive) e.currentTarget.style.backgroundColor = '#b8860b'
+            }}
           >
-            <Icon size={16} strokeWidth={2} />
+            <Icon size={17} strokeWidth={2} />
             <span>{label}</span>
           </NavLink>
         ))}
       </nav>
 
-      {/* Dark mode */}
-      <div className="px-5 py-4 border-t border-gray-100 flex items-center justify-between">
-        <div className="flex items-center gap-2 text-sm text-gray-600">
-          <Moon size={16} />
-          <span>Dark mode</span>
+       {/* Dark mode */}
+        <div className="px-3 pb-2">
+          <div
+            className="flex items-center justify-between px-4 py-3 rounded-lg border-2 cursor-pointer transition-all"
+            style={{ 
+              borderColor:  '#009929',
+              backgroundColor: '#009929'
+            }}
+            onClick={() => setDarkMode(!darkMode)}
+          >
+            <div className="flex items-center gap-2 text-sm font-medium"
+            >
+              {darkMode ? <Moon size={16} /> : <Sun size={16} />}
+              <span>Dark mode</span>
+            </div>
+            <div
+              className="w-10 h-5 rounded-full transition-all relative"
+              style={{ backgroundColor: darkMode ? '#222' : '#555' }}
+            >
+              <div
+                className="absolute top-0.5 w-4 h-4 rounded-full shadow transition-all"
+                style={{ 
+                  left: darkMode ? '22px' : '2px',
+                  backgroundColor: 'white'
+                }}
+              />
+            </div>
+          </div>
         </div>
-        <div className="w-10 h-5 bg-gray-300 rounded-full cursor-pointer" />
+          
+
+      {/* Cerrar sesión */}
+      <div className="px-3 pb-4 pt-2">
+        <button
+          onClick={handleLogout}
+          className="flex items-center gap-3 px-4 py-3 rounded-lg w-full text-sm font-semibold transition-all border"
+          style={{ backgroundColor: '#cc0000', borderColor: '#cc0000', color: 'white' }}
+          onMouseEnter={e => { e.currentTarget.style.backgroundColor = 'white'; e.currentTarget.style.color = '#cc0000' }}
+          onMouseLeave={e => { e.currentTarget.style.backgroundColor = '#cc0000'; e.currentTarget.style.color = 'white' }}
+        >
+          <LogOut size={17} strokeWidth={2} />
+          <span>Cerrar Sesión</span>
+        </button>
       </div>
+
     </aside>
   )
 }
