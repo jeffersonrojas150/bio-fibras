@@ -366,23 +366,14 @@ body {
 
 /* Mensajes de éxito */
 .auth-success {
+  background-color: #f0fdf4;
+  border: 1px solid #5ccb5f;
+  color: #009929;
+  padding: 1rem;
+  border-radius: 8px;
+  font-size: 0.9rem;
   text-align: center;
-  padding: 2rem 0;
-}
-
-.success-icon {
-  font-size: 4rem;
-  margin-bottom: 1.5rem;
-}
-
-.auth-success p {
-  color: var(--biofibras-brown-light);
   margin-bottom: 1rem;
-  line-height: 1.6;
-}
-
-.auth-success strong {
-  color: var(--biofibras-brown-dark);
 }
 
 /* Descripción para recuperar contraseña */
