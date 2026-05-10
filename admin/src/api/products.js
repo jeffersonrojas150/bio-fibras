@@ -1,3 +1,4 @@
+// src/api/products.js
 import api from './axiosConfig'
 
 // --- Listado + Crear ---
@@ -18,8 +19,13 @@ export const uploadProductImage = (productId, formData) =>
 export const deleteProductImage = (productId, imageId) =>
   api.delete(`/admin-api/productos/${productId}/imagenes/${imageId}/`)
 
-// --- Categorías  ---
+export const setMainProductImage = (productId, imageId) =>
+  api.patch(`/admin-api/productos/${productId}/imagenes/${imageId}/`, {
+    es_principal: true,
+  })
+
+// --- Categorías ---
 export const getCategorias = () => api.get('/admin-api/categorias/')
 
-// --- Materiales  ---
+// --- Materiales ---
 export const getMateriales = () => api.get('/admin-api/materiales/')

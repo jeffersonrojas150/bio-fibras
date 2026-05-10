@@ -56,35 +56,7 @@ function Sidebar() {
         ))}
       </nav>
 
-       {/* Dark mode */}
-        <div className="px-3 pb-2">
-          <div
-            className="flex items-center justify-between px-4 py-3 rounded-lg border-2 cursor-pointer transition-all"
-            style={{ 
-              borderColor:  '#009929',
-              backgroundColor: '#009929'
-            }}
-            onClick={() => setDarkMode(!darkMode)}
-          >
-            <div className="flex items-center gap-2 text-sm font-medium"
-            >
-              {darkMode ? <Moon size={16} /> : <Sun size={16} />}
-              <span>Dark mode</span>
-            </div>
-            <div
-              className="w-10 h-5 rounded-full transition-all relative"
-              style={{ backgroundColor: darkMode ? '#222' : '#555' }}
-            >
-              <div
-                className="absolute top-0.5 w-4 h-4 rounded-full shadow transition-all"
-                style={{ 
-                  left: darkMode ? '22px' : '2px',
-                  backgroundColor: 'white'
-                }}
-              />
-            </div>
-          </div>
-        </div>
+       
           
 
       {/* Cerrar sesión */}

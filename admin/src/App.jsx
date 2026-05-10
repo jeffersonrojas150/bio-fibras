@@ -6,6 +6,8 @@ import Categories from './pages/Categories/Categories'
 import Orders from './pages/Orders/Orders'
 import Login from './pages/Login/Login'
 import ProtectedRoute from './components/ProtectedRoute'
+import Users from './pages/Users/Users'
+import Materials from './pages/Materials/Materials'
 
 function App() {
   return (
@@ -21,6 +23,8 @@ function App() {
           <Route path="products" element={<Products />} />
           <Route path="categories" element={<Categories />} />
           <Route path="orders" element={<Orders />} />
+          <Route path="users" element={<Users />} />
+          <Route path="materials" element={<Materials />} />
         </Route>
       </Routes>
     </BrowserRouter>
