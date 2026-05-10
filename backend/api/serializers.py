@@ -381,3 +381,27 @@ class DashboardSerializer(serializers.Serializer):
     productos_sin_stock = serializers.IntegerField()
     total_usuarios = serializers.IntegerField()
     ordenes_recientes = AdminOrdenSerializer(many=True)
+
+# --- CRUD de materiales ---
+class AdminMaterialSerializer(serializers.ModelSerializer):
+    imagen_url = serializers.SerializerMethodField()
+    total_productos = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Material
+        fields = [
+            'id', 'nombre', 'descripcion', 'imagen', 'imagen_url',
+            'es_sostenible', 'total_productos',
+            'fecha_creacion', 'fecha_actualizacion',
+        ]
+
+    def get_imagen_url(self, obj):
+        request = self.context.get('request')
+        if obj.imagen:
+            if request:
+                return request.build_absolute_uri(obj.imagen.url)
+            return obj.imagen.url
+        return None
+
+    def get_total_productos(self, obj):
+        return obj.productos.filter(es_activo=True).count()

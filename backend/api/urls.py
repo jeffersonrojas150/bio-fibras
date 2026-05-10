@@ -35,6 +35,8 @@ from .views import (
     AdminOrdenDetailView,
     AdminUsuarioListView,
     AdminLoginView,
+    AdminMaterialListCreateView,
+    AdminMaterialDetailView,
 
 )
 
@@ -90,6 +92,9 @@ urlpatterns = [
     path('admin-api/login/', AdminLoginView.as_view(), name='admin-login'),
 
     path('admin-api/usuarios/', AdminUsuarioListView.as_view(), name='admin-usuarios'),
+
+    path('admin-api/materiales/', AdminMaterialListCreateView.as_view(), name='admin-materiales'),
+    path('admin-api/materiales/<int:pk>/', AdminMaterialDetailView.as_view(), name='admin-material-detail'),
 
     # ---- ROUTER (favoritos, carrito, direcciones) ----
     path('', include(router.urls)),
