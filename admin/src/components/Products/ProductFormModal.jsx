@@ -1,11 +1,10 @@
 import { useState, useEffect, useRef } from 'react'
-import { X, Save, Loader2, Package, AlertCircle } from 'lucide-react'
+import { X, Save, Loader2, Package, AlertCircle, Plus } from 'lucide-react'
 import {
   createProduct, updateProduct, getCategorias, getMateriales,
   uploadProductImage, deleteProductImage, setMainProductImage,
 } from '../../api/products'
 import ProductImageUploader from './ProductImageUploader'
-import SelectCustom from '../UI/SelectCustom'
 
 const MAX_IMAGES = 7
 
@@ -269,7 +268,7 @@ function ProductFormModal({ isOpen, product, onClose, onSuccess }) {
             <div className="space-y-4">
               <Field label="Categoría">
                 <div className="flex flex-wrap gap-2 pt-1">
-                  {/* Opcion: Sin categoría */}
+    
                   <button
                     type="button"
                     onClick={() => setForm(prev => ({ ...prev, categoria: '' }))}
@@ -303,6 +302,16 @@ function ProductFormModal({ isOpen, product, onClose, onSuccess }) {
                     )
                   })}
                 </div>
+                <button
+                  type="button"
+                  onClick={() => window.open('/categories', '_blank')}
+                  className="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg text-xs font-semibold text-white mt-1 transition-colors"
+                  style={{ backgroundColor: '#1f2937' }}
+                  onMouseEnter={e => { e.currentTarget.style.backgroundColor = '#a6780a' }}
+                  onMouseLeave={e => { e.currentTarget.style.backgroundColor = '#c48f10' }}
+                >
+                  <Plus size={12} /> Agregar nueva categoría
+                </button>
               </Field>
 
               {materiales.length > 0 && (
@@ -321,6 +330,16 @@ function ProductFormModal({ isOpen, product, onClose, onSuccess }) {
                       )
                     })}
                   </div>
+                  <button
+                    type="button"
+                    onClick={() => window.open('/materials', '_blank')}
+                    className="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg text-xs font-semibold text-white mt-1 transition-colors"
+                    style={{ backgroundColor: '#1f2937' }}
+                    onMouseEnter={e => { e.currentTarget.style.backgroundColor = '#a6780a' }}
+                    onMouseLeave={e => { e.currentTarget.style.backgroundColor = '#c48f10' }}
+                  >
+                    <Plus size={12} /> Agregar nuevo material
+                  </button>
                 </Field>
               )}
 
