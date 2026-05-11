@@ -13,17 +13,17 @@ function UserTable({ paginated, loading, currentPage, totalPages, getPageNumbers
             <th className="px-4 py-3 text-left">Email</th>
             <th className="px-4 py-3 text-center">Estado</th>
             <th className="px-4 py-3 text-center">Rol</th>
-            <th className="px-4 py-3 text-center">Fecha registro</th>
+            {/* <th className="px-4 py-3 text-center">Fecha registro</th> */}
           </tr>
         </thead>
         <tbody>
           {loading ? (
             <tr>
-              <td colSpan={7} className="text-center py-10 text-gray-400">Cargando...</td>
+              <td colSpan={6} className="text-center py-10 text-gray-400">Cargando...</td>
             </tr>
           ) : paginated.length === 0 ? (
             <tr>
-              <td colSpan={7} className="text-center py-10 text-gray-400">No se encontraron usuarios</td>
+              <td colSpan={6} className="text-center py-10 text-gray-400">No se encontraron usuarios</td>
             </tr>
           ) : (
             paginated.map((u, idx) => (
@@ -80,12 +80,12 @@ function UserTable({ paginated, loading, currentPage, totalPages, getPageNumbers
                     {u.is_staff ? 'Staff' : 'Cliente'}
                   </span>
                 </td>
-                <td className="px-4 py-3 text-center text-xs text-gray-400">
+                {/* <td className="px-4 py-3 text-center text-xs text-gray-400">
                   {u.date_joined
                     ? new Date(u.date_joined).toLocaleDateString('es-PE', { day: '2-digit', month: 'short', year: 'numeric' })
                     : '—'
                   }
-                </td>
+                </td> */}
               </tr>
             ))
           )}

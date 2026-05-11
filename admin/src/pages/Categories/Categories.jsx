@@ -142,30 +142,22 @@ function Categories() {
       <div className="bg-white rounded-xl shadow-md p-5 space-y-4">
 
         {/* Filtros */}
-        <div className="flex items-center gap-3">
-          <div className="flex items-center gap-2 border border-gray-300 rounded-lg px-3 py-2 w-72 bg-white">
-            <Search size={15} className="text-gray-400" />
-            <input type="text" placeholder="Buscar categorías..."
-              className="text-sm outline-none w-full" value={search}
-              onChange={e => setSearch(e.target.value)} />
-          </div>
-          <button onClick={fetchCategories}
-            className="flex items-center gap-2 px-4 py-2 border rounded-lg text-sm font-medium bg-white transition-colors"
-            style={{ borderColor: '#009929', color: '#009929' }}
-            onMouseEnter={e => { e.currentTarget.style.backgroundColor = '#009929'; e.currentTarget.style.color = 'white' }}
-            onMouseLeave={e => { e.currentTarget.style.backgroundColor = 'white'; e.currentTarget.style.color = '#009929' }}>
-            <RefreshCw size={15} /> Actualizar
-          </button>
-        </div>
-
-        {/* Contador */}
-        <div className="flex items-center gap-3 px-4 py-3 rounded-xl border"
-          style={{ backgroundColor: '#f0fdf4', borderColor: '#f0fdf4' }}>
-          <span className="rounded-lg w-8 h-8 flex items-center justify-center text-xs font-bold text-white"
-            style={{ backgroundColor: '#5ccb5f' }}>{filtered.length}</span>
-          <span className="text-sm" style={{ color: '#009929' }}>categorías encontradas</span>
-        </div>
-
+          <div className="flex items-center gap-3">
+            <div className="flex items-center gap-2 px-4 py-2.5 rounded-lg border flex-1"
+              style={{ borderColor: '#d1d5db', backgroundColor: 'white' }}>
+              <Search size={15} className="text-gray-400 flex-shrink-0" />
+              <input type="text" placeholder="Buscar categorías..."
+                className="bg-transparent outline-none text-sm w-full"
+                style={{ color: '#374151' }}
+                value={search} onChange={e => setSearch(e.target.value)} />
+            </div>
+            <div className="flex items-center gap-2 px-4 py-2.5 rounded-lg text-sm font-semibold flex-shrink-0"
+              style={{ backgroundColor: '#009929', color: 'white' }}>
+              <Tag size={14} />
+              {filtered.length} categorías
+            </div>
+              </div>
+              
         {/* Tabla */}
         <div className="rounded-xl overflow-hidden border" style={{ borderColor: '#f5e6cc' }}>
           <table className="w-full text-sm">

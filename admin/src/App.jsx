@@ -8,6 +8,7 @@ import Login from './pages/Login/Login'
 import ProtectedRoute from './components/ProtectedRoute'
 import Users from './pages/Users/Users'
 import Materials from './pages/Materials/Materials'
+import OrderDetail from './pages/Orders/OrderDetail'
 
 function App() {
   return (
@@ -25,6 +26,7 @@ function App() {
           <Route path="orders" element={<Orders />} />
           <Route path="users" element={<Users />} />
           <Route path="materials" element={<Materials />} />
+          <Route path="/orders/:id" element={<OrderDetail />} />
         </Route>
       </Routes>
     </BrowserRouter>
