@@ -1,3 +1,5 @@
+// src/components/Products/ProductImageUploader.jsx
+import { useRef } from 'react'
 import { ImagePlus, Trash2, Star, AlertCircle } from 'lucide-react'
 
 function ProductImageUploader({
@@ -25,36 +27,50 @@ function ProductImageUploader({
             {images.map(img => (
               <div
                 key={img.id}
-                className="relative rounded-xl overflow-hidden border-2 group"
-                style={{ borderColor: img.es_principal ? '#009929' : '#e5e7eb', aspectRatio: '1' }}
+                className="relative rounded-xl overflow-hidden border-2 flex flex-col"
+                style={{ borderColor: img.es_principal ? '#009929' : '#e5e7eb' }}
               >
-                <img src={img.imagen_url} alt="" className="w-full h-full object-cover" />
-                {img.es_principal && (
-                  <span
-                    className="absolute top-1 left-1 text-xs font-bold px-2 py-0.5 rounded-full"
-                    style={{ backgroundColor: '#009929', color: 'white' }}
-                  >
-                    Principal
-                  </span>
-                )}
-                <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
+                {/* Imagen */}
+                <div style={{ aspectRatio: '1' }} className="relative">
+                  <img src={img.imagen_url} alt="" className="w-full h-full object-cover" />
+                  {img.es_principal && (
+                    <span
+                      className="absolute top-1 left-1 text-xs font-bold px-2 py-0.5 rounded-full"
+                      style={{ backgroundColor: '#009929', color: 'white' }}
+                    >
+                      Principal
+                    </span>
+                  )}
+                </div>
+
+                {/* Acciones siempre visibles */}
+                <div
+                  className="flex items-center justify-center gap-2 py-1.5"
+                  style={{ backgroundColor: '#f9f9f9', borderTop: '1px solid #e5e7eb' }}
+                >
                   {!img.es_principal && (
                     <button
                       type="button"
                       onClick={() => onSetServerMain(img.id)}
                       title="Marcar como principal"
-                      className="p-1.5 rounded-full bg-yellow-400 hover:bg-yellow-500 text-white"
+                      className="p-1.5 rounded-full transition-colors"
+                      style={{ backgroundColor: '#fef9c3', color: '#b45309' }}
+                      onMouseEnter={e => { e.currentTarget.style.backgroundColor = '#fde68a' }}
+                      onMouseLeave={e => { e.currentTarget.style.backgroundColor = '#fef9c3' }}
                     >
-                      <Star size={14} />
+                      <Star size={13} />
                     </button>
                   )}
                   <button
                     type="button"
                     onClick={() => onDeleteServer(img.id)}
                     title="Eliminar"
-                    className="p-1.5 rounded-full bg-red-500 hover:bg-red-600 text-white"
+                    className="p-1.5 rounded-full transition-colors"
+                    style={{ backgroundColor: '#fee2e2', color: '#dc2626' }}
+                    onMouseEnter={e => { e.currentTarget.style.backgroundColor = '#fca5a5' }}
+                    onMouseLeave={e => { e.currentTarget.style.backgroundColor = '#fee2e2' }}
                   >
-                    <Trash2 size={14} />
+                    <Trash2 size={13} />
                   </button>
                 </div>
               </div>
@@ -73,36 +89,50 @@ function ProductImageUploader({
             {newFiles.map((nf, idx) => (
               <div
                 key={idx}
-                className="relative rounded-xl overflow-hidden border-2 group"
-                style={{ borderColor: nf.es_principal ? '#5ccb5f' : '#d1d5db', aspectRatio: '1' }}
+                className="relative rounded-xl overflow-hidden border-2 flex flex-col"
+                style={{ borderColor: nf.es_principal ? '#5ccb5f' : '#d1d5db' }}
               >
-                <img src={nf.preview} alt="" className="w-full h-full object-cover" />
-                {nf.es_principal && (
-                  <span
-                    className="absolute top-1 left-1 text-xs font-bold px-2 py-0.5 rounded-full"
-                    style={{ backgroundColor: '#5ccb5f', color: 'white' }}
-                  >
-                    Principal
-                  </span>
-                )}
-                <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
+                {/* Imagen */}
+                <div style={{ aspectRatio: '1' }} className="relative">
+                  <img src={nf.preview} alt="" className="w-full h-full object-cover" />
+                  {nf.es_principal && (
+                    <span
+                      className="absolute top-1 left-1 text-xs font-bold px-2 py-0.5 rounded-full"
+                      style={{ backgroundColor: '#5ccb5f', color: 'white' }}
+                    >
+                      Principal
+                    </span>
+                  )}
+                </div>
+
+                {/* Acciones siempre visibles */}
+                <div
+                  className="flex items-center justify-center gap-2 py-1.5"
+                  style={{ backgroundColor: '#f9f9f9', borderTop: '1px solid #e5e7eb' }}
+                >
                   {!nf.es_principal && (
                     <button
                       type="button"
                       onClick={() => onSetNewFileMain(idx)}
                       title="Marcar como principal"
-                      className="p-1.5 rounded-full bg-yellow-400 hover:bg-yellow-500 text-white"
+                      className="p-1.5 rounded-full transition-colors"
+                      style={{ backgroundColor: '#fef9c3', color: '#b45309' }}
+                      onMouseEnter={e => { e.currentTarget.style.backgroundColor = '#fde68a' }}
+                      onMouseLeave={e => { e.currentTarget.style.backgroundColor = '#fef9c3' }}
                     >
-                      <Star size={14} />
+                      <Star size={13} />
                     </button>
                   )}
                   <button
                     type="button"
                     onClick={() => onRemoveNewFile(idx)}
                     title="Quitar"
-                    className="p-1.5 rounded-full bg-red-500 hover:bg-red-600 text-white"
+                    className="p-1.5 rounded-full transition-colors"
+                    style={{ backgroundColor: '#fee2e2', color: '#dc2626' }}
+                    onMouseEnter={e => { e.currentTarget.style.backgroundColor = '#fca5a5' }}
+                    onMouseLeave={e => { e.currentTarget.style.backgroundColor = '#fee2e2' }}
                   >
-                    <Trash2 size={14} />
+                    <Trash2 size={13} />
                   </button>
                 </div>
               </div>
@@ -111,7 +141,7 @@ function ProductImageUploader({
         </div>
       )}
 
-      {/* Botón agregar / límite alcanzado */}
+      {/* Botón agregar */}
       {canAddMore ? (
         <>
           <input
@@ -126,8 +156,8 @@ function ProductImageUploader({
             type="button"
             onClick={() => fileInputRef.current?.click()}
             className="flex items-center gap-2 px-4 py-2 rounded-xl border-2 border-dashed text-sm font-semibold transition-colors"
-            style={{ borderColor: '#0c0d0c', color: '#0c0d0c' }}
-            onMouseEnter={e => { e.currentTarget.style.backgroundColor = '#faefd2' }}
+            style={{ borderColor: '#009929', color: '#009929' }}
+            onMouseEnter={e => { e.currentTarget.style.backgroundColor = '#f0fdf4' }}
             onMouseLeave={e => { e.currentTarget.style.backgroundColor = 'transparent' }}
           >
             <ImagePlus size={17} />
@@ -142,7 +172,7 @@ function ProductImageUploader({
       )}
 
       <p className="text-xs text-gray-400">
-        Pasa el cursor sobre una imagen para marcarla como principal o eliminarla.
+        Usa ⭐ para marcar la imagen principal y 🗑️ para eliminar.
       </p>
     </div>
   )

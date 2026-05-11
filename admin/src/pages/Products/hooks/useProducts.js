@@ -1,3 +1,4 @@
+// src/pages/Products/hooks/useProducts.js
 import { useState, useEffect, useCallback } from 'react'
 import { getProducts, deleteProduct } from '../../../api/products'
 
@@ -10,11 +11,8 @@ export function useProducts() {
   const [loading, setLoading] = useState(true)
   const [currentPage, setCurrentPage] = useState(1)
 
-  // Modal crear/editar
   const [modalOpen, setModalOpen] = useState(false)
   const [selectedProduct, setSelectedProduct] = useState(null)
-
-  // Modal eliminar
   const [deleteTarget, setDeleteTarget] = useState(null)
 
   const fetchProducts = useCallback(async () => {
@@ -38,7 +36,7 @@ export function useProducts() {
     setCurrentPage(1)
   }, [search, products])
 
-  // ── Paginación ─────────────────────────────────────────────────────────────
+  // ── Paginación ──
   const totalPages = Math.ceil(filtered.length / ITEMS_PER_PAGE)
   const paginated = filtered.slice(
     (currentPage - 1) * ITEMS_PER_PAGE,
@@ -55,13 +53,17 @@ export function useProducts() {
     return pages
   }
 
-  // ── Modal crear/editar ─────────────────────────────────────────────────────
+  // ── Modal crear/editar ──
   const openCreate = () => { setSelectedProduct(null); setModalOpen(true) }
   const openEdit = (product) => { setSelectedProduct(product); setModalOpen(true) }
   const closeModal = () => { setModalOpen(false); setSelectedProduct(null) }
-  const onSaveSuccess = () => { closeModal(); fetchProducts() }
+  const onSaveSuccess = async () => {
+    closeModal()
+    setSearch('')
+    await fetchProducts()
+  }
 
-  // ── Eliminar ───────────────────────────────────────────────────────────────
+  // ── Eliminar ──
   const confirmDelete = (product) => setDeleteTarget(product)
   const cancelDelete = () => setDeleteTarget(null)
   const executeDelete = async () => {
@@ -69,7 +71,7 @@ export function useProducts() {
     try {
       await deleteProduct(deleteTarget.id)
       setDeleteTarget(null)
-      fetchProducts()
+      await fetchProducts()
     } catch (e) {
       console.error('Error al eliminar:', e)
     }

@@ -103,6 +103,9 @@ function ProductFormModal({ isOpen, product, onClose, onSuccess }) {
   }
 
   function handleSetNewFileMain(idx) {
+    // Desmarca visualmente todas las del servidor
+    setImages(prev => prev.map(img => ({ ...img, es_principal: false })))
+    // Marca solo la nueva seleccionada
     setNewFiles(prev => prev.map((f, i) => ({ ...f, es_principal: i === idx })))
   }
 
@@ -138,12 +141,7 @@ function ProductFormModal({ isOpen, product, onClose, onSuccess }) {
       const payload = {
         nombre: form.nombre,
         descripcion: form.descripcion,
-       
-        slug: form.nombre.toLowerCase()
-          .normalize('NFD').replace(/[\u0300-\u036f]/g, '') 
-          .replace(/[^a-z0-9\s-]/g, '')
-          .trim()
-          .replace(/\s+/g, '-'),
+        
         precio_unitario: parseFloat(form.precio_unitario) || 0,
         stock: parseInt(form.stock) || 0,
         categoria: form.categoria || null,
@@ -173,7 +171,12 @@ function ProductFormModal({ isOpen, product, onClose, onSuccess }) {
       onClose()
     } catch (e) {
       console.error(e)
-      alert('Ocurrió un error al guardar el producto.')
+      const data = e.response?.data
+      if (data?.nombre) {
+        setErrors(prev => ({ ...prev, nombre: data.nombre[0] }))
+      } else {
+        alert('Ocurrió un error al guardar el producto.')
+      }
     } finally {
       setSaving(false)
     }
@@ -342,7 +345,7 @@ function ProductFormModal({ isOpen, product, onClose, onSuccess }) {
           </button>
           <button onClick={handleSubmit} disabled={saving}
             className="flex items-center gap-2 px-5 py-2 rounded-xl text-sm font-semibold text-white disabled:opacity-60"
-            style={{ backgroundColor: saving ? '#ccc' : '#b8860b' }}>
+            style={{ backgroundColor: saving ? '#ccc' : '#278a4d' }}>
             {saving
               ? <><Loader2 size={15} className="animate-spin" /> Guardando...</>
               : <><Save size={15} /> {isEditing ? 'Guardar cambios' : 'Crear producto'}</>}

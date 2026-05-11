@@ -1,8 +1,11 @@
+// src/pages/Products/Products.jsx
+import { useState } from 'react'
 import { Plus } from 'lucide-react'
-import ProductFilters from '../../components/products/ProductFilters'
-import ProductTable from '../../components/products/ProductTable'
-import ProductFormModal from '../../components/products/ProductFormModal'
-import ProductDeleteConfirm from '../../components/products/ProductDeleteConfirm'
+import ProductFilters from '../../components/Products/ProductFilters'
+import ProductTable from '../../components/Products/ProductTable'
+import ProductFormModal from '../../components/Products/ProductFormModal'
+import ProductDeleteConfirm from '../../components/Products/ProductDeleteConfirm'
+import Toast from '../../components/UI/Toast'
 import { useProducts } from './hooks/useProducts'
 
 function Products() {
@@ -14,6 +17,8 @@ function Products() {
     modalOpen, selectedProduct, openCreate, openEdit, closeModal, onSaveSuccess,
     deleteTarget, confirmDelete, cancelDelete, executeDelete,
   } = useProducts()
+
+  const [toast, setToast] = useState(null)
 
   return (
     <div className="space-y-4">
@@ -59,18 +64,42 @@ function Products() {
         />
       </div>
 
-      {/* Modales */}
+      {/* Modal crear / editar */}
       <ProductFormModal
         isOpen={modalOpen}
         product={selectedProduct}
         onClose={closeModal}
-        onSuccess={onSaveSuccess}
+        onSuccess={async () => {
+          const wasEditing = !!selectedProduct
+          await onSaveSuccess()
+          setToast({
+            message: wasEditing ? 'Producto actualizado exitosamente' : 'Producto creado exitosamente',
+            type: 'success',
+          })
+        }}
       />
+
+      {/* Modal eliminar */}
       <ProductDeleteConfirm
         product={deleteTarget}
-        onConfirm={executeDelete}
+        onConfirm={async () => {
+          await executeDelete()
+          setToast({
+            message: 'Producto eliminado exitosamente',
+            type: 'success',
+          })
+        }}
         onCancel={cancelDelete}
       />
+
+      {/* Toast */}
+      {toast && (
+        <Toast
+          message={toast.message}
+          type={toast.type}
+          onClose={() => setToast(null)}
+        />
+      )}
     </div>
   )
 }
