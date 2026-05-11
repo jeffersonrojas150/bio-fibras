@@ -60,7 +60,12 @@ apiClient.interceptors.response.use(
     const originalRequest = error.config;
 
     // Si el error no es 401 o ya reintentamos, rechazamos
-    if (error.response?.status !== 401 || originalRequest._retry) {
+    if (
+      error.response?.status !== 401 ||
+      originalRequest._retry ||
+      originalRequest.url.includes('/auth/token/') ||
+      originalRequest.url.includes('/auth/registro/')
+    ) {
       return Promise.reject(error);
     }
 

@@ -278,6 +278,7 @@ class AdminProductoSerializer(serializers.ModelSerializer):
     imagenes = AdminImagenProductoSerializer(many=True, read_only=True)
     categoria_nombre = serializers.SerializerMethodField()
     materiales_nombres = serializers.SerializerMethodField()
+    slug = serializers.SlugField(required=False)
 
     class Meta:
         model = Producto
@@ -289,6 +290,28 @@ class AdminProductoSerializer(serializers.ModelSerializer):
             'materiales', 'materiales_nombres',
             'imagenes', 'fecha_creacion', 'fecha_actualizacion',
         ]
+    
+    def validate_nombre(self, value):
+        from django.utils.text import slugify
+        slug = slugify(value)
+        qs = Producto.objects.filter(slug=slug)
+        # En update, excluir la instancia actual
+        if self.instance:
+            qs = qs.exclude(pk=self.instance.pk)
+        if qs.exists():
+            raise serializers.ValidationError("Ya existe un producto con ese nombre.")
+        return value
+    
+    def create(self, validated_data):
+        from django.utils.text import slugify
+        validated_data['slug'] = slugify(validated_data['nombre'])
+        return super().create(validated_data)
+
+    def update(self, instance, validated_data):
+        from django.utils.text import slugify
+        if 'nombre' in validated_data:
+            validated_data['slug'] = slugify(validated_data['nombre'])
+        return super().update(instance, validated_data)
 
     def get_categoria_nombre(self, obj):
         return obj.categoria.nombre if obj.categoria else None
@@ -301,6 +324,7 @@ class AdminProductoSerializer(serializers.ModelSerializer):
 class AdminCategoriaSerializer(serializers.ModelSerializer):
     imagen_url = serializers.SerializerMethodField()
     total_productos = serializers.SerializerMethodField()
+    slug = serializers.SlugField(required=False)
 
     class Meta:
         model = Categoria
@@ -309,6 +333,27 @@ class AdminCategoriaSerializer(serializers.ModelSerializer):
             'activo', 'total_productos',
             'fecha_creacion', 'fecha_actualizacion',
         ]
+
+    def validate_nombre(self, value):
+        from django.utils.text import slugify
+        slug = slugify(value)
+        qs = Categoria.objects.filter(slug=slug)
+        if self.instance:
+            qs = qs.exclude(pk=self.instance.pk)
+        if qs.exists():
+            raise serializers.ValidationError("Ya existe una categoría con ese nombre.")
+        return value
+
+    def create(self, validated_data):
+        from django.utils.text import slugify
+        validated_data['slug'] = slugify(validated_data['nombre'])
+        return super().create(validated_data)
+
+    def update(self, instance, validated_data):
+        from django.utils.text import slugify
+        if 'nombre' in validated_data:
+            validated_data['slug'] = slugify(validated_data['nombre'])
+        return super().update(instance, validated_data)
 
     def get_imagen_url(self, obj):
         request = self.context.get('request')
@@ -381,3 +426,27 @@ class DashboardSerializer(serializers.Serializer):
     productos_sin_stock = serializers.IntegerField()
     total_usuarios = serializers.IntegerField()
     ordenes_recientes = AdminOrdenSerializer(many=True)
+
+# --- CRUD de materiales ---
+class AdminMaterialSerializer(serializers.ModelSerializer):
+    imagen_url = serializers.SerializerMethodField()
+    total_productos = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Material
+        fields = [
+            'id', 'nombre', 'descripcion', 'imagen', 'imagen_url',
+            'es_sostenible', 'total_productos',
+            'fecha_creacion', 'fecha_actualizacion',
+        ]
+
+    def get_imagen_url(self, obj):
+        request = self.context.get('request')
+        if obj.imagen:
+            if request:
+                return request.build_absolute_uri(obj.imagen.url)
+            return obj.imagen.url
+        return None
+
+    def get_total_productos(self, obj):
+        return obj.productos.filter(es_activo=True).count()

@@ -28,6 +28,7 @@ from .models import (
     OrdenItem,
     Direccion,
     PaymentProcessed,
+    Material,
     )
 from .serializers import (
     ProductoListSerializer, 
@@ -47,7 +48,8 @@ from .serializers import (
     AdminOrdenSerializer,
     AdminImagenProductoSerializer,
     DashboardSerializer,
-    AdminLoginSerializer
+    AdminLoginSerializer,
+    AdminMaterialSerializer,
     )
 from django.db.models import F, Sum, Count, Q
 
@@ -813,3 +815,15 @@ class AdminLoginView(generics.GenericAPIView):
                 'email': user.email,
             }
         }, status=status.HTTP_200_OK)
+
+# --- CRUD de Materiales ---
+class AdminMaterialListCreateView(generics.ListCreateAPIView):
+    permission_classes = [IsAdminUser]
+    serializer_class = AdminMaterialSerializer
+    queryset = Material.objects.all().order_by('-fecha_creacion')
+
+
+class AdminMaterialDetailView(generics.RetrieveUpdateDestroyAPIView):
+    permission_classes = [IsAdminUser]
+    serializer_class = AdminMaterialSerializer
+    queryset = Material.objects.all()

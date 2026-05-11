@@ -34,7 +34,9 @@ const LoginForm = ({ onAuthChange }) => {
       
       navigate('/', { replace: true });
     } catch (err) {
-      const errorMessage = err.response?.data?.detail || 'Email o contraseña incorrectos. Por favor, inténtalo de nuevo.';
+      const errorMessage = err.response?.status === 401
+        ? 'Email o contraseña incorrectos. Por favor, inténtalo de nuevo.'
+        : 'Ocurrió un error inesperado. Inténtalo más tarde.';
       setError(errorMessage);
     } finally {
       setIsLoading(false);
