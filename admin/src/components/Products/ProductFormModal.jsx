@@ -268,14 +268,41 @@ function ProductFormModal({ isOpen, product, onClose, onSuccess }) {
           <Section title="Clasificación y Visibilidad">
             <div className="space-y-4">
               <Field label="Categoría">
-                <SelectCustom
-                  value={form.categoria}
-                  onChange={(val) => {
-                    setForm(prev => ({ ...prev, categoria: val }))
-                  }}
-                  options={categorias.map(c => ({ value: c.id, label: c.nombre }))}
-                  placeholder="Sin categoría"
-                />
+                <div className="flex flex-wrap gap-2 pt-1">
+                  {/* Opcion: Sin categoría */}
+                  <button
+                    type="button"
+                    onClick={() => setForm(prev => ({ ...prev, categoria: '' }))}
+                    className="px-3 py-1.5 rounded-full text-xs font-semibold border transition-colors"
+                    style={
+                      form.categoria === '' || form.categoria === null
+                        ? { backgroundColor: '#278a4d', color: 'white', borderColor: '#1e6b3b' } // Verde Activo
+                        : { backgroundColor: 'white', color: '#4b5563', borderColor: '#d1d5db' } // Gris Inactivo
+                    }
+                  >
+                    Sin categoría
+                  </button>
+
+                  {/* Lista de Categorías */}
+                  {categorias.map(c => {
+                    const isSelected = String(form.categoria) === String(c.id)
+                    return (
+                      <button
+                        key={c.id}
+                        type="button"
+                        onClick={() => setForm(prev => ({ ...prev, categoria: c.id }))}
+                        className="px-3 py-1.5 rounded-full text-xs font-semibold border transition-colors"
+                        style={
+                          isSelected
+                            ? { backgroundColor: '#278a4d', color: 'white', borderColor: '#1e6b3b' } // Verde Activo
+                            : { backgroundColor: 'white', color: '#4b5563', borderColor: '#d1d5db' } // Gris Inactivo
+                        }
+                      >
+                        {c.nombre}
+                      </button>
+                    )
+                  })}
+                </div>
               </Field>
 
               {materiales.length > 0 && (

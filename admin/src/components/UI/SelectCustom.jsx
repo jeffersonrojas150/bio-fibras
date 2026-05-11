@@ -63,13 +63,15 @@ function SelectCustom({ value, onChange, options = [], placeholder = 'Selecciona
             border: '1px solid #d1b07a',
             borderRadius: '12px',
             boxShadow: '0 10px 25px rgba(0,0,0,0.15)',
-            overflow: 'hidden',
+            maxHeight: '250px', // Altura máxima antes de hacer scroll
+            overflowY: 'auto',  // Activa el scroll vertical
+            overflowX: 'hidden' // Evita scroll horizontal indeseado
           }}
         >
           <button
             type="button"
             onClick={() => { onChange(''); setOpen(false) }}
-            className="w-full text-left px-4 py-2.5 text-sm transition-colors"
+            className="w-full text-left px-4 py-2.5 text-sm transition-colors sticky top-0 z-10 border-b border-white/20"
             style={{
               backgroundColor: '#b8860b',
               color: 'white',
