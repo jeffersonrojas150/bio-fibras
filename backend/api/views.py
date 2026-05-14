@@ -646,7 +646,18 @@ class AdminDashboardView(generics.GenericAPIView):
 
     def get(self, request, *args, **kwargs):
         from .models import Producto, Orden
+        from django.db.models.functions import TruncMonth
+        from django.utils import timezone
+        import calendar
+        from decimal import Decimal
 
+        hoy = timezone.now()
+        mes_actual = hoy.month
+        anio_actual = hoy.year
+        dias_transcurridos = hoy.day
+        dias_totales_mes = calendar.monthrange(anio_actual, mes_actual)[1]
+
+        # --- Métricas generales ---
         total_ordenes = Orden.objects.count()
         ordenes_pendientes = Orden.objects.filter(estado_orden='pendiente').count()
         ordenes_enviadas = Orden.objects.filter(estado_orden='enviado').count()
@@ -668,6 +679,105 @@ class AdminDashboardView(generics.GenericAPIView):
             'usuario', 'direccion'
         ).prefetch_related('items__producto').order_by('-fecha_creacion')[:10]
 
+        # --- Ingresos por mes (últimos 6 meses) ---
+        seis_meses_atras = hoy - timezone.timedelta(days=180)
+
+        ingresos_por_mes_qs = (
+            Orden.objects
+            .filter(fecha_creacion__gte=seis_meses_atras)
+            .annotate(mes=TruncMonth('fecha_creacion'))
+            .values('mes')
+            .annotate(
+                ingresos=Sum('total'),
+                ordenes=Count('id')
+            )
+            .order_by('mes')
+        )
+
+        ingresos_por_mes = [
+            {
+                'mes': item['mes'].strftime('%Y-%m'),
+                'ingresos': item['ingresos'] or Decimal('0.00'),
+                'ordenes': item['ordenes'],
+            }
+            for item in ingresos_por_mes_qs
+        ]
+
+        # --- Estimación del mes actual ---
+        # Ingresos y órdenes reales del mes actual
+        ingresos_mes_actual = Orden.objects.filter(
+            fecha_creacion__year=anio_actual,
+            fecha_creacion__month=mes_actual
+        ).aggregate(
+            ingresos=Sum('total'),
+            ordenes=Count('id')
+        )
+        ingresos_reales = ingresos_mes_actual['ingresos'] or Decimal('0.00')
+        ordenes_reales = ingresos_mes_actual['ordenes'] or 0
+
+        # Ingresos y órdenes del mes anterior
+        if mes_actual == 1:
+            mes_anterior = 12
+            anio_anterior = anio_actual - 1
+        else:
+            mes_anterior = mes_actual - 1
+            anio_anterior = anio_actual
+
+        ingresos_mes_anterior = Orden.objects.filter(
+            fecha_creacion__year=anio_anterior,
+            fecha_creacion__month=mes_anterior
+        ).aggregate(
+            ingresos=Sum('total'),
+            ordenes=Count('id')
+        )
+        ingresos_anterior = ingresos_mes_anterior['ingresos'] or Decimal('0.00')
+        ordenes_anterior = ingresos_mes_anterior['ordenes'] or 0
+        dias_mes_anterior = calendar.monthrange(anio_anterior, mes_anterior)[1]
+
+        # Lógica de estimación según los 3 casos
+        tiene_datos_mes_actual = ordenes_reales > 0
+        tiene_datos_mes_anterior = ordenes_anterior > 0
+
+        if not tiene_datos_mes_actual and not tiene_datos_mes_anterior:
+            # Caso 1: sin datos en ningún mes
+            estimacion_ingresos = Decimal('0.00')
+            estimacion_ordenes = 0
+            tiene_datos_suficientes = False
+
+        elif tiene_datos_mes_actual and not tiene_datos_mes_anterior:
+            # Caso 2: solo hay datos del mes actual
+            promedio_diario_ingresos = ingresos_reales / dias_transcurridos
+            promedio_diario_ordenes = ordenes_reales / dias_transcurridos
+            estimacion_ingresos = promedio_diario_ingresos * dias_totales_mes
+            estimacion_ordenes = round(promedio_diario_ordenes * dias_totales_mes)
+            tiene_datos_suficientes = True
+
+        else:
+            # Caso 3: hay datos de ambos meses — promedio ponderado
+            promedio_diario_actual_ingresos = ingresos_reales / dias_transcurridos if dias_transcurridos > 0 else Decimal('0.00')
+            promedio_diario_anterior_ingresos = ingresos_anterior / dias_mes_anterior
+
+            promedio_diario_actual_ordenes = ordenes_reales / dias_transcurridos if dias_transcurridos > 0 else 0
+            promedio_diario_anterior_ordenes = ordenes_anterior / dias_mes_anterior
+
+            promedio_combinado_ingresos = (promedio_diario_actual_ingresos + promedio_diario_anterior_ingresos) / 2
+            promedio_combinado_ordenes = (promedio_diario_actual_ordenes + promedio_diario_anterior_ordenes) / 2
+
+            estimacion_ingresos = promedio_combinado_ingresos * dias_totales_mes
+            estimacion_ordenes = round(promedio_combinado_ordenes * dias_totales_mes)
+            tiene_datos_suficientes = True
+
+        estimacion_mes_actual = {
+            'mes': hoy.strftime('%Y-%m'),
+            'ingresos_reales': ingresos_reales,
+            'ordenes_reales': ordenes_reales,
+            'dias_transcurridos': dias_transcurridos,
+            'dias_totales_mes': dias_totales_mes,
+            'estimacion_ingresos': round(estimacion_ingresos, 2),
+            'estimacion_ordenes': estimacion_ordenes,
+            'tiene_datos_suficientes': tiene_datos_suficientes,
+        }
+
         data = {
             'total_ordenes': total_ordenes,
             'ordenes_pendientes': ordenes_pendientes,
@@ -681,6 +791,8 @@ class AdminDashboardView(generics.GenericAPIView):
             'ordenes_recientes': AdminOrdenSerializer(
                 ordenes_recientes, many=True, context={'request': request}
             ).data,
+            'ingresos_por_mes': ingresos_por_mes,
+            'estimacion_mes_actual': estimacion_mes_actual,
         }
 
         return Response(data, status=status.HTTP_200_OK)

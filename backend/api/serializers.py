@@ -415,6 +415,21 @@ class AdminLoginSerializer(serializers.Serializer):
         return data
 
 # --- Dashboard: métricas generales ---
+class IngresosMesSerializer(serializers.Serializer):
+    mes = serializers.CharField()
+    ingresos = serializers.DecimalField(max_digits=12, decimal_places=2)
+    ordenes = serializers.IntegerField()
+
+class EstimacionMesSerializer(serializers.Serializer):
+    mes = serializers.CharField()
+    ingresos_reales = serializers.DecimalField(max_digits=12, decimal_places=2)
+    ordenes_reales = serializers.IntegerField()
+    dias_transcurridos = serializers.IntegerField()
+    dias_totales_mes = serializers.IntegerField()
+    estimacion_ingresos = serializers.DecimalField(max_digits=12, decimal_places=2)
+    estimacion_ordenes = serializers.IntegerField()
+    tiene_datos_suficientes = serializers.BooleanField()
+
 class DashboardSerializer(serializers.Serializer):
     total_ordenes = serializers.IntegerField()
     ordenes_pendientes = serializers.IntegerField()
@@ -426,6 +441,8 @@ class DashboardSerializer(serializers.Serializer):
     productos_sin_stock = serializers.IntegerField()
     total_usuarios = serializers.IntegerField()
     ordenes_recientes = AdminOrdenSerializer(many=True)
+    ingresos_por_mes = IngresosMesSerializer(many=True)
+    estimacion_mes_actual = EstimacionMesSerializer()
 
 # --- CRUD de materiales ---
 class AdminMaterialSerializer(serializers.ModelSerializer):
