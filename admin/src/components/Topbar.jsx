@@ -4,6 +4,8 @@ import { useNavigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 import logo from '../assets/logo.png'
 
+const goldGradient = 'linear-gradient(135deg, #d7ad44 0%, #b8941a 0%)'
+
 function Topbar() {
   const { logout } = useAuth()
   const navigate = useNavigate()
@@ -16,14 +18,14 @@ function Topbar() {
   return (
     <header
       className="px-6 py-4 flex items-center justify-between shadow-md rounded-b-2xl mx-2"
-      style={{ backgroundColor: '#b8860b' }}
+      style={{ background: goldGradient }}
     >
       {/* Logo */}
       <div className="flex items-center gap-2">
         <img src={logo} alt="Biofibras" className="h-10 w-auto" />
         <div>
           <h1 className="font-semibold tracking-widest text-lg text-white">BIOFIBRAS</h1>
-          <p className="text-xs tracking-wide  text-white">Panel Administrativo</p>
+          <p className="text-xs tracking-wide text-white">Panel Administrativo</p>
         </div>
       </div>
 

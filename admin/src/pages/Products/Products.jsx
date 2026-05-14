@@ -1,6 +1,6 @@
 // src/pages/Products/Products.jsx
 import { useState } from 'react'
-import { Plus } from 'lucide-react'
+import { Plus, Package } from 'lucide-react'
 import ProductFilters from '../../components/Products/ProductFilters'
 import ProductTable from '../../components/Products/ProductTable'
 import ProductFormModal from '../../components/Products/ProductFormModal'
@@ -26,17 +26,20 @@ function Products() {
       {/* Header */}
       <div
         className="rounded-xl p-5 flex items-center justify-between text-white"
-        style={{ backgroundColor: '#b8860b' }}
+        style={{ background: 'linear-gradient(135deg, #d7ad44 0%, #b8941a 0%)' }}
       >
-        <div>
-          <h1 className="text-xl font-bold">Gestión de Productos</h1>
-          <p className="text-sm text-white/80">Administra el catálogo de productos de tu empresa</p>
+        <div className="flex items-center gap-3">
+          <Package size={32} strokeWidth={2} className="text-white" />
+          <div>
+            <h1 className="text-2xl font-bold">Gestión de Productos</h1>
+            <p className="text-sm text-white/80">Administra el catálogo de productos de tu empresa</p>
+          </div>
         </div>
         <button
           onClick={openCreate}
           className="flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-semibold border bg-white transition-colors"
           style={{ borderColor: '#92590a', color: '#92590a' }}
-          onMouseEnter={e => { e.currentTarget.style.backgroundColor = '#92590a'; e.currentTarget.style.color = 'white' }}
+          onMouseEnter={e => { e.currentTarget.style.backgroundColor = 'white'; e.currentTarget.style.color = '#000000' }}
           onMouseLeave={e => { e.currentTarget.style.backgroundColor = 'white'; e.currentTarget.style.color = '#92590a' }}
         >
           <Plus size={16} />

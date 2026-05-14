@@ -5,15 +5,15 @@ function UserTable({ paginated, loading, currentPage, totalPages, getPageNumbers
   return (
     <div className="rounded-xl overflow-hidden border" style={{ borderColor: '#f5e6cc' }}>
       <table className="w-full text-sm text-gray-600">
-        <thead>
-          <tr style={{ backgroundColor: '#b8860b' }} className="text-white">
-            <th className="px-4 py-3 text-left">ID</th>
-            <th className="px-4 py-3 text-left">Usuario</th>
-            <th className="px-4 py-3 text-left">Nombre completo</th>
-            <th className="px-4 py-3 text-left">Email</th>
-            <th className="px-4 py-3 text-center">Estado</th>
-            <th className="px-4 py-3 text-center">Rol</th>
-            {/* <th className="px-4 py-3 text-center">Fecha registro</th> */}
+        <thead style={{ background: 'linear-gradient(135deg, #d7ad44 0%, #b8941a 0%)' }}>
+          <tr className="text-white text-xs uppercase font-bold">
+            <th className="px-4 py-4 text-left">ID</th>
+            <th className="px-4 py-4 text-left">Usuario</th>
+            <th className="px-4 py-4 text-left">Nombre completo</th>
+            <th className="px-4 py-4 text-left">Email</th>
+            <th className="px-4 py-4 text-center">Estado</th>
+            <th className="px-4 py-4 text-center">Rol</th>
+            {/* <th className="px-4 py-4 text-center">Fecha registro</th> */}
           </tr>
         </thead>
         <tbody>

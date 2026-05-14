@@ -4,7 +4,7 @@ function ProductTable({ paginated, loading, onEdit, onDelete, currentPage, total
   return (
     <div className="rounded-xl overflow-hidden border border-gray-100">
       <table className="w-full text-sm">
-        <thead style={{ backgroundColor: '#b8860b' }}>
+        <thead style={{ background: 'linear-gradient(135deg, #d7ad44 0%, #b8941a 0%)' }}>
           <tr className="text-white text-xs uppercase">
             <th className="px-4 py-4 text-left">ID</th>
             <th className="px-4 py-4 text-left">Nombre</th>
@@ -90,7 +90,7 @@ function Pagination({ currentPage, totalPages, getPageNumbers, setCurrentPage })
         onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
         disabled={currentPage === 1}
         className="px-3 py-1.5 rounded-lg text-sm border transition-colors"
-        style={{ color: currentPage === 1 ? '#ccc' : '#009929', borderColor: currentPage === 1 ? '#e0e0e0' : '#009929' }}
+        style={{ color: currentPage === 1 ? '#ccc' : '#14532d', borderColor: currentPage === 1 ? '#e0e0e0' : '#14532d' }}
       >
         Anterior
       </button>
@@ -101,7 +101,7 @@ function Pagination({ currentPage, totalPages, getPageNumbers, setCurrentPage })
           onClick={() => setCurrentPage(n)}
           className="w-8 h-8 rounded-lg text-sm font-semibold transition-colors"
           style={{
-            backgroundColor: n === currentPage ? '#009929' : 'white',
+            backgroundColor: n === currentPage ? '#14532d' : 'white',
             color: n === currentPage ? 'white' : '#555',
             border: n === currentPage ? 'none' : '1px solid #e0e0e0',
           }}
@@ -114,7 +114,7 @@ function Pagination({ currentPage, totalPages, getPageNumbers, setCurrentPage })
         onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
         disabled={currentPage === totalPages}
         className="px-3 py-1.5 rounded-lg text-sm border transition-colors"
-        style={{ color: currentPage === totalPages ? '#ccc' : '#009929', borderColor: currentPage === totalPages ? '#e0e0e0' : '#009929' }}
+        style={{ color: currentPage === totalPages ? '#ccc' : '#14532d', borderColor: currentPage === totalPages ? '#e0e0e0' : '#14532d' }}
       >
         Siguiente
       </button>
