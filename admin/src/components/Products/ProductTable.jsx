@@ -56,7 +56,7 @@ function ActionButtons({ onEdit, onDelete }) {
         onClick={onEdit}
         className="p-1.5 rounded-lg transition-colors"
         style={{ color: '#0eb505' }}
-        onMouseEnter={e => { e.currentTarget.style.backgroundColor = '#51f748' }}
+        onMouseEnter={e => { e.currentTarget.style.backgroundColor = '#abebae' }}
         onMouseLeave={e => { e.currentTarget.style.backgroundColor = 'transparent' }}
         title="Editar"
       >
