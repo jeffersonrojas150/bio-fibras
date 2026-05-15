@@ -20,7 +20,7 @@ function CategoryBadge({ nombre }) {
   return (
     <span
       className="px-2.5 py-0.5 rounded-full text-xs font-semibold"
-      style={{ backgroundColor: '#fef3c7', color: '#92590a', border: '1px solid #473703' }}
+      style={{ backgroundColor: '#e0d182', color: '#92590a', border: '1px solid #473703' }}
     >
       {nombre}
     </span>

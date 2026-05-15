@@ -165,7 +165,7 @@ function Categories() {
                     <td className="px-4 py-3 font-medium text-gray-800">{c.nombre}</td>
                     <td className="px-4 py-3">
                       <span className="px-2.5 py-0.5 rounded-full text-xs font-semibold"
-                        style={{ backgroundColor: '#deb437', color: '#473703', border: '1px solid #473703' }}>
+                        style={{ backgroundColor: '#e0d182', color: '#473703', border: '1px solid #473703' }}>
                         {c.slug}
                       </span>
                     </td>
