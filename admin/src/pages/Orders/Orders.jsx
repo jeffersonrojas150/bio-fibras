@@ -1,232 +1,226 @@
-import { useEffect, useState } from 'react'
+// src/pages/Orders/Orders.jsx
 import { useNavigate } from 'react-router-dom'
-import { Search, RefreshCw, Eye } from 'lucide-react'
-import { getOrders } from '../../api/orders'
-
-const ITEMS_PER_PAGE = 10
+import { Eye, Search, Package, ShoppingCart } from 'lucide-react'
+import { useOrders } from './hooks/useOrders'
 
 const ESTADO_PAGO_COLORS = {
-  'pagado': { bg: '#f0fdf4', color: '#009929', label: 'Pagado' },
-  'pendiente_de_pago': { bg: '#fff8e1', color: '#b8860b', label: 'Pendiente' },
-  'reembolsado': { bg: '#fff0f0', color: '#cc0000', label: 'Reembolsado' },
+  'pendiente':  { bg: '#f2d811', color: '#080706', label: 'Pendiente'  },
+  'pagado':     { bg: '#c4fa82', color: '#080706', label: 'Pagado'     },
+  'rechazado':  { bg: '#ba0404', color: '#ffffff', label: 'Rechazado'  },
+  'cancelado':  { bg: '#fa0505', color: '#ffffff', label: 'Cancelado'  },
 }
 
 const ESTADO_ORDEN_COLORS = {
-  'pendiente': { bg: '#fff8e1', color: '#b8860b', label: 'Pendiente' },
-  'enviado': { bg: '#e3f2fd', color: '#1565c0', label: 'Enviado' },
-  'entregado': { bg: '#f0fdf4', color: '#009929', label: 'Entregado' },
-  'cancelado': { bg: '#fff0f0', color: '#cc0000', label: 'Cancelado' },
+  'pendiente': { bg: '#f2d811', color: '#080706', label: 'Pendiente' },
+  'enviado':   { bg: '#52faec', color: '#080706', label: 'Enviado'   },
+  'entregado': { bg: '#3c95fa', color: '#080706', label: 'Entregado' },
+  'cancelado': { bg: '#fa0505', color: '#ffffff', label: 'Cancelado' },
 }
 
 function Badge({ value, map }) {
-  const config = map[value] || { bg: '#f5f5f5', color: '#555', label: value }
+  const cfg = map[value] || { bg: '#f5f5f5', color: '#555', label: value }
   return (
-    <span className="px-2 py-1 rounded-md text-xs font-semibold"
-      style={{ backgroundColor: config.bg, color: config.color }}>
-      {config.label}
+    <span
+      className="px-2.5 py-0.5 rounded-full text-xs font-semibold"
+      style={{ backgroundColor: cfg.bg, color: cfg.color, border: `1px solid ${cfg.color}22` }}
+    >
+      {cfg.label}
     </span>
   )
 }
 
-function Orders() {
-  const [orders, setOrders] = useState([])
-  const [filtered, setFiltered] = useState([])
-  const [search, setSearch] = useState('')
-  const [loading, setLoading] = useState(true)
-  const [currentPage, setCurrentPage] = useState(1)
-  const navigate = useNavigate()
-
-  useEffect(() => { fetchOrders() }, [])
-
-  useEffect(() => {
-    const q = search.toLowerCase()
-    setFiltered(orders.filter(o =>
-      o.numero_orden?.toString().includes(q) ||
-      o.usuario_nombre?.toLowerCase().includes(q) ||
-      o.usuario_email?.toLowerCase().includes(q)
-    ))
-    setCurrentPage(1)
-  }, [search, orders])
-
-  const fetchOrders = async () => {
-    setLoading(true)
-    try {
-      const res = await getOrders()
-      const data = res.data.results || res.data
-      setOrders(data)
-      setFiltered(data)
-    } catch (e) {
-      console.error(e)
-    } finally {
-      setLoading(false)
-    }
-  }
-
-  const totalPages = Math.ceil(filtered.length / ITEMS_PER_PAGE)
-  const paginated = filtered.slice(
-    (currentPage - 1) * ITEMS_PER_PAGE,
-    currentPage * ITEMS_PER_PAGE
-  )
-
-  const getPageNumbers = () => {
-    const pages = []
-    const maxVisible = 5
-    let start = Math.max(1, currentPage - 2)
-    let end = Math.min(totalPages, start + maxVisible - 1)
-    if (end - start < maxVisible - 1) start = Math.max(1, end - maxVisible + 1)
-    for (let i = start; i <= end; i++) pages.push(i)
-    return pages
-  }
+function Pagination({ currentPage, totalPages, getPageNumbers, setCurrentPage }) {
+  const activeStyle   = { backgroundColor: '#166534', color: 'white', border: 'none' }
+  const inactiveStyle = { backgroundColor: 'white', color: '#555', border: '1px solid #e0e0e0' }
+  const navEnabled    = { color: '#166534', borderColor: '#166534', backgroundColor: 'white' }
+  const navDisabled   = { color: '#ccc', borderColor: '#e0e0e0', backgroundColor: 'white' }
 
   return (
-    <div className="space-y-4">
+    <div
+      className="flex items-center justify-center gap-2 py-4 border-t"
+      style={{ borderColor: '#cfcfcf', backgroundColor: '#ffffff' }}
+    >
+      <button
+        onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
+        disabled={currentPage === 1}
+        className="px-3 py-1.5 rounded-lg text-sm border transition-colors"
+        style={currentPage === 1 ? navDisabled : navEnabled}
+      >
+        Anterior
+      </button>
+      {getPageNumbers().map(n => (
+        <button key={n} onClick={() => setCurrentPage(n)}
+          className="w-8 h-8 rounded-lg text-sm font-semibold transition-colors"
+          style={n === currentPage ? activeStyle : inactiveStyle}
+        >
+          {n}
+        </button>
+      ))}
+      <button
+        onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
+        disabled={currentPage === totalPages}
+        className="px-3 py-1.5 rounded-lg text-sm border transition-colors"
+        style={currentPage === totalPages ? navDisabled : navEnabled}
+      >
+        Siguiente
+      </button>
+    </div>
+  )
+}
 
-      {/* Header */}
-      <div className="rounded-xl p-5 flex items-center justify-between text-white"
-        style={{ backgroundColor: '#b8860b' }}>
-        <div>
-          <h1 className="text-xl font-bold">Gestión de Órdenes</h1>
-          <p className="text-sm text-white/80">Administra los pedidos de tus clientes</p>
-        </div>
-      </div>
+function Orders() {
+  const navigate = useNavigate()
+  const {
+    filtered, paginated, loading,
+    search, setSearch,
+    currentPage, setCurrentPage, totalPages, getPageNumbers,
+    fetchOrders,
+  } = useOrders()
 
-      {/* Card contenedor */}
-      <div className="bg-white rounded-xl shadow-md p-5 space-y-4">
+  return (
+    <div className="space-y-4" style={{ fontFamily: 'Raleway, sans-serif' }}>
 
-        {/* Buscador */}
-        <div className="flex items-center gap-3">
-          <div className="flex items-center gap-2 border border-gray-300 rounded-lg px-3 py-2 w-72 bg-white">
-            <Search size={15} className="text-gray-400" />
-            <input
-              type="text"
-              placeholder="Buscar por orden, cliente..."
-              className="text-sm outline-none w-full"
-              value={search}
-              onChange={e => setSearch(e.target.value)}
-            />
+      {/* Contenedor unificado */}
+      <div className="rounded-2xl shadow-md overflow-hidden">
+
+        {/* Header */}
+        <div
+          className="px-6 py-5 flex items-center justify-between text-white"
+          style={{ background: 'linear-gradient(135deg, #d7ad44 0%, #b8941a 10%)' }}
+        >
+          <div className="flex items-center gap-3">
+            <ShoppingCart size={28} strokeWidth={2} className="text-white/90" />
+            <div>
+              <h1 className="text-xl font-bold tracking-wide">Gestión de Órdenes</h1>
+              <p className="text-sm text-white/75">Administra los pedidos de tus clientes</p>
+            </div>
           </div>
-          <button
-            onClick={fetchOrders}
-            className="flex items-center gap-2 px-4 py-2 border rounded-lg text-sm font-medium bg-white transition-colors"
-            style={{ borderColor: '#009929', color: '#009929' }}
-            onMouseEnter={e => { e.currentTarget.style.backgroundColor = '#009929'; e.currentTarget.style.color = 'white' }}
-            onMouseLeave={e => { e.currentTarget.style.backgroundColor = 'white'; e.currentTarget.style.color = '#009929' }}
-          >
-            <RefreshCw size={15} />
-            Actualizar
-          </button>
         </div>
 
-        {/* Contador */}
-        <div className="flex items-center gap-3 px-4 py-3 rounded-xl w-full border"
-          style={{ backgroundColor: '#f0fdf4', borderColor: '#f0fdf4' }}>
-          <span className="rounded-lg w-8 h-8 flex items-center justify-center text-xs font-bold text-white flex-shrink-0"
-            style={{ backgroundColor: '#5ccb5f' }}>
-            {filtered.length}
-          </span>
-          <span className="text-sm" style={{ color: '#009929' }}>
-            órdenes encontradas
-          </span>
-        </div>
+        {/* Filtros + Tabla */}
+        <div className="bg-white px-6 py-5 space-y-4">
 
-        {/* Tabla */}
-        <div className="rounded-xl overflow-hidden border border-gray-100">
-          <table className="w-full text-sm">
-            <thead style={{ backgroundColor: '#b8860b' }}>
-              <tr className="text-white text-xs uppercase">
-                <th className="px-4 py-4 text-left">N° Orden</th>
-                <th className="px-4 py-4 text-left">Cliente</th>
-                <th className="px-4 py-4 text-left">Fecha</th>
-                <th className="px-4 py-4 text-left">Total</th>
-                <th className="px-4 py-4 text-left">Método</th>
-                <th className="px-4 py-4 text-center">Estado Pago</th>
-                <th className="px-4 py-4 text-center">Estado Orden</th>
-                <th className="px-4 py-4 text-center">Acción</th>
-              </tr>
-            </thead>
-            <tbody>
-              {loading ? (
-                <tr>
-                  <td colSpan={8} className="text-center py-10 text-gray-400">Cargando...</td>
-                </tr>
-              ) : paginated.map((o, i) => (
-                <tr key={o.id}
-                  className={`border-t border-gray-100 transition-colors ${i % 2 === 0 ? 'bg-white' : 'bg-gray-50'}`}
-                  onMouseEnter={e => e.currentTarget.style.backgroundColor = '#f0fdf4'}
-                  onMouseLeave={e => e.currentTarget.style.backgroundColor = i % 2 === 0 ? 'white' : '#f9f9f9'}
-                >
-                  <td className="px-4 py-3 font-bold text-xs" style={{ color: '#92590a' }}>
-                    #{o.numero_orden}
-                  </td>
-                  <td className="px-4 py-3">
-                    <p className="font-medium text-gray-800">{o.usuario_nombre || '-'}</p>
-                    <p className="text-xs text-gray-400">{o.usuario_email}</p>
-                  </td>
-                  <td className="px-4 py-3 text-gray-600 text-xs">
-                    {new Date(o.fecha_creacion).toLocaleDateString('es-PE', {
-                      day: '2-digit', month: 'short', year: 'numeric'
-                    })}
-                  </td>
-                  <td className="px-4 py-3 font-semibold" style={{ color: '#92590a' }}>
-                    S/ {parseFloat(o.total).toFixed(2)}
-                  </td>
-                  <td className="px-4 py-3 text-gray-600 capitalize">{o.metodo_pago}</td>
-                  <td className="px-4 py-3 text-center">
-                    <Badge value={o.estado_pago} map={ESTADO_PAGO_COLORS} />
-                  </td>
-                  <td className="px-4 py-3 text-center">
-                    <Badge value={o.estado_orden} map={ESTADO_ORDEN_COLORS} />
-                  </td>
-                  <td className="px-4 py-3">
-                    <div className="flex items-center justify-center">
-                      <button
-                        onClick={() => navigate(`/orders/${o.id}`)}
-                        className="p-1.5 rounded-lg transition-colors"
-                        style={{ color: '#009929' }}
-                        onMouseEnter={e => e.currentTarget.style.backgroundColor = '#f0fdf4'}
-                        onMouseLeave={e => e.currentTarget.style.backgroundColor = 'transparent'}
-                      >
-                        <Eye size={15} />
-                      </button>
-                    </div>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-
-          {/* Paginación */}
-          {totalPages > 1 && (
-            <div className="flex items-center justify-center gap-2 py-4 border-t border-gray-100">
+          {/* Buscador */}
+          <div className="flex items-center gap-3">
+            <div
+              className="flex items-center flex-1 rounded-xl overflow-hidden"
+              style={{ border: '1.5px solid #e8d5a3' }}
+            >
+              <div className="flex items-center gap-2 flex-1 px-3 py-2">
+                <Search size={16} style={{ color: '#b8860b' }} className="shrink-0" />
+                <input
+                  type="text"
+                  value={search}
+                  onChange={e => setSearch(e.target.value)}
+                  placeholder="Buscar por N° orden, cliente o email..."
+                  className="flex-1 text-sm outline-none bg-transparent text-gray-700 placeholder-gray-400"
+                />
+              </div>
               <button
-                onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
-                disabled={currentPage === 1}
-                className="px-3 py-1.5 rounded-lg text-sm border transition-colors"
-                style={{ color: currentPage === 1 ? '#ccc' : '#009929', borderColor: currentPage === 1 ? '#e0e0e0' : '#009929' }}
+                onClick={fetchOrders}
+                className="px-4 py-2 text-sm font-semibold text-white shrink-0 transition-colors"
+                style={{ backgroundColor: '#b8860b' }}
+                onMouseEnter={e => { e.currentTarget.style.backgroundColor = '#92590a' }}
+                onMouseLeave={e => { e.currentTarget.style.backgroundColor = '#b8860b' }}
               >
-                Anterior
-              </button>
-              {getPageNumbers().map(n => (
-                <button key={n} onClick={() => setCurrentPage(n)}
-                  className="w-8 h-8 rounded-lg text-sm font-semibold transition-colors"
-                  style={{
-                    backgroundColor: n === currentPage ? '#009929' : 'white',
-                    color: n === currentPage ? 'white' : '#555',
-                    border: n === currentPage ? 'none' : '1px solid #e0e0e0'
-                  }}>
-                  {n}
-                </button>
-              ))}
-              <button
-                onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
-                disabled={currentPage === totalPages}
-                className="px-3 py-1.5 rounded-lg text-sm border transition-colors"
-                style={{ color: currentPage === totalPages ? '#ccc' : '#009929', borderColor: currentPage === totalPages ? '#e0e0e0' : '#009929' }}
-              >
-                Siguiente
+                Buscar
               </button>
             </div>
-          )}
+            <div
+              className="flex items-center gap-2 px-8 py-2 rounded-xl text-sm font-semibold shrink-0"
+              style={{ backgroundColor: '#166534', color: 'white' }}
+            >
+              <Package size={15} />
+              {filtered.length} orden{filtered.length !== 1 ? 'es' : ''}
+            </div>
+          </div>
+
+          {/* Tabla */}
+          <div className="rounded-xl overflow-hidden border" style={{ borderColor: '#cfcfcf' }}>
+            <table className="w-full text-sm">
+              <thead>
+                <tr
+                  className="text-white text-xs uppercase tracking-wider"
+                  style={{ background: 'linear-gradient(135deg, #d7ad44 0%, #b8941a 10%)' }}
+                >
+                  <th className="px-4 py-3 text-left font-semibold">N° Orden</th>
+                  <th className="px-4 py-3 text-left font-semibold">Cliente</th>
+                  <th className="px-4 py-3 text-left font-semibold">Fecha</th>
+                  <th className="px-4 py-3 text-left font-semibold">Total</th>
+                  <th className="px-4 py-3 text-left font-semibold">Método</th>
+                  <th className="px-4 py-3 text-center font-semibold">Estado Pago</th>
+                  <th className="px-4 py-3 text-center font-semibold">Estado Orden</th>
+                  <th className="px-4 py-3 text-center font-semibold">Acción</th>
+                </tr>
+              </thead>
+              <tbody>
+                {loading ? (
+                  <tr>
+                    <td colSpan={8} className="text-center py-10 text-gray-400">Cargando...</td>
+                  </tr>
+                ) : paginated.length === 0 ? (
+                  <tr>
+                    <td colSpan={8} className="text-center py-10 text-gray-400">No se encontraron órdenes</td>
+                  </tr>
+                ) : paginated.map((o, i) => (
+                  <tr
+                    key={o.id}
+                    className="border-t transition-colors duration-150"
+                    style={{ borderColor: '#cfcfcf', backgroundColor: i % 2 === 0 ? '#ffffff' : '#f5f5f5' }}
+                    onMouseEnter={e => (e.currentTarget.style.backgroundColor = '#e6e6e6')}
+                    onMouseLeave={e => (e.currentTarget.style.backgroundColor = i % 2 === 0 ? '#ffffff' : '#f5f5f5')}
+                  >
+                    <td className="px-4 py-3 font-bold text-xs" style={{ color: '#92590a' }}>
+                      #{o.numero_orden}
+                    </td>
+                    <td className="px-4 py-3">
+                      <p className="font-medium text-gray-800">{o.usuario_nombre || '—'}</p>
+                      <p className="text-xs text-gray-400">{o.usuario_email}</p>
+                    </td>
+                    <td className="px-4 py-3 text-gray-600 text-xs">
+                      {new Date(o.fecha_creacion).toLocaleDateString('es-PE', {
+                        day: '2-digit', month: 'short', year: 'numeric'
+                      })}
+                    </td>
+                    <td className="px-4 py-3 font-semibold" style={{ color: '#92590a' }}>
+                      S/ {parseFloat(o.total).toFixed(2)}
+                    </td>
+                    <td className="px-4 py-3 text-gray-600 capitalize text-xs">{o.metodo_pago || '—'}</td>
+                    <td className="px-4 py-3 text-center">
+                      <Badge value={o.estado_pago}  map={ESTADO_PAGO_COLORS}  />
+                    </td>
+                    <td className="px-4 py-3 text-center">
+                      <Badge value={o.estado_orden} map={ESTADO_ORDEN_COLORS} />
+                    </td>
+                    <td className="px-4 py-3">
+                      <div className="flex flex-col items-center gap-0.5">
+                        <button
+                          onClick={() => navigate(`/orders/${o.id}`)}
+                          className="p-1.5 rounded-lg transition-colors"
+                          style={{ color: '#0eb505' }}
+                          onMouseEnter={e => { e.currentTarget.style.backgroundColor = '#abebae' }}
+                          onMouseLeave={e => { e.currentTarget.style.backgroundColor = 'transparent' }}
+                          title="Ver detalle"
+                        >
+                          <Eye size={15} />
+                        </button>
+                        <span className="text-xs text-gray-400">Ver detalle</span>
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+
+            {totalPages > 1 && (
+              <Pagination
+                currentPage={currentPage}
+                totalPages={totalPages}
+                getPageNumbers={getPageNumbers}
+                setCurrentPage={setCurrentPage}
+              />
+            )}
+          </div>
         </div>
       </div>
     </div>
