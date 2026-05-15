@@ -2,7 +2,7 @@
 import { useState, useEffect, useRef } from 'react'
 import {
   X, Save, Loader2, Package, AlertCircle,
-  DollarSign, Tag, Image, ToggleRight, Info,
+  DollarSign, Tag, Image, Info,
 } from 'lucide-react'
 import {
   createProduct, updateProduct, getCategorias, getMateriales,
@@ -143,19 +143,36 @@ function ProductFormModal({ isOpen, product, onClose, onSuccess }) {
     }))
   }
 
+
   function handleFileSelect(e) {
     const slots = MAX_IMAGES - images.length - newFiles.length
     if (slots <= 0) return
+
+    const totalExisting = images.length + newFiles.length
+    const hayPrincipal = images.some(img => img.es_principal) || newFiles.some(nf => nf.es_principal)
+
     const allowed = Array.from(e.target.files).slice(0, slots).map((file, i) => ({
       file, preview: URL.createObjectURL(file),
-      es_principal: false, orden: images.length + newFiles.length + i,
+     
+      es_principal: !hayPrincipal && totalExisting === 0 && i === 0,
+      orden: totalExisting + i,
     }))
     setNewFiles(prev => [...prev, ...allowed])
     e.target.value = ''
   }
 
+  
   function handleRemoveNewFile(idx) {
-    setNewFiles(prev => { URL.revokeObjectURL(prev[idx].preview); return prev.filter((_, i) => i !== idx) })
+    setNewFiles(prev => {
+      URL.revokeObjectURL(prev[idx].preview)
+      const eraPrincipal = prev[idx].es_principal
+      const restantes = prev.filter((_, i) => i !== idx)
+      const hayPrincipalServidor = images.some(img => img.es_principal)
+      if (eraPrincipal && restantes.length > 0 && !hayPrincipalServidor) {
+        restantes[0] = { ...restantes[0], es_principal: true }
+      }
+      return restantes
+    })
   }
 
   function handleSetNewFileMain(idx) {
@@ -163,11 +180,21 @@ function ProductFormModal({ isOpen, product, onClose, onSuccess }) {
     setNewFiles(prev => prev.map((f, i) => ({ ...f, es_principal: i === idx })))
   }
 
+
   async function handleDeleteServer(imgId) {
     if (!window.confirm('¿Eliminar esta imagen?')) return
     try {
       await deleteProductImage(product.id, imgId)
-      setImages(prev => prev.filter(img => img.id !== imgId))
+      setImages(prev => {
+        const eliminadaEraPrincipal = prev.find(img => img.id === imgId)?.es_principal
+        const restantes = prev.filter(img => img.id !== imgId)
+        if (eliminadaEraPrincipal && restantes.length > 0) {
+          restantes[0] = { ...restantes[0], es_principal: true }
+          
+          setTimeout(() => setMainProductImage(product.id, restantes[0].id).catch(console.error), 0)
+        }
+        return restantes
+      })
     } catch { alert('Error al eliminar la imagen') }
   }
 
@@ -188,6 +215,7 @@ function ProductFormModal({ isOpen, product, onClose, onSuccess }) {
     if (!form.nombre.trim()) errs.nombre = 'El nombre es obligatorio'
     if (!form.precio_unitario || isNaN(form.precio_unitario)) errs.precio_unitario = 'Ingresa un precio válido'
     if (form.stock === '' || isNaN(form.stock)) errs.stock = 'Ingresa el stock'
+    if (images.length === 0 && newFiles.length === 0) errs.imagenes = 'Sube al menos una imagen'
     return errs
   }
 
@@ -455,6 +483,7 @@ function ProductFormModal({ isOpen, product, onClose, onSuccess }) {
               onDeleteServer={handleDeleteServer}
               onSetServerMain={handleSetServerMain}
               fileInputRef={fileInputRef}
+              error={errors.imagenes}
             />
           </Section>
 

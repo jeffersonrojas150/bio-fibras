@@ -1,17 +1,33 @@
 // src/components/Products/ProductImageUploader.jsx
-import { Star, Trash2, ImagePlus } from 'lucide-react'
+import { Star, Trash2, ImagePlus, AlertCircle } from 'lucide-react'
 
 function ProductImageUploader({
   images, newFiles, canAddMore, remaining,
   onFileSelect, onRemoveNewFile, onSetNewFileMain,
   onDeleteServer, onSetServerMain,
   fileInputRef,
+  error, // ← prop para mostrar error de validación
 }) {
-  const hasImages = images.length > 0
+  const hasImages   = images.length > 0
   const hasNewFiles = newFiles.length > 0
+  const totalImages = images.length + newFiles.length
+  const hayPrincipal =
+    images.some(img => img.es_principal) ||
+    newFiles.some(nf => nf.es_principal)
 
   return (
     <div className="space-y-4">
+
+      {/* Aviso si no hay imagen principal definida y hay imágenes */}
+      {totalImages > 0 && !hayPrincipal && (
+        <div
+          className="flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-medium"
+          style={{ backgroundColor: '#fef3c7', color: '#92400e', border: '1px solid #d97706' }}
+        >
+          <AlertCircle size={13} />
+          Ninguna imagen está marcada como principal. Usa <Star size={11} className="inline mx-0.5 text-amber-500" /> para marcarla.
+        </div>
+      )}
 
       {/* Imágenes actuales (servidor) */}
       {hasImages && (
@@ -76,7 +92,7 @@ function ProductImageUploader({
       {hasNewFiles && (
         <div>
           <p className="text-xs font-semibold uppercase tracking-wide mb-2" style={{ color: '#7e4400' }}>
-            Nuevas imágenes (se subirán al guardar)
+            Nuevas imágenes <span className="text-gray-400 normal-case font-normal">(se subirán al guardar)</span>
           </p>
           <div className="grid grid-cols-4 gap-3">
             {newFiles.map((nf, idx) => (
@@ -149,7 +165,6 @@ function ProductImageUploader({
             style={{ backgroundColor: '#f5f5f5', color: '#211b05', border: '1px solid #1a1a1a' }}
             onMouseEnter={e => { e.currentTarget.style.backgroundColor = '#d4d4d4' }}
             onMouseLeave={e => { e.currentTarget.style.backgroundColor = '#f5f5f5' }}
-            
           >
             <ImagePlus size={16} />
             Agregar imagen
@@ -161,6 +176,13 @@ function ProductImageUploader({
             </span>
           </button>
         </>
+      )}
+
+      {/* Error de validación (imagen obligatoria) */}
+      {error && (
+        <p className="flex items-center gap-1 text-xs text-red-500">
+          <AlertCircle size={11} /> {error}
+        </p>
       )}
 
       {/* Leyenda con iconos */}
