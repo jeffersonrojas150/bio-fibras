@@ -302,16 +302,7 @@ function ProductFormModal({ isOpen, product, onClose, onSuccess }) {
                     )
                   })}
                 </div>
-                <button
-                  type="button"
-                  onClick={() => window.open('/categories', '_blank')}
-                  className="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg text-xs font-semibold text-white mt-1 transition-colors"
-                  style={{ backgroundColor: '#1f2937' }}
-                  onMouseEnter={e => { e.currentTarget.style.backgroundColor = '#a6780a' }}
-                  onMouseLeave={e => { e.currentTarget.style.backgroundColor = '#c48f10' }}
-                >
-                  <Plus size={12} /> Agregar nueva categoría
-                </button>
+
               </Field>
 
               {materiales.length > 0 && (
@@ -330,16 +321,6 @@ function ProductFormModal({ isOpen, product, onClose, onSuccess }) {
                       )
                     })}
                   </div>
-                  <button
-                    type="button"
-                    onClick={() => window.open('/materials', '_blank')}
-                    className="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg text-xs font-semibold text-white mt-1 transition-colors"
-                    style={{ backgroundColor: '#1f2937' }}
-                    onMouseEnter={e => { e.currentTarget.style.backgroundColor = '#a6780a' }}
-                    onMouseLeave={e => { e.currentTarget.style.backgroundColor = '#c48f10' }}
-                  >
-                    <Plus size={12} /> Agregar nuevo material
-                  </button>
                 </Field>
               )}
 

@@ -2,7 +2,7 @@
 import { useState, useEffect, useCallback } from 'react'
 import { getProducts, deleteProduct } from '../../../api/products'
 
-const ITEMS_PER_PAGE = 10
+const ITEMS_PER_PAGE = 5
 
 export function useProducts() {
   const [products, setProducts] = useState([])
