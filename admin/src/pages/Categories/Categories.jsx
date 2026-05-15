@@ -114,7 +114,7 @@ function Categories() {
               </button>
             </div>
             <div
-              className="flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-semibold shrink-0"
+              className="flex items-center gap-2 px-8 py-2 rounded-xl text-sm font-semibold shrink-0"
               style={{ backgroundColor: '#166534', color: 'white' }}
             >
               <Package size={15} />
