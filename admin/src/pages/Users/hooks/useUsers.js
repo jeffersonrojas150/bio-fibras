@@ -5,16 +5,16 @@ import { getUsers } from '../../../api/users'
 const ITEMS_PER_PAGE = 10
 
 export function useUsers() {
-  const [users, setUsers] = useState([])
+  const [users, setUsers]     = useState([])
   const [filtered, setFiltered] = useState([])
-  const [search, setSearch] = useState('')
+  const [search, setSearch]   = useState('')
   const [loading, setLoading] = useState(true)
   const [currentPage, setCurrentPage] = useState(1)
 
   const fetchUsers = useCallback(async () => {
     setLoading(true)
     try {
-      const res = await getUsers()
+      const res  = await getUsers()
       const data = res.data.results ?? res.data
       setUsers(data)
     } catch (e) {
@@ -37,18 +37,18 @@ export function useUsers() {
     setCurrentPage(1)
   }, [search, users])
 
-  const totalPages = Math.ceil(filtered.length / ITEMS_PER_PAGE)
-  const paginated = filtered.slice(
+  const totalPages = Math.max(1, Math.ceil(filtered.length / ITEMS_PER_PAGE))
+  const paginated  = filtered.slice(
     (currentPage - 1) * ITEMS_PER_PAGE,
     currentPage * ITEMS_PER_PAGE
   )
 
   const getPageNumbers = () => {
-    const pages = []
     const maxVisible = 5
     let start = Math.max(1, currentPage - 2)
-    let end = Math.min(totalPages, start + maxVisible - 1)
+    let end   = Math.min(totalPages, start + maxVisible - 1)
     if (end - start < maxVisible - 1) start = Math.max(1, end - maxVisible + 1)
+    const pages = []
     for (let i = start; i <= end; i++) pages.push(i)
     return pages
   }
