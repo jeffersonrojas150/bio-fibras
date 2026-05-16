@@ -180,6 +180,7 @@ class Orden(models.Model):
         PENDIENTE = 'pendiente', 'Pendiente'
         ENVIADO = 'enviado', 'Enviado'
         ENTREGADO = 'entregado', 'Entregado'
+        CANCELADO = 'cancelado', 'Cancelado'
 
     numero_orden = models.CharField(max_length=20, unique=True, editable=False, verbose_name="Número de Orden")
 
