@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route, Navigate, useLocation } from "react-router-dom";
 import React from "react";
 import { GoogleOAuthProvider } from "@react-oauth/google";
 
@@ -12,6 +12,8 @@ import { LoginForm, RegisterForm, ForgotPasswordForm, ResetPasswordForm } from "
 
 import Header from "./components/common/Layout/Header";
 import Footer from "./components/common/Layout/Footer";
+
+import { useAuth } from "./context/authContext";
 
 import { CartProvider } from "./context/cartContext";
 import Cart from "./components/Cart/Cart";
@@ -44,7 +46,23 @@ import "./App.css";
 const GOOGLE_CLIENT_ID =
   "876707612320-et00ma5g32t9a4op91mp4ajobbgrukeg.apps.googleusercontent.com";
 
-function App() {
+
+
+const PrivateRoute = ({ children }) => {
+  const location = useLocation();
+  const { isAuthenticated, loading } = useAuth();
+  
+  if (loading) return null;
+  
+  if (!isAuthenticated) {
+    return <Navigate to="/login" state={{ from: location.pathname }} replace />;
+  }
+  
+  return children;
+};
+
+
+  function App() {
   return (
     <div className="App">
       <AuthProvider>
@@ -80,7 +98,7 @@ function App() {
                             path="/reset-password/:uid/:token"
                             element={<ResetPasswordForm />}
                           />
-                          <Route path="/checkout" element={<Checkout />} />
+                          <Route path="/checkout" element={<PrivateRoute><Checkout /></PrivateRoute>} />
                           <Route
                             path="/order-confirmation"
                             element={<OrderConfirmation />}
@@ -93,19 +111,15 @@ function App() {
                           <Route path="/terminos-y-condiciones" element={<TermsConditions />} />
                           <Route path="/politica-de-privacidad" element={<PrivacyPolicy />} />
 
-                          <Route path="/mis-ordenes" element={<MyOrders />} />
-                          <Route path="/ordenes/:orderId" element={<OrderDetail />} />
-                          <Route path="/favoritos" element={<Favorites />} />
+                          <Route path="/mis-ordenes" element={<PrivateRoute><MyOrders /></PrivateRoute>} />
+                          <Route path="/ordenes/:orderId" element={<PrivateRoute><OrderDetail /></PrivateRoute>} />
+                          <Route path="/favoritos" element={<PrivateRoute><Favorites /></PrivateRoute>} />
                           <Route path="/about" element={<About />} />
-                          <Route path="/perfil" element={<ProfilePage />}>
+                          <Route path="/perfil" element={<PrivateRoute><ProfilePage /></PrivateRoute>}>
                             <Route index element={<Navigate to="datos" replace />} />
                             <Route path="datos" element={<PersonalData />} />
                             <Route path="direcciones" element={<AddressManagement />} />
-
-
                           </Route>
-
-
                         </Routes>
                       </main>
 
