@@ -1,6 +1,6 @@
 // src/components/auth/LoginForm.jsx
 import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import AuthLayout from './AuthLayout';
 import AuthModalWrapper from '../common/AuthModalWrapper'; 
 import { useAuth } from '../../context/authContext';
@@ -17,6 +17,8 @@ const LoginForm = ({ onAuthChange }) => {
   const [error, setError] = useState('');
   const navigate = useNavigate();
   const { login, loginWithGoogle } = useAuth();
+  const location = useLocation();
+  const from = location.state?.from || '/';
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -24,45 +26,44 @@ const LoginForm = ({ onAuthChange }) => {
   };
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
-    setIsLoading(true);
-    setError('');
-
-    try {
-      await login(formData.email, formData.password);
-      if (onAuthChange) onAuthChange();
-      
-      navigate('/', { replace: true });
-    } catch (err) {
-      const errorMessage = err.response?.status === 401
-        ? 'Email o contraseña incorrectos. Por favor, inténtalo de nuevo.'
-        : 'Ocurrió un error inesperado. Inténtalo más tarde.';
-      setError(errorMessage);
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  const handleGoogleLogin = useGoogleLogin({
-    flow: 'auth-code',
-    onSuccess: async (codeResponse) => {
+      e.preventDefault();
       setIsLoading(true);
       setError('');
+
       try {
-        await loginWithGoogle(codeResponse.code);
+        await login(formData.email, formData.password);
         if (onAuthChange) onAuthChange();
-        navigate('/', { replace: true });
+        navigate(from, { replace: true });
       } catch (err) {
-        setError('Falló el inicio de sesión con Google. Inténtalo de nuevo.');
+        const errorMessage = err.response?.status === 401
+          ? 'Email o contraseña incorrectos. Por favor, inténtalo de nuevo.'
+          : 'Ocurrió un error inesperado. Inténtalo más tarde.';
+        setError(errorMessage);
       } finally {
         setIsLoading(false);
       }
-    },
-    onError: (error) => {
-      console.error('Login con Google fallido:', error);
-      setError('No se pudo iniciar sesión con Google.');
-    }
-  });
+    };
+
+  const handleGoogleLogin = useGoogleLogin({
+      flow: 'auth-code',
+      onSuccess: async (codeResponse) => {
+        setIsLoading(true);
+        setError('');
+        try {
+          await loginWithGoogle(codeResponse.code);
+          if (onAuthChange) onAuthChange();
+          navigate(from, { replace: true });
+        } catch (err) {
+          setError('Falló el inicio de sesión con Google. Inténtalo de nuevo.');
+        } finally {
+          setIsLoading(false);
+        }
+      },
+      onError: (error) => {
+        console.error('Login con Google fallido:', error);
+        setError('No se pudo iniciar sesión con Google.');
+      }
+    });
 
   return (
     <AuthModalWrapper>
