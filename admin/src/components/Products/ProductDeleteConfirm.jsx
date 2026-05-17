@@ -1,39 +1,49 @@
-import { Trash2, X } from 'lucide-react'
+// src/components/Products/ProductDeleteConfirm.jsx
+import { Trash2, X, Loader2 } from 'lucide-react'
 
-function ProductDeleteConfirm({ product, onConfirm, onCancel }) {
+function ProductDeleteConfirm({ product, onConfirm, onCancel, deleting }) {
   if (!product) return null
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
-      <div className="bg-white rounded-2xl shadow-xl p-6 w-full max-w-sm mx-4">
-        <div className="flex justify-center mb-4">
-          <div className="w-14 h-14 rounded-full bg-red-50 flex items-center justify-center">
-            <Trash2 size={26} className="text-red-500" />
+    <div
+      className="fixed inset-0 z-50 flex items-center justify-center"
+      style={{ backgroundColor: 'rgba(0,0,0,0.55)', backdropFilter: 'blur(3px)' }}
+    >
+      <div className="w-full max-w-sm mx-4 rounded-2xl shadow-2xl bg-white overflow-hidden">
+        <div className="p-6 text-center space-y-4">
+          <div className="w-14 h-14 rounded-full bg-red-50 flex items-center justify-center mx-auto">
+            <Trash2 size={24} className="text-red-500" />
           </div>
-        </div>
-
-        <h2 className="text-center text-lg font-bold text-gray-800 mb-1">
-          ¿Eliminar producto?
-        </h2>
-        <p className="text-center text-sm text-gray-500 mb-6">
-          Se eliminará permanentemente{' '}
-          <span className="font-semibold text-gray-700">"{product.nombre}"</span>.
-          Esta acción no se puede deshacer.
-        </p>
-
-        <div className="flex gap-3">
-          <button
-            onClick={onCancel}
-            className="flex-1 px-4 py-2.5 rounded-xl border border-gray-200 text-sm font-medium text-gray-600 hover:bg-gray-50 transition-colors flex items-center justify-center gap-2"
-          >
-            <X size={15} /> Cancelar
-          </button>
-          <button
-            onClick={onConfirm}
-            className="flex-1 px-4 py-2.5 rounded-xl bg-red-500 hover:bg-red-600 text-white text-sm font-semibold transition-colors flex items-center justify-center gap-2"
-          >
-            <Trash2 size={15} /> Eliminar
-          </button>
+          <div>
+            <h3 className="text-lg font-bold text-gray-800">¿Eliminar producto?</h3>
+            <p className="text-sm text-gray-500 mt-1">
+              Se eliminará permanentemente <strong>"{product.nombre}"</strong>. Esta acción no se puede deshacer.
+            </p>
+          </div>
+          <div className="flex gap-3 pt-2">
+            <button
+              onClick={onCancel}
+              disabled={deleting}
+              className="flex-1 flex items-center justify-center gap-1.5 px-4 py-2 rounded-xl text-sm font-semibold transition-colors"
+              style={{ borderColor: '#e5e7eb', color: '#6b7280', border: '1px solid #e5e7eb' }}
+              onMouseEnter={e => { e.currentTarget.style.backgroundColor = '#f9fafb' }}
+              onMouseLeave={e => { e.currentTarget.style.backgroundColor = 'transparent' }}
+            >
+              <X size={14} /> Cancelar
+            </button>
+            <button
+              onClick={onConfirm}
+              disabled={deleting}
+              className="flex-1 flex items-center justify-center gap-2 px-4 py-2 rounded-xl text-sm font-semibold text-white disabled:opacity-60 transition-colors"
+              style={{ backgroundColor: deleting ? '#ccc' : '#f20707', border: '1px solid #f87171' }}
+              onMouseEnter={e => { if (!deleting) e.currentTarget.style.backgroundColor = '#e30707' }}
+              onMouseLeave={e => { if (!deleting) e.currentTarget.style.backgroundColor = '#f20707' }}
+            >
+              {deleting
+                ? <><Loader2 size={14} className="animate-spin" /> Eliminando...</>
+                : <><Trash2 size={14} /> Eliminar</>}
+            </button>
+          </div>
         </div>
       </div>
     </div>

@@ -53,6 +53,16 @@ export function useProducts() {
     return pages
   }
 
+  const getPageNumbersMobile = () => {
+    const pages = []
+    const maxVisible = 3
+    let start = Math.max(1, currentPage - 1)
+    let end = Math.min(totalPages, start + maxVisible - 1)
+    if (end - start < maxVisible - 1) start = Math.max(1, end - maxVisible + 1)
+    for (let i = start; i <= end; i++) pages.push(i)
+    return pages
+  }
+
   // ── Modal crear/editar ──
   const openCreate = () => { setSelectedProduct(null); setModalOpen(true) }
   const openEdit = (product) => { setSelectedProduct(product); setModalOpen(true) }
@@ -80,7 +90,7 @@ export function useProducts() {
   return {
     filtered, paginated, loading,
     search, setSearch,
-    currentPage, setCurrentPage, totalPages, getPageNumbers,
+    currentPage, setCurrentPage, totalPages, getPageNumbers, getPageNumbersMobile,
     fetchProducts,
     modalOpen, selectedProduct, openCreate, openEdit, closeModal, onSaveSuccess,
     deleteTarget, confirmDelete, cancelDelete, executeDelete,
