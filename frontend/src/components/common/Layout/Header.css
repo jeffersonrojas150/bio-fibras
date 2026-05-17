@@ -16,7 +16,7 @@
 
 /* Anuncios */
 .top-announcement-carousel {
-  background: linear-gradient(135deg, #c9960e 0%, #92590a 100%);
+  background: linear-gradient(135deg, #c9960e 20%, #92590a 100%);
   color: white;
   font-size: 14px;
   font-weight: 200;

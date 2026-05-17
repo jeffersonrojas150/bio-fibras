@@ -9,7 +9,7 @@
 }
 
 .biofibras-footer {
-  background: linear-gradient(135deg, #c9960e 0%, #92590a 100%);
+  background: linear-gradient(135deg, #c9960e 20%, #92590a 100%);
   color: var(--footer-text);
   padding: 64px 0 28px;
   font-family: 'Raleway', sans-serif;
@@ -29,7 +29,7 @@
   font-family: 'Raleway', sans-serif;
   font-size: 26px;
   font-weight: 700;
-  color: #ffffff;
+  color: #2c5530;
   letter-spacing: 2px;
   margin: 0;
   line-height: 1;
@@ -94,7 +94,7 @@
   font-family: 'Raleway', sans-serif;
   font-size: 13px;
   font-weight: 700;
-  color: var(--footer-text-white);
+ color: #2c5530;
   margin-bottom: 1.5rem;
   text-transform: uppercase;
   letter-spacing: 2px;
