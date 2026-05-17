@@ -36,7 +36,7 @@ function Topbar({ onMenuClick }) {
 
         {/* Ver Tienda */}
         <a
-          href="/"
+          href={import.meta.env.VITE_STORE_URL}
           target="_blank"
           rel="noopener noreferrer"
           className="flex items-center gap-2 px-3 py-2 rounded-xl font-semibold border-2 transition-all whitespace-nowrap text-sm"
