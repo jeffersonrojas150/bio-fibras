@@ -1,14 +1,16 @@
+// src/context/AuthContext.jsx
 import { createContext, useContext, useState, useEffect } from 'react'
 import { login as loginApi } from '../api/auth'
+import { useAdminStore } from '../store/useAdminStore'
 
 const AuthContext = createContext()
 
 export function AuthProvider({ children }) {
-  const [user, setUser] = useState(null)
+  const [user, setUser]       = useState(null)
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    const token = localStorage.getItem('access_token')
+    const token    = localStorage.getItem('access_token')
     const userData = localStorage.getItem('user_data')
     if (token && userData) {
       setUser(JSON.parse(userData))
@@ -21,7 +23,6 @@ export function AuthProvider({ children }) {
     const { access, refresh } = res.data
     localStorage.setItem('access_token', access)
     localStorage.setItem('refresh_token', refresh)
-    // Guardamos datos básicos del usuario
     const userData = { username }
     localStorage.setItem('user_data', JSON.stringify(userData))
     setUser(userData)
@@ -33,6 +34,8 @@ export function AuthProvider({ children }) {
     localStorage.removeItem('refresh_token')
     localStorage.removeItem('user_data')
     setUser(null)
+    // Limpia el store y detiene el polling
+    useAdminStore.getState().reset()
   }
 
   return (

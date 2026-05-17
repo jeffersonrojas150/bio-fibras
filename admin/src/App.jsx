@@ -1,3 +1,4 @@
+// src/App.jsx
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import AdminLayout from './layouts/AdminLayout'
 import Dashboard from './pages/Dashboard/Dashboard'
@@ -9,6 +10,7 @@ import ProtectedRoute from './components/ProtectedRoute'
 import Users from './pages/Users/Users'
 import Materials from './pages/Materials/Materials'
 import OrderDetail from './pages/Orders/OrderDetail'
+import InitLoader from './components/InitLoader'
 
 function App() {
   return (
@@ -17,6 +19,7 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/" element={
           <ProtectedRoute>
+            <InitLoader />
             <AdminLayout />
           </ProtectedRoute>
         }>
