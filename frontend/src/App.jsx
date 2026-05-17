@@ -43,9 +43,7 @@ import { Toaster } from "react-hot-toast";
 
 import "./App.css";
 
-const GOOGLE_CLIENT_ID =
-  "876707612320-et00ma5g32t9a4op91mp4ajobbgrukeg.apps.googleusercontent.com";
-
+const GOOGLE_CLIENT_ID = import.meta.env.VITE_GOOGLE_CLIENT_ID
 
 
 const PrivateRoute = ({ children }) => {

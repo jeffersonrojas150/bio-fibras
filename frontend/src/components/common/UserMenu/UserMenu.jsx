@@ -1,10 +1,9 @@
-// src/components/common/UserMenu/UserMenu.jsx
 import React, { useState, useRef, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../../context/authContext';
 import './UserMenu.css';
 
-const UserMenu = () => {
+const UserMenu = ({ transparent = false }) => {
   const [isOpen, setIsOpen] = useState(false);
   const menuRef = useRef(null);
   const { user, isAuthenticated, logout } = useAuth();
@@ -26,9 +25,6 @@ const UserMenu = () => {
     navigate('/');
   };
 
-  const toggleMenu = () => setIsOpen(!isOpen);
-
-
   const userFullName = user
     ? `${user.first_name || ''} ${user.last_name || ''}`.trim()
     : '';
@@ -37,8 +33,8 @@ const UserMenu = () => {
     <div className="user-menu-container" ref={menuRef}>
       <button
         type="button"
-        className="nav-icon-link btn-reset user-menu-trigger"
-        onClick={toggleMenu}
+        className={`nav-icon-link btn-reset user-menu-trigger ${transparent ? 'icon--white' : ''}`}
+        onClick={() => setIsOpen(!isOpen)}
       >
         <i className="bi bi-person-circle nav-icon"></i>
       </button>
@@ -46,7 +42,6 @@ const UserMenu = () => {
       {isOpen && (
         <div className="user-menu-dropdown">
           {isAuthenticated && user ? (
-            // Usuario autenticado
             <>
               <div className="user-menu-header">
                 <div className="user-avatar">
@@ -57,31 +52,20 @@ const UserMenu = () => {
                   )}
                 </div>
                 <div className="user-info">
-
                   <p className="user-greeting">¡Bienvenido a Biofibras!</p>
-
-
                   <p className="user-name">{userFullName || user.username}</p>
                 </div>
               </div>
 
               <ul className="user-menu-list">
                 <li>
-                  <Link
-                    to="/perfil"
-                    className="user-menu-item"
-                    onClick={() => setIsOpen(false)}
-                  >
+                  <Link to="/perfil" className="user-menu-item" onClick={() => setIsOpen(false)}>
                     <i className="bi bi-person-circle"></i>
                     <span>Mi Perfil</span>
                   </Link>
                 </li>
                 <li>
-                  <Link
-                    to="/mis-ordenes"
-                    className="user-menu-item"
-                    onClick={() => setIsOpen(false)}
-                  >
+                  <Link to="/mis-ordenes" className="user-menu-item" onClick={() => setIsOpen(false)}>
                     <i className="bi bi-box-seam"></i>
                     <span>Mis Órdenes</span>
                   </Link>
@@ -90,35 +74,22 @@ const UserMenu = () => {
 
               <div className="user-menu-divider"></div>
 
-              <button
-                className="user-menu-item user-menu-logout"
-                onClick={handleLogout}
-              >
+              <button className="user-menu-item user-menu-logout" onClick={handleLogout}>
                 <i className="bi bi-box-arrow-right"></i>
                 <span>Cerrar Sesión</span>
               </button>
             </>
           ) : (
-            // Usuario no autenticado
             <>
               <div className="user-menu-guest">
                 <p className="guest-message">¡Bienvenido a Biofibras!</p>
                 <p className="guest-submessage">Inicia sesión para una mejor experiencia</p>
               </div>
-
               <div className="user-menu-buttons">
-                <Link
-                  to="/login"
-                  className="btn btn-dark w-100 mb-2"
-                  onClick={() => setIsOpen(false)}
-                >
+                <Link to="/login" className="btn btn-dark w-100 mb-2" onClick={() => setIsOpen(false)}>
                   Iniciar Sesión
                 </Link>
-                <Link
-                  to="/registro"
-                  className="btn btn-outline-dark w-100"
-                  onClick={() => setIsOpen(false)}
-                >
+                <Link to="/registro" className="btn btn-outline-dark w-100" onClick={() => setIsOpen(false)}>
                   Registrarse
                 </Link>
               </div>
