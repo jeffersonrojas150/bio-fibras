@@ -534,3 +534,49 @@ body.body-menu-open { overflow: hidden; }
 .main-navbar.navbar.navbar-dark {
   border-radius: 0 0 30px 30px;
 }
+
+/* Tablets (768px - 991px) */
+@media (min-width: 768px) and (max-width: 991.98px) {
+  .logo-image { height: 40px !important; }
+  .brand-name { font-size: 22px; }
+  .brand-tagline { font-size: 10px; }
+  .nav-icon { font-size: 20px; }
+  .nav-icon-link { width: 36px; height: 36px; }
+  .right-nav { gap: 4px; }
+  .main-navbar.navbar { padding: 10px 0 !important; }
+}
+
+/* Móvil estándar (576px - 767px) */
+@media (min-width: 576px) and (max-width: 767.98px) {
+  .logo-image { height: 35px !important; }
+  .brand-name { font-size: 20px; }
+  .brand-tagline { font-size: 9px; letter-spacing: 1.5px; }
+  .nav-icon { font-size: 18px; }
+  .nav-icon-link { width: 32px; height: 32px; }
+  .right-nav { gap: 2px; }
+  .main-navbar.navbar { padding: 10px 0 !important; }
+}
+
+/* Móvil pequeño (400px - 575px) */
+@media (max-width: 575.98px) {
+  .logo-image { height: 35px !important; }
+  .brand-name { font-size: 17px; }
+  .brand-tagline { font-size: 8px; letter-spacing: 1px; }
+  .nav-icon { font-size: 16px; }
+  .nav-icon-link { width: 30px; height: 30px; }
+  .right-nav { gap: 1px; }
+  .main-navbar.navbar { padding: 8px 0 !important; }
+  .top-announcement-carousel { font-size: 11px; }
+}
+
+/* Móvil muy pequeño (- 400px) */
+@media (max-width: 400px) {
+  .logo-image { height: 28px !important; }
+  .brand-name { font-size: 14px; }
+  .brand-tagline { font-size: 7px; letter-spacing: 0.5px; }
+  .nav-icon { font-size: 14px; }
+  .nav-icon-link { width: 26px; height: 26px; }
+  .right-nav { gap: 0; }
+  .main-navbar.navbar { padding: 7px 0 !important; }
+  .top-announcement-carousel { font-size: 10px; height: 24px; }
+}
