@@ -1,9 +1,9 @@
 // src/pages/Materials/Materials.jsx
 import { Plus, Pencil, Trash2, X, Save, Loader2, Layers, ImagePlus, Search, Package } from 'lucide-react'
 import { useMaterials } from './hooks/useMaterials'
+import MaterialCard from '../../components/Materials/MaterialCard'
 import Toast from '../../components/UI/Toast'
 
-// ── Paginación ────────────────────────────────────────────────────────────────
 function Pagination({ currentPage, totalPages, setCurrentPage }) {
   const activeStyle   = { backgroundColor: '#166534', color: 'white', border: 'none' }
   const inactiveStyle = { backgroundColor: 'white', color: '#555', border: '1px solid #e0e0e0' }
@@ -44,7 +44,6 @@ function Pagination({ currentPage, totalPages, setCurrentPage }) {
   )
 }
 
-// ── Componente principal ──────────────────────────────────────────────────────
 function Materials() {
   const {
     paginated, filtered, loading,
@@ -63,67 +62,152 @@ function Materials() {
   return (
     <div className="space-y-4" style={{ fontFamily: 'Raleway, sans-serif' }}>
 
-      {/* ── Contenedor unificado ── */}
       <div className="rounded-2xl shadow-md overflow-hidden">
 
         {/* Header */}
         <div
-          className="px-6 py-5 flex items-center justify-between text-white"
+          className="px-6 py-5 text-white"
           style={{ background: 'linear-gradient(135deg, #d7ad44 0%, #b8941a 10%)' }}
         >
-          <div className="flex items-center gap-3">
-            <Layers size={28} strokeWidth={2} className="text-white/90" />
-            <div>
-              <h1 className="text-xl font-bold tracking-wide">Gestión de Materiales</h1>
-              <p className="text-sm text-white/75">Administra los materiales de los productos de tu empresa</p>
+          {/* Desktop */}
+          <div className="hidden md:flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <Layers size={28} strokeWidth={2} className="text-white/90" />
+              <div>
+                <h1 className="text-xl font-bold tracking-wide">Gestión de Materiales</h1>
+                <p className="text-sm text-white/75">Administra los materiales de los productos de tu empresa</p>
+              </div>
             </div>
+            <button
+              onClick={openCreate}
+              className="flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-semibold border bg-white transition-colors"
+              style={{ borderColor: '#92590a', color: '#92590a' }}
+              onMouseEnter={e => { e.currentTarget.style.color = '#4f3c04' }}
+              onMouseLeave={e => { e.currentTarget.style.color = '#92590a' }}
+            >
+              <Plus size={16} /> Agregar Material
+            </button>
           </div>
-          <button
-            onClick={openCreate}
-            className="flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-semibold border bg-white transition-colors"
-            style={{ borderColor: '#92590a', color: '#92590a' }}
-            onMouseEnter={e => { e.currentTarget.style.color = '#4f3c04' }}
-            onMouseLeave={e => { e.currentTarget.style.color = '#92590a' }}
-          >
-            <Plus size={16} /> Agregar Material
-          </button>
+
+          {/* Móvil */}
+          <div className="md:hidden">
+            <div className="flex items-start gap-3 mb-3">
+              <Layers size={22} strokeWidth={2} className="text-white/90 shrink-0 mt-0.5" />
+              <div>
+                <h1 className="text-lg font-bold tracking-wide leading-tight">Gestión de Materiales</h1>
+                <p className="text-xs text-white/75 mt-0.5">Administra los materiales de los productos de tu empresa</p>
+              </div>
+            </div>
+            <button
+              onClick={openCreate}
+              className="flex items-center justify-center gap-2 w-full px-4 py-2 rounded-lg text-sm font-semibold border bg-white transition-colors"
+              style={{ borderColor: '#92590a', color: '#92590a' }}
+              onMouseEnter={e => { e.currentTarget.style.color = '#4f3c04' }}
+              onMouseLeave={e => { e.currentTarget.style.color = '#92590a' }}
+            >
+              <Plus size={16} /> Agregar Material
+            </button>
+          </div>
         </div>
 
-        {/* Filtros + Tabla */}
-        <div className="bg-white px-6 py-5 space-y-4">
+        {/* Contenido */}
+        <div className="bg-white px-4 md:px-6 py-5 space-y-4">
 
-          {/* Buscador */}
-          <div className="flex items-center gap-3">
-            <div className="flex items-center flex-1 rounded-xl overflow-hidden" style={{ border: '1.5px solid #e8d5a3' }}>
+          {/* Buscador + Contador */}
+          <div className="flex flex-col md:flex-row items-stretch gap-3">
+
+            {/* Móvil */}
+            <div className="flex items-center flex-1 md:hidden rounded-xl px-3 py-1.5 gap-2"
+              style={{ border: '1.5px solid #e8d5a3', backgroundColor: 'white' }}>
+              <input
+                type="text" value={search}
+                onChange={e => setSearch(e.target.value)}
+                placeholder="Buscar material..."
+                className="flex-1 text-sm outline-none bg-transparent text-gray-700 placeholder-gray-400"
+              />
+              {search && (
+                <button onClick={() => setSearch('')} className="shrink-0 p-0.5 rounded-full" style={{ color: '#999' }}>
+                  <X size={14} />
+                </button>
+              )}
+              <button
+                className="shrink-0 w-8 h-8 rounded-full flex items-center justify-center transition-colors"
+                style={{ backgroundColor: '#b8860b' }}
+                onMouseEnter={e => { e.currentTarget.style.backgroundColor = '#b8941a' }}
+                onMouseLeave={e => { e.currentTarget.style.backgroundColor = '#b8860b' }}
+              >
+                <Search size={15} className="text-white" />
+              </button>
+            </div>
+
+            {/* Desktop */}
+            <div className="hidden md:flex items-center flex-1 rounded-xl overflow-hidden"
+              style={{ border: '1.5px solid #e8d5a3' }}>
               <div className="flex items-center gap-2 flex-1 px-3 py-2">
-                <Search size={16} style={{ color: '#b8860b' }} className="shrink-0" />
+                <Search size={18} style={{ color: '#b8860b' }} className="shrink-0" />
                 <input
                   type="text" value={search}
                   onChange={e => setSearch(e.target.value)}
                   placeholder="Buscar material por nombre..."
                   className="flex-1 text-sm outline-none bg-transparent text-gray-700 placeholder-gray-400"
                 />
+                {search && (
+                  <button
+                    onClick={() => setSearch('')}
+                    className="p-0.5 rounded-full transition-colors shrink-0"
+                    style={{ color: '#b8860b' }}
+                    onMouseEnter={e => { e.currentTarget.style.backgroundColor = '#f5e6cc' }}
+                    onMouseLeave={e => { e.currentTarget.style.backgroundColor = 'transparent' }}
+                  >
+                    <X size={16} />
+                  </button>
+                )}
               </div>
               <button
                 className="px-4 py-2 text-sm font-semibold text-white shrink-0 transition-colors"
                 style={{ backgroundColor: '#b8860b' }}
-                onMouseEnter={e => { e.currentTarget.style.backgroundColor = '#92590a' }}
+                onMouseEnter={e => { e.currentTarget.style.backgroundColor = '#d99c07' }}
                 onMouseLeave={e => { e.currentTarget.style.backgroundColor = '#b8860b' }}
               >
                 Buscar
               </button>
             </div>
+
+            {/* Contador */}
             <div
-              className="flex items-center gap-2 px-8 py-2 rounded-xl text-sm font-semibold shrink-0"
-              style={{ backgroundColor: '#166534', color: 'white' }}
+              className="flex items-center justify-center gap-2 px-6 py-2 rounded-xl text-sm font-semibold shrink-0"
+              style={{ backgroundColor: '#166534', color: 'white', border: '1px solid #5cb85c' }}
             >
               <Package size={15} />
               {filtered.length} material{filtered.length !== 1 ? 'es' : ''}
             </div>
           </div>
 
-          {/* Tabla */}
-          <div className="rounded-xl overflow-hidden border" style={{ borderColor: '#cfcfcf' }}>
+          {/* Vista MÓVIL: cards */}
+          <div className="md:hidden space-y-3">
+            {loading ? (
+              <p className="text-center py-10 text-gray-400 text-sm">Cargando...</p>
+            ) : paginated.length === 0 ? (
+              <p className="text-center py-10 text-gray-400 text-sm">No se encontraron materiales</p>
+            ) : (
+              <>
+                {paginated.map(m => (
+                  <MaterialCard
+                    key={m.id}
+                    material={m}
+                    onEdit={openEdit}
+                    onDelete={confirmDelete}
+                  />
+                ))}
+                {totalPages > 1 && (
+                  <Pagination currentPage={currentPage} totalPages={totalPages} setCurrentPage={setCurrentPage} />
+                )}
+              </>
+            )}
+          </div>
+
+          {/* Vista DESKTOP: tabla */}
+          <div className="hidden md:block rounded-xl overflow-hidden border" style={{ borderColor: '#cfcfcf' }}>
             <table className="w-full text-sm">
               <thead>
                 <tr
@@ -151,10 +235,7 @@ function Materials() {
                     onMouseEnter={e => (e.currentTarget.style.backgroundColor = '#e6e6e6')}
                     onMouseLeave={e => (e.currentTarget.style.backgroundColor = i % 2 === 0 ? '#ffffff' : '#f5f5f5')}
                   >
-                    {/* ID */}
                     <td className="px-4 py-3 font-semibold text-xs" style={{ color: '#92590a' }}>#{m.id}</td>
-
-                    {/* Imagen */}
                     <td className="px-4 py-3">
                       <div className="flex justify-center">
                         {m.imagen_url
@@ -168,16 +249,10 @@ function Materials() {
                         }
                       </div>
                     </td>
-
-                    {/* Nombre */}
                     <td className="px-4 py-3 font-medium text-gray-800">{m.nombre}</td>
-
-                    {/* Descripción */}
                     <td className="px-4 py-3 text-gray-500 text-xs max-w-xs truncate">
                       {m.descripcion || <span className="text-gray-300">—</span>}
                     </td>
-
-                    {/* Sostenible */}
                     <td className="px-4 py-3 text-center">
                       <span
                         className="px-2.5 py-0.5 rounded-full text-xs font-semibold"
@@ -189,19 +264,17 @@ function Materials() {
                         {m.es_sostenible ? 'Sí' : 'No'}
                       </span>
                     </td>
-
-                    {/* Acciones */}
                     <td className="px-4 py-3">
                       <div className="flex items-center justify-center gap-1.5">
                         <button onClick={() => openEdit(m)}
-                          className="p-1.5 rounded-lg transition-colors" style={{ color: '#0eb505' }}
+                          className="p-1.5 rounded-lg transition-colors" style={{ color: '#166534' }}
                           onMouseEnter={e => { e.currentTarget.style.backgroundColor = '#abebae' }}
                           onMouseLeave={e => { e.currentTarget.style.backgroundColor = 'transparent' }}
                           title="Editar">
                           <Pencil size={15} />
                         </button>
                         <button onClick={() => confirmDelete(m)}
-                          className="p-1.5 rounded-lg transition-colors" style={{ color: '#ef4444' }}
+                          className="p-1.5 rounded-lg transition-colors" style={{ color: '#f20707' }}
                           onMouseEnter={e => { e.currentTarget.style.backgroundColor = '#fef2f2' }}
                           onMouseLeave={e => { e.currentTarget.style.backgroundColor = 'transparent' }}
                           title="Eliminar">
@@ -213,15 +286,15 @@ function Materials() {
                 ))}
               </tbody>
             </table>
-
             {totalPages > 1 && (
               <Pagination currentPage={currentPage} totalPages={totalPages} setCurrentPage={setCurrentPage} />
             )}
           </div>
+
         </div>
       </div>
 
-      {/* ── Modal crear/editar ── */}
+      {/* Modal crear/editar */}
       {modalOpen && (
         <div
           className="fixed inset-0 z-50 flex items-start sm:items-center justify-center overflow-y-auto py-4"
@@ -230,7 +303,6 @@ function Materials() {
         >
           <div className="w-full max-w-xl mx-4 rounded-2xl shadow-2xl bg-white overflow-hidden">
 
-            {/* Cabecera */}
             <div
               className="flex items-center justify-between px-6 py-4"
               style={{ background: 'linear-gradient(135deg, #d7ad44 0%, #b8941a 10%)' }}
@@ -259,13 +331,11 @@ function Materials() {
               </button>
             </div>
 
-            {/* Cuerpo */}
             <div className="p-6 space-y-4">
               {errors.general && (
                 <p className="text-xs text-red-500 bg-red-50 px-3 py-2 rounded-lg">{errors.general}</p>
               )}
 
-              {/* Nombre */}
               <div className="space-y-1">
                 <label className="block text-xs font-semibold uppercase tracking-wide" style={{ color: '#7e4400' }}>
                   Nombre *
@@ -282,7 +352,6 @@ function Materials() {
                 {errors.nombre && <p className="text-xs text-red-500 mt-0.5">{errors.nombre}</p>}
               </div>
 
-              {/* Descripción */}
               <div className="space-y-1">
                 <label className="block text-xs font-semibold uppercase tracking-wide" style={{ color: '#7e4400' }}>
                   Descripción
@@ -291,13 +360,12 @@ function Materials() {
                 <textarea
                   name="descripcion" value={form.descripcion}
                   onChange={handleFormChange} rows={3}
-                  placeholder="Ej: Fibra natural obtenida del junco peruano, ideal para tejidos artesanales resistentes..."
+                  placeholder="Ej: Fibra natural obtenida del junco peruano..."
                   className="w-full px-3 py-2 text-sm border rounded-xl outline-none transition-colors focus:ring-2 focus:ring-amber-300 hover:border-amber-300 resize-none"
                   style={{ borderColor: '#e5e7eb' }}
                 />
               </div>
 
-              {/* Sostenible */}
               <div
                 className="flex items-start gap-3 p-3 rounded-xl"
                 style={{ backgroundColor: '#f5f5f5', border: '1px solid #cfcfcf' }}
@@ -314,7 +382,6 @@ function Materials() {
                 </div>
               </div>
 
-              {/* Imagen */}
               <div className="space-y-2">
                 <label className="block text-xs font-semibold uppercase tracking-wide" style={{ color: '#7e4400' }}>
                   Imagen *
@@ -340,7 +407,6 @@ function Materials() {
               </div>
             </div>
 
-            {/* Footer */}
             <div
               className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 px-6 py-4 border-t"
               style={{ borderColor: '#e8d5a3', backgroundColor: '#ffffff' }}
@@ -348,22 +414,22 @@ function Materials() {
               <p className="text-xs text-gray-400">
                 Los campos con <span className="text-red-400 font-bold">*</span> son obligatorios
               </p>
-              <div className="flex gap-3 justify-end">
+              <div className="flex gap-3 justify-center md:justify-end">
                 <button
                   onClick={closeModal} disabled={saving}
                   className="px-5 py-2 rounded-xl text-sm font-semibold transition-colors whitespace-nowrap"
-                  style={{ backgroundColor: '#b80e02', color: 'white' }}
-                  onMouseEnter={e => { e.currentTarget.style.backgroundColor = '#d92b1f' }}
-                  onMouseLeave={e => { e.currentTarget.style.backgroundColor = '#b80e02' }}
+                  style={{ color: '#f7f5f5', backgroundColor: '#f20707', border: '1px solid #f87171' }}
+                  onMouseEnter={e => { e.currentTarget.style.backgroundColor = '#e30707' }}
+                  onMouseLeave={e => { e.currentTarget.style.backgroundColor = '#f20707' }}
                 >
                   Cancelar
                 </button>
                 <button
                   onClick={handleSave} disabled={saving}
                   className="flex items-center gap-2 px-5 py-2 rounded-xl text-sm font-semibold text-white disabled:opacity-60 transition-colors whitespace-nowrap"
-                  style={{ backgroundColor: saving ? '#aaa' : '#166534' }}
-                  onMouseEnter={e => { if (!saving) e.currentTarget.style.backgroundColor = '#14532d' }}
-                  onMouseLeave={e => { if (!saving) e.currentTarget.style.backgroundColor = '#166534' }}
+                  style={{ color: '#f7f5f5', backgroundColor: '#166534', border: '1px solid #5cb85c' }}
+                  onMouseEnter={e => { if (!saving) e.currentTarget.style.backgroundColor = '#087508' }}
+                  onMouseLeave={e => { if (!saving) e.currentTarget.style.backgroundColor = '#057305' }}
                 >
                   {saving
                     ? <><Loader2 size={14} className="animate-spin" /> Guardando...</>
@@ -376,7 +442,7 @@ function Materials() {
         </div>
       )}
 
-      {/* ── Modal eliminar ── */}
+      {/* Modal eliminar */}
       {deleteTarget && (
         <div
           className="fixed inset-0 z-50 flex items-center justify-center"
@@ -396,19 +462,19 @@ function Materials() {
               <div className="flex gap-3 pt-2">
                 <button
                   onClick={cancelDelete} disabled={deleting}
-                  className="flex-1 px-4 py-2 rounded-xl text-sm font-semibold border transition-colors"
+                  className="flex-1 flex items-center justify-center gap-1.5 px-4 py-2 rounded-xl text-sm font-semibold border transition-colors"
                   style={{ borderColor: '#e5e7eb', color: '#6b7280' }}
                   onMouseEnter={e => { e.currentTarget.style.backgroundColor = '#f9fafb' }}
                   onMouseLeave={e => { e.currentTarget.style.backgroundColor = 'transparent' }}
                 >
-                  <X size={14} className="inline mr-1" /> Cancelar
+                  <X size={14} /> Cancelar
                 </button>
                 <button
                   onClick={executeDelete} disabled={deleting}
                   className="flex-1 flex items-center justify-center gap-2 px-4 py-2 rounded-xl text-sm font-semibold text-white disabled:opacity-60 transition-colors"
-                  style={{ backgroundColor: deleting ? '#ccc' : '#ef4444' }}
-                  onMouseEnter={e => { if (!deleting) e.currentTarget.style.backgroundColor = '#dc2626' }}
-                  onMouseLeave={e => { if (!deleting) e.currentTarget.style.backgroundColor = '#ef4444' }}
+                  style={{ backgroundColor: deleting ? '#ccc' : '#f20707', border: '1px solid #f87171' }}
+                  onMouseEnter={e => { if (!deleting) e.currentTarget.style.backgroundColor = '#e30707' }}
+                  onMouseLeave={e => { if (!deleting) e.currentTarget.style.backgroundColor = '#f20707' }}
                 >
                   {deleting
                     ? <><Loader2 size={14} className="animate-spin" /> Eliminando...</>
