@@ -1,174 +1,233 @@
-/* --- Variables de Color para fácil personalización --- */
 :root {
-  --footer-bg: #C8860D;
-  --footer-title-color: #452A04;
-  --footer-text-light: #f8f9fa;
+  --footer-primary: #f5c842;
+  --footer-primary-dark: #c9960e;
+  --footer-text: rgba(255, 255, 255, 0.88);
   --footer-text-white: #ffffff;
-  --footer-divider-color: rgba(255, 255, 255, 0.2);
-  --footer-social-border: rgba(255, 255, 255, 0.3);
-  --footer-social-bg-hover: rgba(255, 255, 255, 0.15);
+  --footer-divider: rgba(255, 255, 255, 0.2);
+  --footer-social-border: rgba(255, 255, 255, 0.25);
+  --footer-social-hover: rgba(255, 255, 255, 0.15);
 }
 
-/* --- Estilo General del Footer --- */
 .biofibras-footer {
-  background-color: var(--footer-bg);
-  color: var(--footer-text-light);
-  padding: 60px 0 25px;
-  margin-top: auto; /* Empuja el footer hacia abajo en la página */
-  font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  background: linear-gradient(135deg, #c9960e 0%, #92590a 100%);
+  color: var(--footer-text);
+  padding: 64px 0 28px;
+  font-family: 'Raleway', sans-serif;
 }
 
-/* --- Sección de la Marca --- */
 .footer-brand-section {
   text-align: left;
 }
-.footer-brand-title {
-  font-size: 2.2rem;
-  font-weight: 700;
-  color: var(--footer-title-color);
-  font-family: var(--font-body), sans-serif; font-size: 32px; font-weight: 600; color: #2c5530; letter-spacing: -0.5px !important;
-  margin-bottom: 1rem;
-}
-.footer-brand-description {
-  font-size: 0.95rem;
-  line-height: 1.7;
-  opacity: 0.95;
-  margin-bottom: 1.5rem;
-  max-width: 380px;
+
+.footer-logo-area {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 1.25rem;
 }
 
-/* --- Contenedor de Enlaces --- */
+.footer-brand-title {
+  font-family: 'Raleway', sans-serif;
+  font-size: 26px;
+  font-weight: 700;
+  color: #ffffff;
+  letter-spacing: 2px;
+  margin: 0;
+  line-height: 1;
+}
+
+.footer-brand-tagline {
+  font-size: 11px;
+  font-weight: 400;
+  color: rgba(255, 255, 255, 0.7);
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  margin-top: 4px;
+}
+
+.footer-brand-description {
+  font-size: 0.9rem;
+  line-height: 1.8;
+  color: var(--footer-text);
+  margin-bottom: 1.75rem;
+  max-width: 340px;
+}
+
+.social-media-links {
+  display: flex;
+  gap: 10px;
+}
+
+.social-link {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border: 1px solid var(--footer-social-border);
+  border-radius: 50%;
+  color: var(--footer-text);
+  font-size: 1.1rem;
+  text-decoration: none;
+  transition: all 0.3s ease;
+}
+
+.social-link:hover {
+  background-color: var(--footer-social-hover);
+  border-color: #ffffff;
+  color: #ffffff;
+  transform: translateY(-3px);
+}
+
 .footer-links-wrapper {
   display: flex;
-  justify-content: space-between; 
+  justify-content: space-between;
   width: 100%;
-  gap: 20px; 
-}
-.footer-column {
-  flex: 1; 
-  min-width: 180px; 
+  gap: 20px;
 }
 
-/* --- Títulos de Sección y Listas --- */
+.footer-column {
+  flex: 1;
+  min-width: 160px;
+}
+
 .footer-section-title {
-  font-size: 1rem;
+  font-family: 'Raleway', sans-serif;
+  font-size: 13px;
   font-weight: 700;
-  color: var(--footer-title-color);
+  color: var(--footer-text-white);
   margin-bottom: 1.5rem;
   text-transform: uppercase;
-  letter-spacing: 0.8px;
-  font-family: var(--font-body), sans-serif; font-size: 18px;  color: #2c5530; letter-spacing: -0.5px !important;
+  letter-spacing: 2px;
+  position: relative;
+  padding-bottom: 12px;
 }
+
+.footer-section-title::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 28px;
+  height: 2px;
+  background: rgba(255, 255, 255, 0.5);
+  border-radius: 2px;
+}
+
 .footer-links-list {
   list-style: none;
   padding: 0;
   margin: 0;
 }
+
 .footer-links-list li {
-  margin-bottom: 1rem;
+  margin-bottom: 0.5rem;
 }
 
-/* --- Estilo de Enlaces --- */
 .footer-link {
-  color: var(--footer-text-light);
+  color: var(--footer-text);
   text-decoration: none;
-  font-size: 0.9rem;
-  transition: color 0.3s ease, padding-left 0.3s ease;
-}
-.footer-link:hover {
-  color: var(--footer-text-white);
-  padding-left: 8px; /* Sutil efecto al pasar el mouse */
+  font-size: 0.88rem;
+  transition: all 0.25s ease;
+  display: inline-flex;
+  align-items: center;
 }
 
-/* --- Estilos de Contacto --- */
+.footer-link:hover {
+  color: #ffffff;
+  padding-left: 6px;
+}
+
+.footer-link--complaint {
+  color: #ffffff !important;
+  font-weight: 600;
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  padding: 6px 12px !important;
+  border-radius: 6px;
+  font-size: 0.82rem;
+  transition: all 0.3s ease;
+  margin-top: 4px;
+}
+
+.footer-link--complaint:hover {
+  background: rgba(255, 255, 255, 0.15);
+  border-color: #ffffff;
+  padding-left: 12px !important;
+  color: #ffffff !important;
+}
+
 .contact-item {
   display: flex;
   align-items: flex-start;
-  gap: 12px;
+  gap: 10px;
+  margin-bottom: 0.5rem;
 }
+
 .contact-icon {
-  font-size: 1rem;
+  font-size: 0.9rem;
   margin-top: 3px;
-  color: var(--footer-text-white);
+  color: rgba(255, 255, 255, 0.7);
+  flex-shrink: 0;
 }
 
-/* --- Íconos de Redes Sociales --- */
-.social-media-links {
-  display: flex;
-  gap: 12px;
-}
-.social-link {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 42px;
-  height: 42px;
-  border: 1px solid var(--footer-social-border);
-  border-radius: 50%;
-  color: var(--footer-text-white);
-  font-size: 1.2rem;
-  text-decoration: none;
-  transition: background-color 0.3s ease, transform 0.3s ease;
-}
-.social-link:hover {
-  background-color: var(--footer-social-bg-hover);
-  transform: translateY(-3px); /* Efecto de elevación */
-}
-
-/* --- Divisor y Copyright --- */
 .footer-divider {
   border: none;
   height: 1px;
-  background: var(--footer-divider-color);
-  margin: 40px 0 25px;
+  background: var(--footer-divider);
+  margin: 48px 0 24px;
 }
+
+.footer-bottom {
+  display: flex;
+  align-items: center;
+}
+
+.footer-legal-links {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.footer-legal-link {
+  color: var(--footer-text);
+  text-decoration: none;
+  font-size: 0.82rem;
+  transition: color 0.25s ease;
+}
+
+.footer-legal-link:hover {
+  color: #ffffff;
+}
+
+.footer-legal-separator {
+  color: rgba(255, 255, 255, 0.3);
+  font-size: 1rem;
+}
+
 .copyright-text {
   margin: 0;
-  font-size: 0.85rem;
-  opacity: 0.8;
+  font-size: 0.82rem;
+  color: var(--footer-text);
+  opacity: 0.7;
 }
 
-/* --- Media Queries para Responsividad --- */
-
-/* Tablets (menor a 992px) */
 @media (max-width: 991.98px) {
-  .footer-brand-section, .footer-column {
-    text-align: center; /* Centra todo en tablet */
-  }
-  .footer-brand-description {
-    margin-left: auto;
-    margin-right: auto;
-  }
-  .social-media-links {
-    justify-content: center; /* Centra los íconos sociales */
-  }
-  .footer-links-wrapper {
-    flex-wrap: wrap; /* Permite que las columnas pasen a la siguiente línea */
-    justify-content: center; /* Centra los grupos de columnas */
-    gap: 30px 20px; /* Espacio vertical y horizontal */
-  }
-  .footer-column {
-    min-width: 220px; /* Más ancho para que quepan 2 por fila */
-    flex-basis: 45%; /* Ocupa casi la mitad del espacio disponible */
-  }
+  .footer-brand-section { text-align: center; }
+  .footer-logo-area { align-items: center; }
+  .footer-brand-description { margin: 0 auto 1.75rem; }
+  .social-media-links { justify-content: center; }
+  .footer-links-wrapper { flex-wrap: wrap; justify-content: center; gap: 36px 24px; }
+  .footer-column { min-width: 200px; flex-basis: 44%; text-align: center; }
+  .footer-section-title::after { left: 50%; transform: translateX(-50%); }
+  .footer-link:hover { padding-left: 0; }
+  .contact-item { justify-content: center; }
+  .footer-legal-links { justify-content: center; margin-bottom: 8px; }
+  .footer-bottom .text-md-end { text-align: center !important; }
 }
 
-/* Teléfonos (menor a 767.98px) */
 @media (max-width: 767.98px) {
-  .biofibras-footer {
-    padding-top: 40px;
-    text-align: center; /* Asegura centrado en móviles */
-  }
-  .footer-links-wrapper {
-    flex-direction: column; /* Apila las columnas de enlaces */
-    align-items: center; /* Centra las columnas apiladas */
-    gap: 35px;
-  }
-  .footer-column {
-    width: 100%;
-    max-width: 300px;
-  }
-  .contact-item {
-    justify-content: center; /* Centra los items de contacto dentro de su contenedor */
-  }
+  .biofibras-footer { padding-top: 48px; }
+  .footer-links-wrapper { flex-direction: column; align-items: center; gap: 32px; }
+  .footer-column { width: 100%; max-width: 280px; }
+  .footer-link--complaint { display: inline-flex; }
 }
