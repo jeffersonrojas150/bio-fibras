@@ -6,6 +6,7 @@ import { FaShoppingCart, FaArrowRight } from 'react-icons/fa';
 import { useCart } from '../../context/cartContext';
 import { useNavigate, Link } from 'react-router-dom';
 import apiClient from '../../api';
+import { useOrders } from '../../context/ordersContext';
 import OrderSummary from './OrderSummary';
 import PaymentMethods from './PaymentMethods';
 import AddressForm from './AddressForm';
@@ -13,6 +14,7 @@ import './Checkout.css';
 
 const Checkout = () => {
   const { cartItems, getTotalPrice, clearCartLocal } = useCart();
+  const { invalidateOrders } = useOrders();
   const navigate = useNavigate();
 
   const [currentStep, setCurrentStep] = useState(1);
@@ -28,7 +30,6 @@ const Checkout = () => {
   const shipping = 0;
   const finalTotal = totalPrice;
 
-  // Efecto para obtener las direcciones existentes del usuario
   useEffect(() => {
     const getAddresses = async () => {
       setLoadingAddresses(true);
@@ -51,14 +52,11 @@ const Checkout = () => {
     getAddresses();
   }, []);
 
-  // Función que se pasará a AddressForm.jsx
   const handleAddressCreated = (newAddressId) => {
     setSelectedAddressId(newAddressId);
-    // Recargamos la lista de direcciones para que incluya la nueva
     apiClient.get('/direcciones/').then(response => {
       const userAddresses = response.data.results || response.data;
       setAddresses(userAddresses);
-      // Avanzamos al siguiente paso
       handleNextStep(newAddressId);
     });
   };
@@ -95,6 +93,9 @@ const Checkout = () => {
 
       clearCartLocal();
 
+      // Invalidar caché para que MyOrders recargue en la próxima visita
+      invalidateOrders();
+
       navigate('/order-confirmation', { state: { order: newOrder } });
 
     } catch (err) {
@@ -106,7 +107,6 @@ const Checkout = () => {
     }
   };
 
-  // Lógica de renderizado condicional para el paso de dirección
   const renderAddressStep = () => {
     if (loadingAddresses) {
       return <div className="text-center p-5"><Spinner animation="border" /> <p>Cargando datos...</p></div>;
@@ -190,11 +190,7 @@ const Checkout = () => {
               <p className="text-muted mb-4">
                 Agrega algunos productos antes de proceder al checkout
               </p>
-              <Button
-                variant="primary"
-                onClick={() => navigate('/productos')}
-                className="btn-fiofibras"
-              >
+              <Button variant="primary" onClick={() => navigate('/productos')} className="btn-fiofibras">
                 Ver Productos
               </Button>
             </div>

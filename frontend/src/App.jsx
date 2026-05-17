@@ -10,12 +10,14 @@ import Categories from "./pages/Categories/Categories";
 import Contact from "./pages/Contact/Contact";
 import { LoginForm, RegisterForm, ForgotPasswordForm, ResetPasswordForm } from "./components/auth";
 
+
 import Header from "./components/common/Layout/Header";
 import Footer from "./components/common/Layout/Footer";
 
 import { useAuth } from "./context/authContext";
 
 import { CartProvider } from "./context/cartContext";
+import { OrdersProvider } from "./context/ordersContext";
 import Cart from "./components/Cart/Cart";
 import Checkout from "./components/Checkout/Checkout";
 import OrderConfirmation from "./pages/Orders/OrderConfirmation";
@@ -72,61 +74,58 @@ const PrivateRoute = ({ children }) => {
               <FavoritesProvider>
                 <CartProvider>
                   <OrderProvider>
-                    <Router>
-                      <ScrollToTop />
-                      <Header />
+                    <OrdersProvider>
+                      <Router>
+                        <ScrollToTop />
+                        <Header />
+                        <main id="page-content">
+                          <Routes>
+                            <Route path="/" element={<Home />} />
+                            <Route path="/productos" element={<Products />} />
+                            <Route path="/producto/:slug" element={<ProductDetail />} />
+                            <Route path="/categorias" element={<Categories />} />
+                            <Route path="/productos/categoria/:categorySlug" element={<Products />} />
+                            <Route path="/contacto" element={<Contact />} />
+                            <Route path="/login" element={<LoginForm />} />
+                            <Route path="/registro" element={<RegisterForm />} />
+                            <Route
+                              path="/recuperar-password"
+                              element={<ForgotPasswordForm />}
+                            />
+                            <Route
+                              path="/reset-password/:uid/:token"
+                              element={<ResetPasswordForm />}
+                            />
+                            <Route path="/checkout" element={<PrivateRoute><Checkout /></PrivateRoute>} />
+                            <Route
+                              path="/order-confirmation"
+                              element={<OrderConfirmation />}
+                            />
+                            {/* ← AGREGAR ESTAS 3 RUTAS AQUÍ */}
+                            <Route path="/pago/success" element={<PaymentSuccess />} />
+                            <Route path="/pago/failure" element={<PaymentFailure />} />
+                            <Route path="/pago/pending" element={<PaymentPending />} />
+                            {/* Rutas Legales */}
+                            <Route path="/terminos-y-condiciones" element={<TermsConditions />} />
+                            <Route path="/politica-de-privacidad" element={<PrivacyPolicy />} />
 
-                      <main id="page-content">
-                        <Routes>
-                          <Route path="/" element={<Home />} />
-                          <Route path="/productos" element={<Products />} />
-                          <Route path="/producto/:slug" element={<ProductDetail />} />
-                          <Route path="/categorias" element={<Categories />} />
+                            <Route path="/mis-ordenes" element={<PrivateRoute><MyOrders /></PrivateRoute>} />
+                            <Route path="/ordenes/:orderId" element={<PrivateRoute><OrderDetail /></PrivateRoute>} />
+                            <Route path="/favoritos" element={<PrivateRoute><Favorites /></PrivateRoute>} />
+                            <Route path="/about" element={<About />} />
+                            <Route path="/perfil" element={<PrivateRoute><ProfilePage /></PrivateRoute>}>
+                              <Route index element={<Navigate to="datos" replace />} />
+                              <Route path="datos" element={<PersonalData />} />
+                              <Route path="direcciones" element={<AddressManagement />} />
+                            </Route>
+                          </Routes>
+                        </main>
 
-
-
-                          <Route path="/productos/categoria/:categorySlug" element={<Products />} />
-                          <Route path="/contacto" element={<Contact />} />
-
-                          <Route path="/login" element={<LoginForm />} />
-                          <Route path="/registro" element={<RegisterForm />} />
-                          <Route
-                            path="/recuperar-password"
-                            element={<ForgotPasswordForm />}
-                          />
-                          <Route
-                            path="/reset-password/:uid/:token"
-                            element={<ResetPasswordForm />}
-                          />
-                          <Route path="/checkout" element={<PrivateRoute><Checkout /></PrivateRoute>} />
-                          <Route
-                            path="/order-confirmation"
-                            element={<OrderConfirmation />}
-                          />
-                          {/* ← AGREGAR ESTAS 3 RUTAS AQUÍ */}
-                          <Route path="/pago/success" element={<PaymentSuccess />} />
-                          <Route path="/pago/failure" element={<PaymentFailure />} />
-                          <Route path="/pago/pending" element={<PaymentPending />} />
-                          {/* Rutas Legales */}
-                          <Route path="/terminos-y-condiciones" element={<TermsConditions />} />
-                          <Route path="/politica-de-privacidad" element={<PrivacyPolicy />} />
-
-                          <Route path="/mis-ordenes" element={<PrivateRoute><MyOrders /></PrivateRoute>} />
-                          <Route path="/ordenes/:orderId" element={<PrivateRoute><OrderDetail /></PrivateRoute>} />
-                          <Route path="/favoritos" element={<PrivateRoute><Favorites /></PrivateRoute>} />
-                          <Route path="/about" element={<About />} />
-                          <Route path="/perfil" element={<PrivateRoute><ProfilePage /></PrivateRoute>}>
-                            <Route index element={<Navigate to="datos" replace />} />
-                            <Route path="datos" element={<PersonalData />} />
-                            <Route path="direcciones" element={<AddressManagement />} />
-                          </Route>
-                        </Routes>
-                      </main>
-
-                      <Footer />
-                      <Cart />
-                      <Toaster position="top-center" reverseOrder={false} />
-                    </Router>
+                        <Footer />
+                        <Cart />
+                        <Toaster position="top-center" reverseOrder={false} />
+                      </Router>
+                    </OrdersProvider>
                   </OrderProvider>
                 </CartProvider>
               </FavoritesProvider>
