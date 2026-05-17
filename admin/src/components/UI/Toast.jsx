@@ -1,5 +1,4 @@
 // src/components/UI/Toast.jsx
-// Uso: <Toast message="Producto creado" type="success" onClose={() => setToast(null)} />
 import { useEffect } from 'react'
 import { CheckCircle, XCircle, X } from 'lucide-react'
 

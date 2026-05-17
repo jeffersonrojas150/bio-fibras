@@ -66,7 +66,7 @@ function ProductFilters({ search, onSearchChange, onRefresh, count }) {
 
       {/* Contador */}
       <div
-        className="flex items-center justify-center gap-2 px-6 py-2 rounded-xl text-sm font-semibold shrink-0"
+        className="flex items-center justify-center gap-2 px-8 py-2 rounded-xl text-sm font-semibold shrink-0"
         style={{ backgroundColor: '#166534', color: 'white', border: '1px solid #5cb85c' }}
       >
         <Package size={15} />

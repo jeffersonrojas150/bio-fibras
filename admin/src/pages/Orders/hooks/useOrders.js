@@ -5,10 +5,10 @@ import { getOrders } from '../../../api/orders'
 const ITEMS_PER_PAGE = 10
 
 export function useOrders() {
-  const [orders, setOrders]       = useState([])
-  const [filtered, setFiltered]   = useState([])
-  const [search, setSearch]       = useState('')
-  const [loading, setLoading]     = useState(true)
+  const [orders,   setOrders]   = useState([])
+  const [filtered, setFiltered] = useState([])
+  const [search,   setSearch]   = useState('')
+  const [loading,  setLoading]  = useState(true)
   const [currentPage, setCurrentPage] = useState(1)
 
   const fetchOrders = useCallback(async () => {
@@ -53,10 +53,21 @@ export function useOrders() {
     return pages
   }
 
+  const getPageNumbersMobile = () => {
+    const maxVisible = 3
+    let start = Math.max(1, currentPage - 1)
+    let end   = Math.min(totalPages, start + maxVisible - 1)
+    if (end - start < maxVisible - 1) start = Math.max(1, end - maxVisible + 1)
+    const pages = []
+    for (let i = start; i <= end; i++) pages.push(i)
+    return pages
+  }
+
   return {
     filtered, paginated, loading,
     search, setSearch,
-    currentPage, setCurrentPage, totalPages, getPageNumbers,
+    currentPage, setCurrentPage, totalPages,
+    getPageNumbers, getPageNumbersMobile,
     fetchOrders,
   }
 }
