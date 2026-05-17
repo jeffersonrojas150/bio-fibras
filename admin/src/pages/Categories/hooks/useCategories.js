@@ -1,22 +1,28 @@
 // src/pages/Categories/hooks/useCategories.js
 import { useEffect, useState, useRef } from 'react'
-import { getCategories, createCategory, updateCategory, deleteCategory } from '../../../api/categories'
+import { createCategory, updateCategory, deleteCategory } from '../../../api/categories'
+import { useAdminStore } from '../../../store/useAdminStore'
 
 const ITEMS_PER_PAGE = 10
 
 export function useCategories() {
-  const [categories, setCategories] = useState([])
-  const [filtered, setFiltered]     = useState([])
-  const [search, setSearch]         = useState('')
-  const [loading, setLoading]       = useState(true)
-  const [toast, setToast]           = useState(null)
+  const {
+    categories,
+    refetchCategories,
+    removeCategory,
+  } = useAdminStore()
+
+  const [filtered, setFiltered]       = useState([])
+  const [search, setSearch]           = useState('')
+  const [loading] = useState(false)
+  const [toast, setToast]             = useState(null)
   const [currentPage, setCurrentPage] = useState(1)
 
   // Modal crear/editar
   const [modalOpen, setModalOpen]       = useState(false)
   const [selected, setSelected]         = useState(null)
   const [nombre, setNombre]             = useState('')
-  const [estaActiva, setEstaActiva]     = useState(true)   
+  const [estaActiva, setEstaActiva]     = useState(true)
   const [imageFile, setImageFile]       = useState(null)
   const [imagePreview, setImagePreview] = useState(null)
   const [saving, setSaving]             = useState(false)
@@ -28,27 +34,12 @@ export function useCategories() {
 
   const fileInputRef = useRef(null)
 
-  useEffect(() => { fetchCategories() }, [])
-
+  // Sincroniza filtered cuando cambia el store o el search
   useEffect(() => {
     const q = search.toLowerCase()
-    setFiltered(categories.filter(c => c.nombre.toLowerCase().includes(q)))
+    setFiltered(categories.filter(c => c.nombre?.toLowerCase().includes(q)))
     setCurrentPage(1)
   }, [search, categories])
-
-  async function fetchCategories() {
-    setLoading(true)
-    try {
-      const res  = await getCategories()
-      const data = res.data.results ?? res.data
-      setCategories(data)
-      setFiltered(data)
-    } catch (e) {
-      console.error(e)
-    } finally {
-      setLoading(false)
-    }
-  }
 
   // Paginación
   const totalPages = Math.max(1, Math.ceil(filtered.length / ITEMS_PER_PAGE))
@@ -62,7 +53,7 @@ export function useCategories() {
 
   function openEdit(c) {
     setSelected(c); setNombre(c.nombre)
-    setEstaActiva(c.activo ?? true)        
+    setEstaActiva(c.activo ?? true)
     setImageFile(null)
     setImagePreview(c.imagen_url ?? null); setErrors({}); setModalOpen(true)
   }
@@ -88,7 +79,7 @@ export function useCategories() {
     try {
       const fd = new FormData()
       fd.append('nombre', nombre.trim())
-      fd.append('activo', estaActiva)             
+      fd.append('activo', estaActiva)
       if (imageFile) fd.append('imagen', imageFile)
       const wasEditing = !!selected
       if (selected) {
@@ -97,7 +88,8 @@ export function useCategories() {
         await createCategory(fd)
       }
       closeModal()
-      await fetchCategories()
+      // Refresca categorías en el store
+      await refetchCategories()
       setToast({
         message: wasEditing ? 'Categoría actualizada exitosamente' : 'Categoría creada exitosamente',
         type: 'success',
@@ -124,8 +116,8 @@ export function useCategories() {
     setDeleting(true)
     try {
       await deleteCategory(deleteTarget.id)
+      removeCategory(deleteTarget.id)   // actualización local instantánea
       setDeleteTarget(null)
-      await fetchCategories()
       setToast({ message: 'Categoría eliminada exitosamente', type: 'success' })
     } catch (e) {
       console.error(e)
@@ -141,7 +133,7 @@ export function useCategories() {
     currentPage, setCurrentPage, totalPages,
     toast, setToast,
     modalOpen, selected, nombre, setNombre,
-    estaActiva, setEstaActiva,            
+    estaActiva, setEstaActiva,
     imageFile, imagePreview,
     saving, errors, setErrors,
     fileInputRef,

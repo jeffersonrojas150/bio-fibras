@@ -1,15 +1,20 @@
 // src/pages/Materials/hooks/useMaterials.js
-import { useEffect, useState, useRef } from 'react'
-import { getMaterials, createMaterial, updateMaterial, deleteMaterial } from '../../../api/materials'
+import { useState, useMemo, useRef } from 'react'
+import { createMaterial, updateMaterial, deleteMaterial } from '../../../api/materials'
+import { useAdminStore } from '../../../store/useAdminStore'
 
 const ITEMS_PER_PAGE = 10
 
 export function useMaterials() {
-  const [materials, setMaterials] = useState([])
-  const [filtered, setFiltered]   = useState([])
-  const [search, setSearch]       = useState('')
-  const [loading, setLoading]     = useState(true)
-  const [toast, setToast]         = useState(null)
+  const {
+    materials,
+    refetchMaterials,
+    removeMaterial,
+  } = useAdminStore()
+
+  const [search, setSearch]           = useState('')
+  const [loading] = useState(false)
+  const [toast, setToast]             = useState(null)
   const [currentPage, setCurrentPage] = useState(1)
 
   const [modalOpen, setModalOpen]       = useState(false)
@@ -25,27 +30,11 @@ export function useMaterials() {
 
   const fileInputRef = useRef(null)
 
-  useEffect(() => { fetchMaterials() }, [])
-
-  useEffect(() => {
+  // filtered derivado con useMemo — sin setState en useEffect
+  const filtered = useMemo(() => {
     const q = search.toLowerCase()
-    setFiltered(materials.filter(m => m.nombre.toLowerCase().includes(q)))
-    setCurrentPage(1)
+    return materials.filter(m => m.nombre?.toLowerCase().includes(q))
   }, [search, materials])
-
-  async function fetchMaterials() {
-    setLoading(true)
-    try {
-      const res  = await getMaterials()
-      const data = res.data.results ?? res.data
-      setMaterials(data)
-      setFiltered(data)
-    } catch (e) {
-      console.error(e)
-    } finally {
-      setLoading(false)
-    }
-  }
 
   const totalPages = Math.max(1, Math.ceil(filtered.length / ITEMS_PER_PAGE))
   const paginated  = filtered.slice((currentPage - 1) * ITEMS_PER_PAGE, currentPage * ITEMS_PER_PAGE)
@@ -121,7 +110,7 @@ export function useMaterials() {
         await createMaterial(fd)
       }
       closeModal()
-      await fetchMaterials()
+      await refetchMaterials()
       setToast({
         message: wasEditing ? 'Material actualizado exitosamente' : 'Material creado exitosamente',
         type: 'success',
@@ -147,8 +136,8 @@ export function useMaterials() {
     setDeleting(true)
     try {
       await deleteMaterial(deleteTarget.id)
+      removeMaterial(deleteTarget.id)   // actualización local instantánea
       setDeleteTarget(null)
-      await fetchMaterials()
       setToast({ message: 'Material eliminado exitosamente', type: 'success' })
     } catch (e) {
       console.error(e)
@@ -160,7 +149,8 @@ export function useMaterials() {
 
   return {
     paginated, filtered, loading,
-    search, setSearch,
+    search,
+    setSearch: (val) => { setSearch(val); setCurrentPage(1) },
     currentPage, setCurrentPage, totalPages,
     getPageNumbers, getPageNumbersMobile,
     toast, setToast,

@@ -1,8 +1,11 @@
 // src/pages/Orders/hooks/useOrderDetail.js
 import { useEffect, useState, useCallback } from 'react'
 import { getOrder, updateOrder } from '../../../api/orders'
+import { useAdminStore } from '../../../store/useAdminStore'
 
 export function useOrderDetail(id) {
+  const { refetchOrder } = useAdminStore()
+
   const [order,   setOrder]   = useState(null)
   const [loading, setLoading] = useState(true)
   const [saving,  setSaving]  = useState(false)
@@ -73,7 +76,9 @@ export function useOrderDetail(id) {
       showToast('Orden actualizada correctamente')
       clearFile(setPagFile, setPagPreview)
       clearFile(setEnvioFile, setEnvioPreview)
+      // Actualiza la orden local y en el store simultáneamente
       fetchOrder()
+      refetchOrder(id)
     } catch (e) {
       console.error(e)
       showToast('Error al guardar los cambios', 'error')

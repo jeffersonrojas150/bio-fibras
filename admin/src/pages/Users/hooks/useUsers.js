@@ -1,40 +1,25 @@
 // src/pages/Users/hooks/useUsers.js
-import { useState, useEffect, useCallback } from 'react'
-import { getUsers } from '../../../api/users'
+import { useState, useMemo } from 'react'
+import { useAdminStore } from '../../../store/useAdminStore'
 
 const ITEMS_PER_PAGE = 10
 
 export function useUsers() {
-  const [users,    setUsers]    = useState([])
-  const [filtered, setFiltered] = useState([])
-  const [search,   setSearch]   = useState('')
-  const [loading,  setLoading]  = useState(true)
+  const { users } = useAdminStore()
+
+  const [search, setSearch]           = useState('')
   const [currentPage, setCurrentPage] = useState(1)
+  const loading = false
 
-  const fetchUsers = useCallback(async () => {
-    setLoading(true)
-    try {
-      const res  = await getUsers()
-      const data = res.data.results ?? res.data
-      setUsers(data)
-    } catch (e) {
-      console.error('Error al cargar usuarios:', e)
-    } finally {
-      setLoading(false)
-    }
-  }, [])
-
-  useEffect(() => { fetchUsers() }, [fetchUsers])
-
-  useEffect(() => {
+  // filtered derivado con useMemo — sin setState en useEffect
+  const filtered = useMemo(() => {
     const q = search.toLowerCase()
-    setFiltered(users.filter(u =>
+    return users.filter(u =>
       u.username?.toLowerCase().includes(q) ||
       u.email?.toLowerCase().includes(q) ||
       u.first_name?.toLowerCase().includes(q) ||
       u.last_name?.toLowerCase().includes(q)
-    ))
-    setCurrentPage(1)
+    )
   }, [search, users])
 
   const totalPages = Math.max(1, Math.ceil(filtered.length / ITEMS_PER_PAGE))
@@ -63,9 +48,13 @@ export function useUsers() {
     return pages
   }
 
+  // fetchUsers queda como no-op: el polling del store ya se encarga
+  const fetchUsers = () => {}
+
   return {
     filtered, paginated, loading,
-    search, setSearch,
+    search,
+    setSearch: (val) => { setSearch(val); setCurrentPage(1) },
     currentPage, setCurrentPage,
     totalPages, getPageNumbers, getPageNumbersMobile,
     fetchUsers,
