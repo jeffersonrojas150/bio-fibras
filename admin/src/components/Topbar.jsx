@@ -1,77 +1,71 @@
 // src/components/Topbar.jsx
-import { Bell, LogOut } from 'lucide-react'
-import { useNavigate } from 'react-router-dom'
-import { useAuth } from '../context/AuthContext'
+import { Bell, Menu, Globe } from 'lucide-react'
 import logo from '../assets/logo.png'
 
-const goldGradient = 'linear-gradient(135deg, #d7ad44 0%, #b8941a 0%)'
+const goldGradient = 'linear-gradient(135deg, #d7ad44 0%, #b8941a 30%)'
 
-function Topbar() {
-  const { logout } = useAuth()
-  const navigate = useNavigate()
-
-  const handleLogout = () => {
-    logout()
-    navigate('/login')
-  }
-
+function Topbar({ onMenuClick }) {
   return (
     <header
-      className="px-6 py-4 flex items-center justify-between shadow-md rounded-b-2xl mx-2"
+      className="px-4 md:px-6 py-3 flex items-center justify-between shadow-md rounded-b-2xl mx-2 z-10"
       style={{ background: goldGradient }}
     >
-      {/* Logo */}
+      {/* ── Izquierda: Logo + Texto ── */}
       <div className="flex items-center gap-2">
-        <img src={logo} alt="Biofibras" className="h-10 w-auto" />
+        <img src={logo} alt="Biofibras" className="h-8 md:h-10 w-auto" />
         <div>
-          <h1 className="font-semibold tracking-widest text-lg text-white">BIOFIBRAS</h1>
-          <p className="text-xs tracking-wide text-white">Panel Administrativo</p>
+          <h1 className="font-semibold tracking-widest text-base md:text-lg text-white leading-tight">
+            BIOFIBRAS
+          </h1>
+          <p className="text-[10px] md:text-xs tracking-wide text-white/80">
+            Panel Administrativo
+          </p>
         </div>
       </div>
 
-      {/* Derecha */}
-      <div className="flex items-center gap-3">
+      {/* ── Derecha ── */}
+      <div className="flex items-center gap-2 md:gap-3">
 
         {/* Campana */}
-        <button className="relative p-2 rounded-lg hover:bg-white/20 transition-colors">
-          <Bell size={18} className="text-white" />
-          <span className="absolute top-1 right-1 w-2 h-2 bg-red-400 rounded-full" />
+        <button className="relative p-2.5 rounded-xl hover:bg-white/20 active:bg-white/30 transition-colors">
+          <Bell size={24} className="text-white" />
+          <span className="absolute top-1.5 right-1.5 w-2.5 h-2.5 bg-red-500 border-2 border-white rounded-full" />
         </button>
 
-        <div className="w-px h-6 bg-white/30" />
+        <div className="w-px h-6 bg-white/30 hidden sm:block" />
 
-        {/* Usuario */}
-        <div className="flex items-center gap-3">
-          <div className="text-right">
-            <p className="text-sm font-semibold text-white">Administrador</p>
-            <p className="text-xs text-white/70">admin@biofibras.com</p>
-          </div>
-          <div className="w-9 h-9 rounded-full flex items-center justify-center text-amber-800 text-sm font-bold bg-white shadow">
-            A
-          </div>
-        </div>
-
-        <div className="w-px h-6 bg-white/30" />
-
-        {/* Cerrar sesión */}
-        <button
-          onClick={handleLogout}
-          className="flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-semibold border-2 transition-all"
+        {/* Ver Tienda */}
+        <a
+          href="/"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="flex items-center gap-2 px-3 py-2 rounded-xl font-semibold border-2 transition-all whitespace-nowrap text-sm"
           style={{ borderColor: 'white', color: 'white', backgroundColor: 'transparent' }}
           onMouseEnter={e => {
             e.currentTarget.style.backgroundColor = 'white'
-            e.currentTarget.style.color = '#cc0000'
-            e.currentTarget.style.borderColor = 'white'
+            e.currentTarget.style.color = '#b8941a'
           }}
           onMouseLeave={e => {
             e.currentTarget.style.backgroundColor = 'transparent'
             e.currentTarget.style.color = 'white'
-            e.currentTarget.style.borderColor = 'white'
           }}
         >
-          <LogOut size={15} />
-          Cerrar sesión
+          <Globe size={18} />
+          <span className="hidden sm:inline">Ver Tienda</span>
+        </a>
+
+        {/* ── Hamburguesa con label "Menú" — solo móvil ── */}
+        <button
+          onClick={onMenuClick}
+          className="md:hidden flex flex-col items-center justify-center gap-0.5 px-2 py-1.5 rounded-xl
+                     text-white hover:bg-white/20 active:bg-white/30 transition-colors"
+        >
+          <Menu size={22} />
+          <span className="text-[9px] font-semibold tracking-widest uppercase leading-none">
+            Menú
+          </span>
         </button>
+
       </div>
     </header>
   )

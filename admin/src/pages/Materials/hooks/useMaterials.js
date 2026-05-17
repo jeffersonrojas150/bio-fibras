@@ -2,7 +2,7 @@
 import { useEffect, useState, useRef } from 'react'
 import { getMaterials, createMaterial, updateMaterial, deleteMaterial } from '../../../api/materials'
 
-const ITEMS_PER_PAGE = 6
+const ITEMS_PER_PAGE = 10
 
 export function useMaterials() {
   const [materials, setMaterials] = useState([])
@@ -12,7 +12,6 @@ export function useMaterials() {
   const [toast, setToast]         = useState(null)
   const [currentPage, setCurrentPage] = useState(1)
 
-  // Modal crear/editar
   const [modalOpen, setModalOpen]       = useState(false)
   const [selected, setSelected]         = useState(null)
   const [form, setForm]                 = useState({ nombre: '', descripcion: '', es_sostenible: false })
@@ -21,7 +20,6 @@ export function useMaterials() {
   const [saving, setSaving]             = useState(false)
   const [errors, setErrors]             = useState({})
 
-  // Modal eliminar
   const [deleteTarget, setDeleteTarget] = useState(null)
   const [deleting, setDeleting]         = useState(false)
 
@@ -49,11 +47,29 @@ export function useMaterials() {
     }
   }
 
-  // Paginación
   const totalPages = Math.max(1, Math.ceil(filtered.length / ITEMS_PER_PAGE))
   const paginated  = filtered.slice((currentPage - 1) * ITEMS_PER_PAGE, currentPage * ITEMS_PER_PAGE)
 
-  // Modal crear/editar
+  const getPageNumbers = () => {
+    const maxVisible = 5
+    let start = Math.max(1, currentPage - 2)
+    let end   = Math.min(totalPages, start + maxVisible - 1)
+    if (end - start < maxVisible - 1) start = Math.max(1, end - maxVisible + 1)
+    const pages = []
+    for (let i = start; i <= end; i++) pages.push(i)
+    return pages
+  }
+
+  const getPageNumbersMobile = () => {
+    const maxVisible = 3
+    let start = Math.max(1, currentPage - 1)
+    let end   = Math.min(totalPages, start + maxVisible - 1)
+    if (end - start < maxVisible - 1) start = Math.max(1, end - maxVisible + 1)
+    const pages = []
+    for (let i = start; i <= end; i++) pages.push(i)
+    return pages
+  }
+
   function openCreate() {
     setSelected(null)
     setForm({ nombre: '', descripcion: '', es_sostenible: false })
@@ -123,7 +139,6 @@ export function useMaterials() {
     }
   }
 
-  // Modal eliminar
   function confirmDelete(m) { setDeleteTarget(m) }
   function cancelDelete()   { setDeleteTarget(null) }
 
@@ -147,6 +162,7 @@ export function useMaterials() {
     paginated, filtered, loading,
     search, setSearch,
     currentPage, setCurrentPage, totalPages,
+    getPageNumbers, getPageNumbersMobile,
     toast, setToast,
     modalOpen, selected, form, imagePreview,
     saving, errors, setErrors,

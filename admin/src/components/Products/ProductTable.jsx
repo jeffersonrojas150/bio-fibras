@@ -1,8 +1,6 @@
 // src/components/Products/ProductTable.jsx
 import { Pencil, Trash2 } from 'lucide-react'
 
-// ── Sub-componentes reutilizables ─────────────────────────────────────────────
-
 function StockBadge({ stock }) {
   if (stock === null || stock === undefined) return <span className="text-gray-400 text-xs">—</span>
   return (
@@ -55,7 +53,7 @@ function ActionButtons({ onEdit, onDelete }) {
       <button
         onClick={onEdit}
         className="p-1.5 rounded-lg transition-colors"
-        style={{ color: '#0eb505' }}
+        style={{ color: '#166534' }}
         onMouseEnter={e => { e.currentTarget.style.backgroundColor = '#abebae' }}
         onMouseLeave={e => { e.currentTarget.style.backgroundColor = 'transparent' }}
         title="Editar"
@@ -65,7 +63,7 @@ function ActionButtons({ onEdit, onDelete }) {
       <button
         onClick={onDelete}
         className="p-1.5 rounded-lg transition-colors"
-        style={{ color: '#ef4444' }}
+        style={{ color: '#f20707' }}
         onMouseEnter={e => { e.currentTarget.style.backgroundColor = '#fef2f2' }}
         onMouseLeave={e => { e.currentTarget.style.backgroundColor = 'transparent' }}
         title="Eliminar"
@@ -76,7 +74,6 @@ function ActionButtons({ onEdit, onDelete }) {
   )
 }
 
-// ── Fila ──────────────────────────────────────────────────────────────────────
 function ProductRow({ product: p, index: i, onEdit, onDelete }) {
   const isEven = i % 2 === 0
   return (
@@ -97,10 +94,9 @@ function ProductRow({ product: p, index: i, onEdit, onDelete }) {
   )
 }
 
-// ── Paginación ────────────────────────────────────────────────────────────────
 function Pagination({ currentPage, totalPages, getPageNumbers, setCurrentPage }) {
-  const activeStyle = { backgroundColor: '#166534', color: 'white', border: 'none' }
-  const inactiveStyle = { backgroundColor: 'white', color: '#555', border: '1px solid #e0e0e0' }
+  const activeStyle     = { backgroundColor: '#166534', color: 'white', border: 'none' }
+  const inactiveStyle   = { backgroundColor: 'white', color: '#555', border: '1px solid #e0e0e0' }
   const navEnabledStyle = { color: '#166534', borderColor: '#166534', backgroundColor: 'white' }
   const navDisabledStyle = { color: '#ccc', borderColor: '#e0e0e0', backgroundColor: 'white' }
 
@@ -117,18 +113,14 @@ function Pagination({ currentPage, totalPages, getPageNumbers, setCurrentPage })
       >
         Anterior
       </button>
-
       {getPageNumbers().map(n => (
-        <button
-          key={n}
-          onClick={() => setCurrentPage(n)}
+        <button key={n} onClick={() => setCurrentPage(n)}
           className="w-8 h-8 rounded-lg text-sm font-semibold transition-colors"
           style={n === currentPage ? activeStyle : inactiveStyle}
         >
           {n}
         </button>
       ))}
-
       <button
         onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
         disabled={currentPage === totalPages}
@@ -141,7 +133,6 @@ function Pagination({ currentPage, totalPages, getPageNumbers, setCurrentPage })
   )
 }
 
-// ── Tabla principal ───────────────────────────────────────────────────────────
 function ProductTable({ paginated, loading, onEdit, onDelete, currentPage, totalPages, getPageNumbers, setCurrentPage }) {
   return (
     <div className="rounded-xl overflow-hidden border" style={{ borderColor: '#cfcfcf' }}>
@@ -162,13 +153,9 @@ function ProductTable({ paginated, loading, onEdit, onDelete, currentPage, total
         </thead>
         <tbody>
           {loading ? (
-            <tr>
-              <td colSpan={7} className="text-center py-10 text-gray-400">Cargando...</td>
-            </tr>
+            <tr><td colSpan={7} className="text-center py-10 text-gray-400">Cargando...</td></tr>
           ) : paginated.length === 0 ? (
-            <tr>
-              <td colSpan={7} className="text-center py-10 text-gray-400">No se encontraron productos</td>
-            </tr>
+            <tr><td colSpan={7} className="text-center py-10 text-gray-400">No se encontraron productos</td></tr>
           ) : (
             paginated.map((p, i) => (
               <ProductRow key={p.id} product={p} index={i} onEdit={onEdit} onDelete={onDelete} />
@@ -176,7 +163,6 @@ function ProductTable({ paginated, loading, onEdit, onDelete, currentPage, total
           )}
         </tbody>
       </table>
-
       {totalPages > 1 && (
         <Pagination
           currentPage={currentPage}

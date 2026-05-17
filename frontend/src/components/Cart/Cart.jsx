@@ -5,12 +5,15 @@ import { useCart } from '../../context/cartContext';
 import './Cart.css';
 import { useNavigate } from 'react-router-dom';
 
-export const CartIcon = () => {
+export const CartIcon = ({ transparent = false }) => {
   const { getTotalItems, toggleCart } = useCart();
   const totalItems = getTotalItems();
 
   return (
-    <div className="nav-icon-link cart-icon-container" onClick={toggleCart}>
+    <div
+      className={`nav-icon-link cart-icon-container ${transparent ? 'icon--white' : ''}`}
+      onClick={toggleCart}
+    >
       <div className="cart-icon-wrapper">
         <i className="bi bi-cart nav-icon"></i>
         {totalItems > 0 && (
@@ -28,7 +31,6 @@ const CartItem = ({ item }) => {
   const [showRemoveAlert, setShowRemoveAlert] = useState(false);
 
   const currentQuantity = parseInt(item.quantity, 10) || 1;
-
   const rawPrice = item.precio_oferta || item.precio_unitario;
   const displayPrice = rawPrice ? parseFloat(rawPrice) : 0;
   const subtotal = displayPrice * currentQuantity;
@@ -44,14 +46,7 @@ const CartItem = ({ item }) => {
     }
 
     const maxStock = parseInt(item.stock, 10) || 999;
-    const finalQuantity = Math.min(parsedQuantity, maxStock);
-
-    if (isNaN(finalQuantity)) {
-      console.error("Error calculando cantidad final:", { parsedQuantity, stock: item.stock, maxStock });
-      return;
-    }
-
-    updateQuantity(item.id, finalQuantity);
+    updateQuantity(item.id, Math.min(parsedQuantity, maxStock));
   };
 
   const handleRemove = () => {
@@ -68,9 +63,7 @@ const CartItem = ({ item }) => {
         <img
           src={item.imagen_principal}
           alt={item.name || item.nombre}
-          onError={(e) => {
-            e.target.src = 'https://via.placeholder.com/85x85/f8f9fa/dee2e6?text=Imagen';
-          }}
+          onError={(e) => { e.target.src = 'https://via.placeholder.com/85x85/f8f9fa/dee2e6?text=Imagen'; }}
         />
       </div>
 
@@ -83,52 +76,24 @@ const CartItem = ({ item }) => {
 
         <div className="cart-item-controls">
           <div className="quantity-controls">
-            <Button
-              variant="outline-secondary"
-              size="sm"
-              onClick={() => handleQuantityChange(currentQuantity - 1)}
-              disabled={currentQuantity <= 1}
-            >
+            <Button variant="outline-secondary" size="sm" onClick={() => handleQuantityChange(currentQuantity - 1)} disabled={currentQuantity <= 1}>
               <FaMinus />
             </Button>
-
             <Form.Control
               type="number"
               value={currentQuantity}
-              onChange={(e) => {
-                const value = e.target.value;
-                if (value !== '' && value !== null) {
-                  handleQuantityChange(value);
-                }
-              }}
-              onBlur={(e) => {
-                const value = parseInt(e.target.value, 10);
-                if (isNaN(value) || value < 1) {
-                  handleQuantityChange(1);
-                }
-              }}
+              onChange={(e) => { if (e.target.value !== '') handleQuantityChange(e.target.value); }}
+              onBlur={(e) => { const v = parseInt(e.target.value, 10); if (isNaN(v) || v < 1) handleQuantityChange(1); }}
               min="1"
               max={item.stock}
               className="quantity-input"
               size="sm"
             />
-
-            <Button
-              variant="outline-secondary"
-              size="sm"
-              onClick={() => handleQuantityChange(currentQuantity + 1)}
-              disabled={currentQuantity >= item.stock}
-            >
+            <Button variant="outline-secondary" size="sm" onClick={() => handleQuantityChange(currentQuantity + 1)} disabled={currentQuantity >= item.stock}>
               <FaPlus />
             </Button>
           </div>
-
-          <Button
-            variant="link"
-            className="remove-btn"
-            onClick={handleRemove}
-            title="Eliminar producto"
-          >
+          <Button variant="link" className="remove-btn" onClick={handleRemove} title="Eliminar producto">
             <FaTrash />
           </Button>
         </div>
@@ -139,9 +104,7 @@ const CartItem = ({ item }) => {
 
         {currentQuantity >= item.stock && (
           <div className="stock-warning">
-            <small style={{ color: '#856404', fontSize: '0.8rem' }}>
-              Stock máximo: {item.stock} unidades
-            </small>
+            <small style={{ color: '#856404', fontSize: '0.8rem' }}>Stock máximo: {item.stock} unidades</small>
           </div>
         )}
       </div>
@@ -162,25 +125,14 @@ const Cart = () => {
   };
 
   const handleClearCart = () => {
-    if (window.confirm('¿Estás seguro de que deseas vaciar el carrito?')) {
-      clearCart();
-    }
+    if (window.confirm('¿Estás seguro de que deseas vaciar el carrito?')) clearCart();
   };
 
   return (
     <>
-      <div
-        className={`cart-overlay ${isCartOpen ? 'active' : ''}`}
-        onClick={toggleCart}
-      />
+      <div className={`cart-overlay ${isCartOpen ? 'active' : ''}`} onClick={toggleCart} />
 
-      <Offcanvas
-        show={isCartOpen}
-        onHide={toggleCart}
-        placement="end"
-        className="cart-sidebar"
-        backdrop={false}
-      >
+      <Offcanvas show={isCartOpen} onHide={toggleCart} placement="end" className="cart-sidebar" backdrop={false}>
         <Offcanvas.Header className="cart-header">
           <div className="cart-title">
             <FaShoppingCart />
@@ -199,18 +151,10 @@ const Cart = () => {
         <Offcanvas.Body className="cart-body">
           {cartItems.length === 0 ? (
             <div className="empty-cart">
-              <div className="empty-cart-icon">
-                <FaShoppingCart />
-              </div>
+              <div className="empty-cart-icon"><FaShoppingCart /></div>
               <h5>Tu carrito está vacío</h5>
               <p>Descubre nuestros productos ecológicos y sostenibles</p>
-              <Button
-                variant="primary"
-                onClick={() => {
-                  toggleCart();
-                  navigate('/productos');
-                }}
-              >
+              <Button variant="primary" onClick={() => { toggleCart(); navigate('/productos'); }}>
                 Explorar Productos
               </Button>
             </div>
@@ -218,24 +162,14 @@ const Cart = () => {
             <div className="cart-content">
               {cartItems.length > 2 && (
                 <div className="cart-actions">
-                  <Button
-                    variant="outline-danger"
-                    size="sm"
-                    onClick={handleClearCart}
-                    className="clear-cart-btn"
-                  >
-                    <FaTrash className="me-2" />
-                    Vaciar carrito
+                  <Button variant="outline-danger" size="sm" onClick={handleClearCart} className="clear-cart-btn">
+                    <FaTrash className="me-2" /> Vaciar carrito
                   </Button>
                 </div>
               )}
-
               <div className="cart-items">
-                {cartItems.map((item) => (
-                  <CartItem key={item.id} item={item} />
-                ))}
+                {cartItems.map((item) => <CartItem key={item.id} item={item} />)}
               </div>
-
               <div className="cart-footer">
                 <div className="cart-summary">
                   <div className="summary-row">
@@ -247,12 +181,7 @@ const Cart = () => {
                     <span>S/ {totalPrice.toFixed(2)}</span>
                   </div>
                 </div>
-
-                <Button
-                  variant="primary"
-                  className="checkout-btn"
-                  onClick={handleCheckout}
-                >
+                <Button variant="primary" className="checkout-btn" onClick={handleCheckout}>
                   Proceder al Pago
                 </Button>
               </div>

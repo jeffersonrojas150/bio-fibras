@@ -8,7 +8,6 @@ import {
 } from 'lucide-react'
 import { useOrderDetail } from './hooks/useOrderDetail'
 
-// ── Constantes de estado ──────────────────────────────────────────────────────
 const ESTADO_PAGO_OPTIONS = [
   { value: 'pendiente', label: 'Pendiente', bg: '#f2d811', color: '#080706', Icon: Clock       },
   { value: 'pagado',    label: 'Pagado',    bg: '#c4fa82', color: '#080706', Icon: CheckCircle },
@@ -23,7 +22,6 @@ const ESTADO_ORDEN_OPTIONS = [
   { value: 'cancelado', label: 'Cancelado', bg: '#fa0505', color: '#ffffff', Icon: XCircle     },
 ]
 
-// ── Sub-componentes ───────────────────────────────────────────────────────────
 function Badge({ value, options }) {
   const cfg = options.find(o => o.value === value) || { label: value, bg: '#f5f5f5', color: '#555' }
   return (
@@ -139,7 +137,6 @@ function ComprobanteUpload({ label, currentUrl, preview, onFileChange, onClear }
   )
 }
 
-// ── Componente principal ──────────────────────────────────────────────────────
 function OrderDetail() {
   const { id } = useParams()
   const navigate = useNavigate()
@@ -169,7 +166,6 @@ function OrderDetail() {
   return (
     <div className="space-y-4 pb-10" style={{ fontFamily: 'Raleway, sans-serif' }}>
 
-      {/* Toast */}
       {toast && (
         <div
           className="fixed top-5 right-5 z-50 px-4 py-3 rounded-xl shadow-lg text-sm font-semibold text-white flex items-center gap-2"
@@ -183,54 +179,69 @@ function OrderDetail() {
       {/* Header */}
       <div className="rounded-2xl shadow-md overflow-hidden">
         <div
-          className="px-6 py-5 flex items-center justify-between text-white"
+          className="px-5 py-4 text-white"
           style={{ background: 'linear-gradient(135deg, #d7ad44 0%, #b8941a 10%)' }}
         >
-          <div className="flex items-center gap-3">
-            <button
-              onClick={() => navigate('/orders')}
-              className="p-2 rounded-lg transition-colors"
-              style={{ backgroundColor: 'rgba(255,255,255,0.15)' }}
-              onMouseEnter={e => { e.currentTarget.style.backgroundColor = 'rgba(255,255,255,0.25)' }}
-              onMouseLeave={e => { e.currentTarget.style.backgroundColor = 'rgba(255,255,255,0.15)' }}
-            >
-              <ArrowLeft size={16} />
-            </button>
-            <ShoppingCart size={26} className="text-white/90" />
-            <div>
-              <h1 className="text-xl font-bold tracking-wide">Orden #{order.numero_orden}</h1>
-              <p className="text-sm text-white/70">
-                {new Date(order.fecha_creacion).toLocaleDateString('es-PE', {
-                  day: '2-digit', month: 'long', year: 'numeric',
-                  hour: '2-digit', minute: '2-digit'
-                })}
-              </p>
+          {/* Botón regresar */}
+          <button
+            onClick={() => navigate('/orders')}
+            className="flex items-center gap-2 mb-3 px-3 py-1.5 rounded-lg text-xs font-semibold transition-colors w-fit"
+            style={{ backgroundColor: 'rgba(255,255,255,0.2)', color: 'white' }}
+            onMouseEnter={e => { e.currentTarget.style.backgroundColor = 'rgba(255,255,255,0.3)' }}
+            onMouseLeave={e => { e.currentTarget.style.backgroundColor = 'rgba(255,255,255,0.2)' }}
+          >
+            <ArrowLeft size={14} />
+            Regresar
+          </button>
+
+          {/* Título + fecha + badges */}
+          <div className="flex items-start justify-between gap-3">
+            <div className="flex items-start gap-3">
+              <ShoppingCart size={22} className="text-white/90 shrink-0 mt-0.5" />
+              <div>
+                <h1 className="text-lg font-bold tracking-wide leading-tight">
+                  Orden #{order.numero_orden}
+                </h1>
+                <p className="text-xs text-white/70 mt-0.5">
+                  {new Date(order.fecha_creacion).toLocaleDateString('es-PE', {
+                    day: '2-digit', month: 'long', year: 'numeric',
+                    hour: '2-digit', minute: '2-digit'
+                  })}
+                </p>
+                {/* Badges en móvil */}
+                <div className="flex flex-wrap gap-2 mt-2 md:hidden">
+                  <Badge value={order.estado_pago}  options={ESTADO_PAGO_OPTIONS}  />
+                  <Badge value={order.estado_orden} options={ESTADO_ORDEN_OPTIONS} />
+                </div>
+              </div>
+            </div>
+            {/* Badges en desktop */}
+            <div className="hidden md:flex items-center gap-2 shrink-0">
+              <Badge value={order.estado_pago}  options={ESTADO_PAGO_OPTIONS}  />
+              <Badge value={order.estado_orden} options={ESTADO_ORDEN_OPTIONS} />
             </div>
           </div>
-          <div className="flex items-center gap-2">
-            <Badge value={order.estado_pago}  options={ESTADO_PAGO_OPTIONS}  />
-            <Badge value={order.estado_orden} options={ESTADO_ORDEN_OPTIONS} />
-          </div>
         </div>
+
       </div>
 
-      {/* Grid */}
+      {/* Grid principal */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
 
         {/* Columna izquierda */}
         <div className="lg:col-span-2 space-y-4">
 
           <SectionCard title="Información del cliente" icon={User}>
-            <div className="grid grid-cols-2 gap-4">
-              <InfoRow label="Nombre"   value={clienteNombre}           />
-              <InfoRow label="Email"    value={order.usuario_email}      />
-              <InfoRow label="Teléfono" value={dir.telefono}            />
-              <InfoRow label="DNI"      value={dir.dni}                 />
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <InfoRow label="Nombre"   value={clienteNombre}      />
+              <InfoRow label="Email"    value={order.usuario_email} />
+              <InfoRow label="Teléfono" value={dir.telefono}       />
+              <InfoRow label="DNI"      value={dir.dni}            />
             </div>
           </SectionCard>
 
           <SectionCard title="Dirección de envío" icon={MapPin}>
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <InfoRow label="Dirección completa"  value={dir.direccion_completo} />
               <InfoRow label="Distrito"            value={dir.distrito}           />
               <InfoRow label="Provincia"           value={dir.provincia}          />
@@ -344,16 +355,16 @@ function OrderDetail() {
             </div>
           </SectionCard>
 
-          {/* Botón guardar */}
           <button
             onClick={handleSave}
             disabled={!hasChanges || saving}
             className="w-full flex items-center justify-center gap-2 py-3 rounded-xl text-sm font-bold text-white transition-all"
             style={{
               backgroundColor: hasChanges && !saving ? '#166534' : '#ccc',
+              border: hasChanges && !saving ? '1px solid #5cb85c' : 'none',
               cursor: hasChanges && !saving ? 'pointer' : 'not-allowed',
             }}
-            onMouseEnter={e => { if (hasChanges && !saving) e.currentTarget.style.backgroundColor = '#14532d' }}
+            onMouseEnter={e => { if (hasChanges && !saving) e.currentTarget.style.backgroundColor = '#087508' }}
             onMouseLeave={e => { if (hasChanges && !saving) e.currentTarget.style.backgroundColor = '#166534' }}
           >
             <Save size={15} />

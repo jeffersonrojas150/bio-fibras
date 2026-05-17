@@ -731,3 +731,11 @@
   color: #000000 !important;
   border-color: #8b6914 !important;
 }
+
+.cart-icon-container.icon--white .cart-icon-wrapper {
+  color: rgba(255, 255, 255, 0.92);
+}
+
+.cart-icon-container.icon--white:hover .cart-icon-wrapper {
+  color: #ffffff;
+}

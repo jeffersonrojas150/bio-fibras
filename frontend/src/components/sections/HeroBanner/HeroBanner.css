@@ -131,6 +131,7 @@
   justify-content: center;
   z-index: 4;
   padding: 0 5%;
+  padding-top: 140px;
 }
 
 /* Contenido de texto */
@@ -454,7 +455,7 @@
   }
   
   .hero-content-wrapper {
-    padding: 0 20px;
+    padding: 120px 20px 0;
   }
   
   .hero-title {

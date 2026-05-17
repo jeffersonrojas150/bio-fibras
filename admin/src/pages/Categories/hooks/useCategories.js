@@ -2,7 +2,7 @@
 import { useEffect, useState, useRef } from 'react'
 import { getCategories, createCategory, updateCategory, deleteCategory } from '../../../api/categories'
 
-const ITEMS_PER_PAGE = 6
+const ITEMS_PER_PAGE = 10
 
 export function useCategories() {
   const [categories, setCategories] = useState([])
@@ -16,6 +16,7 @@ export function useCategories() {
   const [modalOpen, setModalOpen]       = useState(false)
   const [selected, setSelected]         = useState(null)
   const [nombre, setNombre]             = useState('')
+  const [estaActiva, setEstaActiva]     = useState(true)   
   const [imageFile, setImageFile]       = useState(null)
   const [imagePreview, setImagePreview] = useState(null)
   const [saving, setSaving]             = useState(false)
@@ -55,18 +56,21 @@ export function useCategories() {
 
   // Acciones modal crear/editar
   function openCreate() {
-    setSelected(null); setNombre(''); setImageFile(null)
-    setImagePreview(null); setErrors({}); setModalOpen(true)
+    setSelected(null); setNombre(''); setEstaActiva(true)
+    setImageFile(null); setImagePreview(null); setErrors({}); setModalOpen(true)
   }
 
   function openEdit(c) {
-    setSelected(c); setNombre(c.nombre); setImageFile(null)
+    setSelected(c); setNombre(c.nombre)
+    setEstaActiva(c.activo ?? true)        
+    setImageFile(null)
     setImagePreview(c.imagen_url ?? null); setErrors({}); setModalOpen(true)
   }
 
   function closeModal() {
     setModalOpen(false); setSelected(null); setNombre('')
-    setImageFile(null); setImagePreview(null); setErrors({})
+    setEstaActiva(true); setImageFile(null)
+    setImagePreview(null); setErrors({})
   }
 
   function handleFileChange(e) {
@@ -79,11 +83,12 @@ export function useCategories() {
 
   async function handleSave() {
     if (!nombre.trim()) { setErrors({ nombre: 'El nombre es obligatorio' }); return }
-    if (!imagePreview) { setErrors({ imagen: 'La imagen es obligatoria' }); return }
+    if (!imagePreview)  { setErrors({ imagen: 'La imagen es obligatoria' }); return }
     setSaving(true)
     try {
       const fd = new FormData()
       fd.append('nombre', nombre.trim())
+      fd.append('activo', estaActiva)             
       if (imageFile) fd.append('imagen', imageFile)
       const wasEditing = !!selected
       if (selected) {
@@ -131,19 +136,17 @@ export function useCategories() {
   }
 
   return {
-    // datos
     paginated, filtered, loading,
     search, setSearch,
     currentPage, setCurrentPage, totalPages,
     toast, setToast,
-    // modal crear/editar
     modalOpen, selected, nombre, setNombre,
+    estaActiva, setEstaActiva,            
     imageFile, imagePreview,
     saving, errors, setErrors,
     fileInputRef,
     openCreate, openEdit, closeModal,
     handleFileChange, handleSave,
-    // modal eliminar
     deleteTarget, deleting,
     confirmDelete, cancelDelete, executeDelete,
   }

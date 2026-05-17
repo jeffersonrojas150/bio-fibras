@@ -1,4 +1,3 @@
-// src/components/Products/ProductFormModal.jsx
 import { useState, useEffect, useRef } from 'react'
 import {
   X, Save, Loader2, Package, AlertCircle,
@@ -143,7 +142,6 @@ function ProductFormModal({ isOpen, product, onClose, onSuccess }) {
     }))
   }
 
-
   function handleFileSelect(e) {
     const slots = MAX_IMAGES - images.length - newFiles.length
     if (slots <= 0) return
@@ -153,14 +151,12 @@ function ProductFormModal({ isOpen, product, onClose, onSuccess }) {
 
     const allowed = Array.from(e.target.files).slice(0, slots).map((file, i) => ({
       file, preview: URL.createObjectURL(file),
-     
       es_principal: !hayPrincipal && totalExisting === 0 && i === 0,
       orden: totalExisting + i,
     }))
     setNewFiles(prev => [...prev, ...allowed])
     e.target.value = ''
   }
-
   
   function handleRemoveNewFile(idx) {
     setNewFiles(prev => {
@@ -180,7 +176,6 @@ function ProductFormModal({ isOpen, product, onClose, onSuccess }) {
     setNewFiles(prev => prev.map((f, i) => ({ ...f, es_principal: i === idx })))
   }
 
-
   async function handleDeleteServer(imgId) {
     if (!window.confirm('¿Eliminar esta imagen?')) return
     try {
@@ -190,7 +185,6 @@ function ProductFormModal({ isOpen, product, onClose, onSuccess }) {
         const restantes = prev.filter(img => img.id !== imgId)
         if (eliminadaEraPrincipal && restantes.length > 0) {
           restantes[0] = { ...restantes[0], es_principal: true }
-          
           setTimeout(() => setMainProductImage(product.id, restantes[0].id).catch(console.error), 0)
         }
         return restantes
@@ -199,12 +193,10 @@ function ProductFormModal({ isOpen, product, onClose, onSuccess }) {
   }
 
   async function handleSetServerMain(imgId) {
-    
     setImages(prev => prev.map(img => ({ ...img, es_principal: img.id === imgId })))
     try {
       await setMainProductImage(product.id, imgId)
     } catch {
-     
       setImages(prev => prev.map(img => ({ ...img, es_principal: img.id === imgId ? false : img.es_principal })))
       alert('Error al marcar imagen principal')
     }
@@ -278,14 +270,16 @@ function ProductFormModal({ isOpen, product, onClose, onSuccess }) {
       style={{ backgroundColor: 'rgba(0,0,0,0.55)', backdropFilter: 'blur(3px)' }}
       onClick={e => e.target === e.currentTarget && onClose()}
     >
+
       <div
-        className="relative w-full max-w-3xl my-8 mx-4 rounded-2xl shadow-2xl bg-white"
+        className="relative w-full max-w-3xl m-3 sm:my-8 sm:mx-auto rounded-2xl shadow-2xl bg-white"
         style={{ fontFamily: 'Raleway, sans-serif' }}
       >
 
         {/* ── Cabecera ── */}
+
         <div
-          className="flex items-center justify-between px-6 py-4 rounded-t-2xl"
+          className="flex items-center justify-between px-4 sm:px-6 py-4 rounded-t-2xl"
           style={{ background: 'linear-gradient(135deg, #d7ad44 0%, #b8941a 10%)' }}
         >
           <div className="flex items-center gap-3">
@@ -298,8 +292,8 @@ function ProductFormModal({ isOpen, product, onClose, onSuccess }) {
               </h2>
               <p className="text-white/65 text-xs">
                 {isEditing
-                  ? 'Modifica los datos del producto seleccionado'
-                  : 'Completa los campos para agregar un nuevo producto'}
+                  ? 'Modifica los datos del producto'
+                  : 'Completa los campos para agregar producto'}
               </p>
             </div>
           </div>
@@ -315,9 +309,10 @@ function ProductFormModal({ isOpen, product, onClose, onSuccess }) {
         </div>
 
         {/* ── Cuerpo ── */}
-        <div className="p-6 space-y-5">
 
-          {/* 1. Información Principal */}
+        <div className="p-4 sm:p-6 space-y-5">
+
+          {/*Información Principal */}
           <Section icon={Info} title="Información Principal" subtitle="Nombre y descripción visible en la tienda">
             <div className="grid grid-cols-1 gap-4">
               <Field label="Nombre del producto *" error={errors.nombre} hint="Este nombre aparecerá en el catálogo público">
@@ -330,16 +325,16 @@ function ProductFormModal({ isOpen, product, onClose, onSuccess }) {
               <Field label="Descripción completa" hint="Describe materiales, dimensiones, usos o características especiales">
                 <textarea
                   name="descripcion" value={form.descripcion} onChange={handleChange}
-                  rows={3} placeholder="Ej: Cartera elaborada con fibra de junco natural, tejida artesanalmente en punto aguja. Dimensiones: 25cm x 20cm. Incluye cierre y asa de cuero..."
+                  rows={3} placeholder="Ej: Cartera elaborada con fibra de junco natural..."
                   className={inputCls(false) + ' resize-none'}
                 />
               </Field>
             </div>
           </Section>
 
-          {/* 2. Precios y Stock */}
+          {/* Precios y Stock */}
           <Section icon={DollarSign} title="Precios y Stock" subtitle="Define los precios y la disponibilidad del producto">
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <Field label="Precio unitario (S/) *" error={errors.precio_unitario} hint="Precio de venta para el público">
                 <input
                   name="precio_unitario" type="number" min="0" step="0.01"
@@ -361,7 +356,7 @@ function ProductFormModal({ isOpen, product, onClose, onSuccess }) {
                   placeholder="0.00" className={inputCls(false)}
                 />
               </Field>
-              <Field label="Cantidad mínima para precio mayor" hint="Nº de unidades a partir del cual aplica el precio mayor">
+              <Field label="Cantidad mínima mayor" hint="Unidades para aplicar el precio mayor">
                 <input
                   name="cantidad_minima_mayor" type="number" min="1"
                   value={form.cantidad_minima_mayor} onChange={handleChange}
@@ -378,7 +373,7 @@ function ProductFormModal({ isOpen, product, onClose, onSuccess }) {
             </div>
           </Section>
 
-          {/* 3. Clasificación */}
+          {/* Clasificación */}
           <Section icon={Tag} title="Clasificación y Visibilidad" subtitle="Categoría, materiales y estado de publicación">
             <div className="space-y-5">
 
@@ -446,19 +441,20 @@ function ProductFormModal({ isOpen, product, onClose, onSuccess }) {
                 <p className="text-xs font-semibold uppercase tracking-wide mb-2" style={{ color: '#7e4400' }}>
                   Estado de publicación
                 </p>
+
                 <div
-                  className="grid grid-cols-2 gap-3 p-3 rounded-xl"
+                  className="grid grid-cols-1 sm:grid-cols-2 gap-3 p-3 rounded-xl"
                   style={{ backgroundColor: '#f5f5f5', border: '1px solid #0f0f0f' }}
                 >
                   <CheckField
                     name="es_activo" checked={form.es_activo} onChange={handleChange}
                     label="Producto activo"
-                    hint="Visible y disponible para comprar en la tienda"
+                    hint="Visible y disponible en la tienda"
                   />
                   <CheckField
                     name="es_destacado" checked={form.es_destacado} onChange={handleChange}
                     label="Producto destacado"
-                    hint="Aparece en la sección de productos destacados"
+                    hint="Aparece en sección de destacados"
                   />
                 </div>
               </div>
@@ -466,11 +462,11 @@ function ProductFormModal({ isOpen, product, onClose, onSuccess }) {
             </div>
           </Section>
 
-          {/* 4. Imágenes */}
+          {/*Imágenes */}
           <Section
             icon={Image}
             title={`Imágenes del producto (${totalImages}/${MAX_IMAGES})`}
-            subtitle="Sube hasta 7 imágenes. Marca una como principal para que aparezca en el catálogo"
+            subtitle="Sube hasta 7 imágenes. Marca una como principal"
           >
             <ProductImageUploader
               images={images}
@@ -489,32 +485,37 @@ function ProductFormModal({ isOpen, product, onClose, onSuccess }) {
 
         </div>
 
+
         {/* ── Footer ── */}
+
         <div
-          className="flex items-center justify-between px-6 py-4 border-t rounded-b-2xl"
+          className="flex flex-col md:flex-row items-center justify-between px-4 sm:px-6 py-4 border-t rounded-b-2xl gap-4 md:gap-0"
           style={{ borderColor: '#e8d5a3', backgroundColor: '#ffffff' }}
         >
-          <p className="text-xs text-gray-400">
+
+          <p className="text-xs text-gray-400 text-center md:text-left w-full md:w-auto">
             Los campos marcados con <span className="text-red-400 font-bold">*</span> son obligatorios
           </p>
-          <div className="flex gap-3">
+
+          <div className="flex gap-3 w-full md:w-auto justify-center md:justify-end">
+
             <button
               onClick={onClose}
               disabled={saving}
-              className="px-5 py-2 rounded-xl text-sm font-semibold transition-colors"
-              style={{ backgroundColor: '#b80e02', color: 'white', border: '1.5px solid #b80e02' }}
-              onMouseEnter={e => { e.currentTarget.style.backgroundColor = '#d92b1f' }}
-              onMouseLeave={e => { e.currentTarget.style.backgroundColor = '#b80e02' }}
+              className="flex-1 md:flex-none px-5 py-2 rounded-xl text-sm font-semibold transition-colors whitespace-nowrap text-center"
+              style={{ color: '#f7f5f5', backgroundColor: '#f20707', border: '1px solid #f87171' }}
+              onMouseEnter={e => { e.currentTarget.style.backgroundColor = '#e30707' }}
+              onMouseLeave={e => { e.currentTarget.style.backgroundColor = '#f20707' }}
             >
               Cancelar
             </button>
             <button
               onClick={handleSubmit}
               disabled={saving}
-              className="flex items-center gap-2 px-5 py-2 rounded-xl text-sm font-semibold text-white disabled:opacity-60 transition-colors"
-              style={{ backgroundColor: saving ? '#aaa' : '#166534' }}
-              onMouseEnter={e => { if (!saving) e.currentTarget.style.backgroundColor = '#14532d' }}
-              onMouseLeave={e => { if (!saving) e.currentTarget.style.backgroundColor = '#166534' }}
+              className="flex-1 md:flex-none flex items-center justify-center gap-2 px-5 py-2 rounded-xl text-sm font-semibold text-white disabled:opacity-60 transition-colors whitespace-nowrap"
+              style={{ color: '#f7f5f5', backgroundColor: '#166534', border: '1px solid #5cb85c' }}
+              onMouseEnter={e => { if (!saving) e.currentTarget.style.backgroundColor = '#087508' }}
+              onMouseLeave={e => { if (!saving) e.currentTarget.style.backgroundColor = '#057305' }}
             >
               {saving
                 ? <><Loader2 size={15} className="animate-spin" /> Guardando...</>
