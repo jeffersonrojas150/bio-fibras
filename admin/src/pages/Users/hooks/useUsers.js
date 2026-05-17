@@ -5,10 +5,10 @@ import { getUsers } from '../../../api/users'
 const ITEMS_PER_PAGE = 10
 
 export function useUsers() {
-  const [users, setUsers]     = useState([])
+  const [users,    setUsers]    = useState([])
   const [filtered, setFiltered] = useState([])
-  const [search, setSearch]   = useState('')
-  const [loading, setLoading] = useState(true)
+  const [search,   setSearch]   = useState('')
+  const [loading,  setLoading]  = useState(true)
   const [currentPage, setCurrentPage] = useState(1)
 
   const fetchUsers = useCallback(async () => {
@@ -53,11 +53,21 @@ export function useUsers() {
     return pages
   }
 
+  const getPageNumbersMobile = () => {
+    const maxVisible = 3
+    let start = Math.max(1, currentPage - 1)
+    let end   = Math.min(totalPages, start + maxVisible - 1)
+    if (end - start < maxVisible - 1) start = Math.max(1, end - maxVisible + 1)
+    const pages = []
+    for (let i = start; i <= end; i++) pages.push(i)
+    return pages
+  }
+
   return {
     filtered, paginated, loading,
     search, setSearch,
     currentPage, setCurrentPage,
-    totalPages, getPageNumbers,
+    totalPages, getPageNumbers, getPageNumbersMobile,
     fetchUsers,
   }
 }
