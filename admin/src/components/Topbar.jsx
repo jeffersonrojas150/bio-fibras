@@ -2,7 +2,7 @@
 import { Bell, Menu, Globe } from 'lucide-react'
 import logo from '../assets/logo.png'
 
-const goldGradient = 'linear-gradient(135deg, #d7ad44 0%, #b8941a 25%)'
+const goldGradient = 'linear-gradient(135deg, #d7ad44 0%, #b8941a 30%)'
 
 function Topbar({ onMenuClick }) {
   return (
@@ -10,7 +10,7 @@ function Topbar({ onMenuClick }) {
       className="px-4 md:px-6 py-3 flex items-center justify-between shadow-md rounded-b-2xl mx-2 z-10"
       style={{ background: goldGradient }}
     >
-      {/* ── Logo + Texto ── */}
+      {/* ── Izquierda: Logo + Texto ── */}
       <div className="flex items-center gap-2">
         <img src={logo} alt="Biofibras" className="h-8 md:h-10 w-auto" />
         <div>
@@ -23,6 +23,7 @@ function Topbar({ onMenuClick }) {
         </div>
       </div>
 
+      {/* ── Derecha ── */}
       <div className="flex items-center gap-2 md:gap-3">
 
         {/* Campana */}
@@ -31,14 +32,14 @@ function Topbar({ onMenuClick }) {
           <span className="absolute top-1.5 right-1.5 w-2.5 h-2.5 bg-red-500 border-2 border-white rounded-full" />
         </button>
 
-        <div className="w-px h-6 bg-white/30" />
+        <div className="w-px h-6 bg-white/30 hidden sm:block" />
 
         {/* Ver Tienda */}
         <a
           href="/"
           target="_blank"
           rel="noopener noreferrer"
-          className="flex items-center gap-2 px-4 py-2 rounded-xl font-semibold border-2 transition-all whitespace-nowrap text-sm"
+          className="flex items-center gap-2 px-3 py-2 rounded-xl font-semibold border-2 transition-all whitespace-nowrap text-sm"
           style={{ borderColor: 'white', color: 'white', backgroundColor: 'transparent' }}
           onMouseEnter={e => {
             e.currentTarget.style.backgroundColor = 'white'
@@ -50,10 +51,10 @@ function Topbar({ onMenuClick }) {
           }}
         >
           <Globe size={18} />
-          <span>Ver Tienda</span>
+          <span className="hidden sm:inline">Ver Tienda</span>
         </a>
 
-        {/* ── Hamburguesa  ── */}
+        {/* ── Hamburguesa con label "Menú" — solo móvil ── */}
         <button
           onClick={onMenuClick}
           className="md:hidden flex flex-col items-center justify-center gap-0.5 px-2 py-1.5 rounded-xl

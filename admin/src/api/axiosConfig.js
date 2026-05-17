@@ -5,20 +5,20 @@ const api = axios.create({
   baseURL: import.meta.env.VITE_API_URL,
 })
 
-// ── Request: agrega el token ──
+// ── Request ──
 api.interceptors.request.use((config) => {
   const token = localStorage.getItem('access_token')
   if (token) config.headers['Authorization'] = `Bearer ${token}`
   return config
 }, (error) => Promise.reject(error))
 
-// ── Response: si expira el token, refresca automáticamente ──
+// ── Response ──
 api.interceptors.response.use(
   (response) => response,
   async (error) => {
     const original = error.config
 
-    // Si es 401 y no es un reintento ni el endpoint de login/refresh
+
     if (
       error.response?.status === 401 &&
       !original._retry &&
@@ -36,9 +36,9 @@ api.interceptors.response.use(
         const newAccess = res.data.access
         localStorage.setItem('access_token', newAccess)
         original.headers['Authorization'] = `Bearer ${newAccess}`
-        return api(original) // reintenta la petición original
+        return api(original)
       } catch (e) {
-        // Refresh falló — limpiar sesión y redirigir al login
+     
         localStorage.removeItem('access_token')
         localStorage.removeItem('refresh_token')
         localStorage.removeItem('user_data')
