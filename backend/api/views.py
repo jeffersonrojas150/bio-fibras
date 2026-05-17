@@ -58,7 +58,8 @@ from .email_service import (
     enviar_correo_nueva_orden_admin, 
     enviar_correo_password_reset, 
     enviar_correo_contacto, 
-    enviar_correo_confirmacion_mercadopago
+    enviar_correo_confirmacion_mercadopago,
+    enviar_correo_orden_cancelada_admin,
     )
 
 from .mercado_pago_service import MercadoPagoService
@@ -890,11 +891,21 @@ class AdminOrdenListView(generics.ListAPIView):
 class AdminOrdenDetailView(generics.RetrieveUpdateAPIView):
     permission_classes = [IsAdminUser]
     serializer_class = AdminOrdenSerializer
-
     def get_queryset(self):
         return Orden.objects.select_related(
             'usuario', 'direccion'
         ).prefetch_related('items__producto')
+    def perform_update(self, serializer):
+        orden_anterior = self.get_object()
+        estado_orden_anterior = orden_anterior.estado_orden
+        orden_actualizada = serializer.save()
+        # Si el admin acaba de cambiar el estado_orden a 'cancelado'
+        # y antes NO estaba cancelado → enviar correo de cancelación por admin
+        if (
+            orden_actualizada.estado_orden == 'cancelado' and
+            estado_orden_anterior != 'cancelado'
+        ):
+            enviar_correo_orden_cancelada_admin(orden_actualizada)
 
 
 # --- Lista de Usuarios ---

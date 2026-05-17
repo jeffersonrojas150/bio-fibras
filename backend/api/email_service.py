@@ -203,3 +203,28 @@ def enviar_correo_confirmacion_mercadopago(orden):
         import traceback
         traceback.print_exc()
         return False
+
+def enviar_correo_orden_cancelada_admin(orden):
+    """
+    Correo enviado al usuario cuando el ADMIN cancela manualmente su orden.
+    Diferente al de cancelación automática por falta de pago.
+    """
+    try:
+        contexto = {
+            'orden': orden,
+            'usuario': orden.usuario,
+            'items': orden.items.all(),
+            'frontend_url': settings.FRONTEND_URL,
+        }
+        html = render_to_string('emails/orden_cancelada_admin.html', contexto)
+        resend.Emails.send({
+            "from": FROM_EMAIL,
+            "to": [orden.usuario.email],
+            "subject": f"Tu pedido #{orden.numero_orden} ha sido cancelado por nuestro equipo",
+            "html": html,
+        })
+        print(f"Correo de cancelación por admin enviado para la orden #{orden.numero_orden}")
+        return True
+    except Exception as e:
+        print(f"ERROR al enviar correo de cancelación por admin para #{orden.numero_orden}: {e}")
+        return False
