@@ -27,3 +27,5 @@ admin/dist
 *.sln
 *.sw?
 "admin/node_modules/" 
+.env.development
+.env.production
