@@ -648,21 +648,6 @@ box-shadow: 0 0 0 0.25rem rgba(200, 134, 13, 0.25) !important; /* Sombra/resplan
   }
 }
 
-@media (max-width: 575.98px) {
-  .products-grid .col-6 {
-    padding-left: 0.5rem;
-    padding-right: 0.5rem;
-  }
-  
-  .products-grid .col-6:nth-child(odd) {
-    padding-left: 0;
-  }
-  
-  .products-grid .col-6:nth-child(even) {
-    padding-right: 0;
-  }
-}
-
 /* === BADGES Y ELEMENTOS FLOTANTES === */
 @media (max-width: 575.98px) {
   .product-badges {
@@ -888,5 +873,30 @@ box-shadow: 0 0 0 0.25rem rgba(200, 134, 13, 0.25) !important; /* Sombra/resplan
  
   .pagination .page-link .visually-hidden {
     display: none;
+  }
+}
+
+@media (max-width: 575.98px) {
+  .product-card .card-body {
+    padding: 0.6rem !important;
+  }
+
+  .product-price {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    align-items: baseline !important;
+    gap: 5px !important;
+    margin-bottom: 0.6rem !important;
+  }
+
+  .original-price {
+    font-size: 0.75rem !important;
+    margin-right: 0 !important;
+    white-space: nowrap !important;
+  }
+
+  .current-price {
+    font-size: 1rem !important;
+    white-space: nowrap !important;
   }
 }
