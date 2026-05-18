@@ -1,19 +1,194 @@
-.empty-favorites {
-  color: #6c757d;
+/* ── Hero ── */
+.fav-hero {
+  position: relative;
+  height: 450px;
+  overflow: hidden;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  padding-bottom: 120px;
 }
-.empty-favorites svg {
-  color: #dc3545;
+.fav-hero-bg {
+  position: absolute;
+  inset: 0;
+  background: #000000;
 }
-.product-card a {
-  text-decoration: none;
-  color: inherit;
+.fav-hearts {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+.fav-heart-item {
+  position: absolute;
+  animation: favHeartFloat var(--dur, 6s) ease-in-out infinite;
+  animation-delay: var(--delay, 0s);
+}
+@keyframes favHeartFloat {
+  0%, 100% { transform: translateY(0) rotate(var(--rot, 0deg)) scale(1); }
+  50%       { transform: translateY(-12px) rotate(var(--rot, 0deg)) scale(1.08); }
+}
+.fav-hero-content {
+  position: relative;
+  z-index: 2;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+.fav-hero-eyebrow {
+  display: block;
+  font-size: 22px;
+  color: #b8860b;
+  opacity: 0.9;
+  line-height: 1;
+}
+.fav-hero-title {
+  font-family: 'Raleway', sans-serif;
+  font-size: 64px;
+  font-weight: 200;
+  color: #ffffff;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  margin: 0;
+  line-height: 1;
 }
 
-.fav-main-title {
-  font-size: 3.3rem;
-  font-weight: 300;
-  color: #2c5530; /* Verde oscuro del logo */
-  margin-bottom: 0.9rem;
-   text-align: center;
+/* ── Raya dorada  ── */
+.fav-hero-divider {
+  width: 100%;
+  height: 9px;
+  background: linear-gradient(90deg, transparent 0%, #b8860b 30%, #d4a843 50%, #b8860b 70%, transparent 100%);
+}
+
+/* Rayita pequeña  */
+.fav-hero-line {
+  display: block;
+  width: 50px;
+  height: 1.5px;
+  background: linear-gradient(90deg, transparent, #b8860b, transparent);
+  margin: 12px auto 0;
+}
+
+/* ── Container ── */
+.fav-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 32px 24px 56px;
+}
+
+/* ── Grid CSS puro ── */
+.fav-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  justify-content: center;
+  width: 100%;
+  margin: 0 auto !important;
+  padding: 0 !important;
+}
+
+.fav-grid > * {
+  width: calc(25% - 16px);
+  min-width: 280px;
+  max-width: 380px;
+  padding: 0 !important;
+  margin: 0 !important;
+  flex-shrink: 0;
+  flex-grow: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.fav-grid .product-card {
+  width: 100% !important;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.fav-grid .card-body {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ── Loading ── */
+.fav-loading {
+  text-align: center;
+  padding: 60px 0;
+  color: #92590a;
+}
+.fav-spinner {
+  width: 36px;
+  height: 36px;
+  border: 3px solid #f5e6cc;
+  border-top-color: #b8860b;
+  border-radius: 50%;
+  animation: favSpin 0.7s linear infinite;
+  margin: 0 auto 14px;
+}
+@keyframes favSpin { to { transform: rotate(360deg); } }
+
+/* ── Empty state ── */
+.fav-empty {
+  text-align: center;
+  padding: 72px 24px;
+  color: #92590a;
+}
+.fav-empty svg { margin-bottom: 16px; opacity: 0.7; }
+.fav-empty h3  { font-size: 22px; font-weight: 500; color: #3d1f00; margin-bottom: 8px; }
+.fav-empty p   { font-size: 15px; color: #92590a; margin-bottom: 22px; }
+.fav-empty-btn {
+  display: inline-block;
+  background: #b8860b;
+  color: #fff;
+  padding: 10px 28px;
+  border-radius: 8px;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 14px;
+  letter-spacing: 0.05em;
+  transition: background 0.2s;
+}
+.fav-empty-btn:hover { background: #92590a; color: #fff; }
+
+/* ── Responsive ── */
+@media (max-width: 1100px) {
+  .fav-grid > * { width: calc(33.333% - 14px); }
+}
+@media (max-width: 768px) {
+  .fav-hero        { height: 300px; padding-bottom: 36px; }
+  .fav-hero-title  { font-size: 44px; }
+  .fav-grid > *    { width: calc(50% - 10px); max-width: none; }
+}
+
+@media (max-width: 576px) {
+  .fav-hero        { height: 240px; padding-bottom: 28px; }
+  .fav-hero-title  { font-size: 32px; letter-spacing: 0.15em; }
   
+  .fav-container {
+    padding: 20px 15px 40px !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
+    overflow-x: hidden !important;
+  }
+  
+  .fav-grid {
+    display: grid !important;
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 10px !important;
+    width: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+  
+  .fav-grid > * {
+    width: 100% !important;
+    min-width: 0 !important;
+    max-width: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
 }

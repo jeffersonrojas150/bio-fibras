@@ -267,15 +267,16 @@ const PaginationComponent = () => {
     // Se renderiza el `map` sobre `currentProducts` 
   
     return (
-      <Row className="products-grid gx-2 gy-3 g-md-4"> 
-        {currentProducts.map((product) => (
-          <ProductCard key={product.id} product={product} />
-        ))}
-      </Row>
-    );
+    <Row className="products-grid gx-2 gy-3 g-md-4">
+      {currentProducts.map((product) => (
+        <Col xs={6} md={4} lg={4} key={product.id} className="mb-4">
+          <ProductCard product={product} />
+        </Col>
+      ))}
+    </Row>
+  );
   };
 
-  // === JSX PRINCIPAL DEL COMPONENTE ===
   return (
     <div className="products-page">
       <Container className="py-4">
