@@ -119,6 +119,8 @@ class Direccion(models.Model):
     direccion_completo = models.TextField(verbose_name="Dirección detallada")
     agencia_recojo = models.TextField(blank=True, verbose_name="Agencia de Recojo (Empresa de envío)")
     direccion_agencia = models.TextField(blank=True, verbose_name="Dirección de la Agencia")
+    latitud = models.DecimalField(max_digits=9, decimal_places=6, null=True, blank=True)
+    longitud = models.DecimalField(max_digits=9, decimal_places=6, null=True, blank=True)
     es_principal = models.BooleanField(default=False, verbose_name="¿Es la dirección principal?")
     fecha_creacion = models.DateTimeField(auto_now_add=True)
     fecha_actualizacion = models.DateTimeField(auto_now=True)

@@ -191,8 +191,8 @@ class DireccionSerializer(serializers.ModelSerializer):
         fields = [
             'id', 'usuario', 'nombres', 'apellidos', 'dni', 'telefono', 
             'departamento', 'provincia', 'distrito', 'direccion_completo', 
-            'agencia_recojo', 'direccion_agencia', 'es_principal', 
-            'fecha_creacion'
+            'agencia_recojo', 'direccion_agencia', 'latitud', 'longitud', 
+            'es_principal', 'fecha_creacion'
         ]
         extra_kwargs = {
             'usuario': {'read_only': True}
