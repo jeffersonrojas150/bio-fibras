@@ -248,11 +248,43 @@ function OrderDetail() {
               <InfoRow label="Departamento"        value={dir.departamento}       />
               {dir.agencia_recojo && (
                 <>
-                  <InfoRow label="Agencia de recojo"    value={dir.agencia_recojo}   />
+                  <InfoRow label="Agencia de recojo"    value={dir.agencia_recojo}    />
                   <InfoRow label="Dirección de agencia" value={dir.direccion_agencia} />
                 </>
               )}
             </div>
+
+            {/* Mapa + botón Google Maps */}
+            {dir.latitud && dir.longitud && (
+              <div className="mt-4 space-y-3">
+                {/* Botón abrir en Google Maps */}
+                <a
+                  href={"https://www.google.com/maps/search/" + encodeURIComponent(dir.agencia_recojo + " " + dir.direccion_agencia)}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-semibold text-white transition-colors"
+                  style={{ backgroundColor: '#1a73e8' }}
+                  onMouseEnter={e => { e.currentTarget.style.backgroundColor = '#1557b0' }}
+                  onMouseLeave={e => { e.currentTarget.style.backgroundColor = '#1a73e8' }}
+                >
+                  <MapPin size={15} />
+                  Abrir en Google Maps
+                </a>
+
+                {/* Mapa embebido */}
+                <div style={{ borderRadius: '10px', overflow: 'hidden', border: '1px solid #e8d5a3' }}>
+                  <iframe
+                    title="Ubicación de la agencia"
+                    width="100%"
+                    height="250"
+                    style={{ border: 0, display: 'block' }}
+                    loading="lazy"
+                    allowFullScreen
+                    src={`https://www.google.com/maps/embed/v1/place?key=${import.meta.env.VITE_GOOGLE_MAPS_API_KEY}&q=${dir.latitud},${dir.longitud}&zoom=17`}
+                  />
+                </div>
+              </div>
+            )}
           </SectionCard>
 
           <SectionCard title="Productos del pedido" icon={Package}>
