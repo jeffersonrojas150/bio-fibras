@@ -337,10 +337,11 @@ class ContactFormView(generics.GenericAPIView):
 
         name = serializer.validated_data.get('name')
         email = serializer.validated_data.get('email')
+        phone = serializer.validated_data.get('phone', '')
         subject = serializer.validated_data.get('subject')
         message = serializer.validated_data.get('message')
 
-        enviar_correo_contacto(name, email, subject, message)
+        enviar_correo_contacto(name, email, phone, subject, message)
 
         return Response(
             {"detail": "Mensaje enviado exitosamente. Nos pondremos en contacto contigo pronto."},

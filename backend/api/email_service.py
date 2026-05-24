@@ -93,11 +93,12 @@ def enviar_correo_password_reset(request, usuario, token, uid):
         return False
 
 
-def enviar_correo_contacto(name, email, subject, message):
+def enviar_correo_contacto(name, email, phone, subject, message):
     try:
         contexto = {
             'nombre_remitente': name,
             'email_remitente': email,
+            'telefono_remitente': phone,
             'asunto_mensaje': subject,
             'cuerpo_mensaje': message,
         }
