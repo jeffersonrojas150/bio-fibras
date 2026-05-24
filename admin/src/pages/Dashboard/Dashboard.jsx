@@ -67,7 +67,7 @@ function StatCard({ icon: Icon, label, value, sub, iconBg, iconColor, loading })
     >
       <div
         className="w-12 h-12 md:w-14 md:h-14 rounded-xl flex items-center justify-center shrink-0"
-        style={{ backgroundColor: iconBg, border: '1px solid #080706' }}
+        style={{ backgroundColor: iconBg }}
       >
         <Icon size={24} style={{ color: iconColor }} strokeWidth={2} />
       </div>
@@ -89,8 +89,13 @@ function StatCard({ icon: Icon, label, value, sub, iconBg, iconColor, loading })
 function EstadoCard({ icon: Icon, label, value, bg, color, loading }) {
   return (
     <div
-      className="rounded-2xl p-4 flex items-center gap-3 shadow-sm"
-      style={{ backgroundColor: bg, border: '1px solid #080706' }}
+      className="p-4 flex items-center gap-3 shadow-sm"
+      style={{
+        backgroundColor: bg,
+        clipPath: 'polygon(0 0, calc(100% - 24px) 0, 100% 50%, calc(100% - 24px) 100%, 0 100%, 0 0)',
+        borderRadius: '12px 0 0 12px',
+        minHeight: '80px',
+      }}
     >
       <Icon size={20} style={{ color }} />
       <div>
@@ -108,7 +113,7 @@ function CustomTooltip({ active, payload, label }) {
   if (!active || !payload?.length) return null
   return (
     <div className="rounded-xl shadow-lg px-4 py-3 text-sm bg-white"
-      style={{ border: '1px solid #080706', fontFamily: 'Raleway, sans-serif' }}>
+      style={{fontFamily: 'Raleway, sans-serif' }}>
       <p className="font-bold mb-1" style={{ color: '#7e4400' }}>{label}</p>
       {payload.map((p, i) => (
         <p key={i} style={{ color: p.color }}>
@@ -127,7 +132,7 @@ function Dashboard() {
     <div className="space-y-5" style={{ fontFamily: 'Raleway, sans-serif' }}>
 
       {/* ── Header ── */}
-      <div className="rounded-2xl shadow-md overflow-hidden" style={{ border: '1px solid #080706' }}>
+      <div className="rounded-2xl shadow-md overflow-hidden">
         <div className="px-4 md:px-6 py-4 md:py-5 flex items-center justify-between gap-3"
           style={{ background: GOLD }}>
           <div className="flex items-center gap-3">
@@ -144,8 +149,20 @@ function Dashboard() {
             disabled={loading}
             className="flex items-center gap-2 px-3 md:px-4 py-2 rounded-lg text-xs md:text-sm font-semibold bg-white transition-all disabled:opacity-60 shrink-0"
             style={{ border: '2px solid white', color: '#b8941a' }}
-            onMouseEnter={e => { e.currentTarget.style.backgroundColor = '#f5e6cc'; e.currentTarget.style.color = '#7e4400' }}
-            onMouseLeave={e => { e.currentTarget.style.backgroundColor = 'white'; e.currentTarget.style.color = '#b8941a' }}
+            onMouseEnter={e => {
+              e.currentTarget.style.backgroundColor = '#080706'
+              e.currentTarget.style.color = '#d7ad44'
+              e.currentTarget.style.borderColor = '#080706'
+              e.currentTarget.style.transform = 'scale(1.04)'
+              e.currentTarget.style.boxShadow = '0 4px 14px rgba(0,0,0,0.25)'
+            }}
+            onMouseLeave={e => {
+              e.currentTarget.style.backgroundColor = 'white'
+              e.currentTarget.style.color = '#b8941a'
+              e.currentTarget.style.borderColor = 'white'
+              e.currentTarget.style.transform = 'scale(1)'
+              e.currentTarget.style.boxShadow = 'none'
+            }}
           >
             <RefreshCw size={14} className={loading ? 'animate-spin' : ''} />
             <span className="hidden sm:inline">Actualizar</span>
@@ -168,9 +185,13 @@ function Dashboard() {
         <StatCard loading={loading} icon={ShoppingCart} label="Total Órdenes"
           value={data?.total_ordenes ?? '—'} sub={`${data?.ordenes_pendientes ?? 0} pendientes`}
           iconBg="#f2d811" iconColor="#080706" />
+
+
         <StatCard loading={loading} icon={SolIcon} label="Ingresos Pagados"
-          value={data ? fmt(data.ingresos_pagados) : '—'} sub={`Total: ${data ? fmt(data.ingresos_totales) : '—'}`}
+          value={data ? fmt(data.ingresos_pagados) : '—'}
+          sub=" "
           iconBg="#c4fa82" iconColor="#080706" />
+
         <StatCard loading={loading} icon={Package} label="Productos Activos"
           value={data?.total_productos ?? '—'}
           sub={data?.productos_sin_stock > 0 ? `${data.productos_sin_stock} sin stock` : 'Stock completo'}
@@ -195,7 +216,7 @@ function Dashboard() {
 
         {/* Barras */}
         <div className="xl:col-span-2 rounded-2xl shadow-sm overflow-hidden"
-          style={{ border: '1px solid #080706' }}>
+          >
           <div className="px-4 py-3" style={{ background: GOLD }}>
             <div className="flex items-center gap-2">
               <TrendingUp size={16} className="text-white/90" />
@@ -217,10 +238,15 @@ function Dashboard() {
                     <BarChart data={barData} margin={{ top: 4, right: 4, left: 0, bottom: 0 }}>
                       <CartesianGrid strokeDasharray="3 3" stroke="#f3f4f6" />
                       <XAxis dataKey="mes" tick={{ fontSize: 10, fill: '#6b7280', fontFamily: 'Raleway' }} />
-                      <YAxis tickFormatter={v => `S/${(v/1000).toFixed(0)}k`}
-                        tick={{ fontSize: 10, fill: '#6b7280', fontFamily: 'Raleway' }} width={45} />
-                      <Tooltip content={<CustomTooltip />} />
-                      <Legend wrapperStyle={{ fontSize: 12, fontFamily: 'Raleway' }} />
+                      <YAxis
+                        tickFormatter={v => `S/${v.toLocaleString('es-PE')}`}
+                        tick={{ fontSize: 10, fill: '#6b7280', fontFamily: 'Raleway' }}
+                        width={65}
+                        tickCount={6}
+                        domain={[0, 'auto']}
+                      />
+                                            <Tooltip content={<CustomTooltip />} />
+                      <Legend wrapperStyle={{ fontSize: 12, fontFamily: 'Raleway', color: '#080706' }} />
                       <Bar dataKey="Ingresos" fill="#b8941a" radius={[6,6,0,0]} />
                       <Bar dataKey="Órdenes"  fill="#009929" radius={[6,6,0,0]} />
                     </BarChart>
@@ -231,7 +257,7 @@ function Dashboard() {
         </div>
 
         {/* Torta */}
-        <div className="rounded-2xl shadow-sm overflow-hidden" style={{ border: '1px solid #080706' }}>
+        <div className="rounded-2xl shadow-sm overflow-hidden">
           <div className="px-4 py-3" style={{ background: GOLD }}>
             <div className="flex items-center gap-2">
               <ShoppingCart size={16} className="text-white/90" />
@@ -252,14 +278,23 @@ function Dashboard() {
                     <Pie data={pieData} cx="50%" cy="42%"
                       innerRadius={50} outerRadius={75} paddingAngle={4} dataKey="value">
                       {pieData.map((_, i) => (
-                        <Cell key={i} fill={PIE_COLORS[i]} stroke="#080706" strokeWidth={1} />
+                        <Cell key={i} fill={PIE_COLORS[i]} stroke="none" strokeWidth={0} />
                       ))}
                     </Pie>
                     <Tooltip
                       formatter={(v, n) => [v, n]}
-                      contentStyle={{ fontFamily: 'Raleway', borderRadius: 12, border: '1px solid #080706' }}
+                      contentStyle={{ fontFamily: 'Raleway, sans-serif', borderRadius: 12, border: '1px solid #cfcfcf' }}
                     />
-                    <Legend wrapperStyle={{ fontSize: 11, fontFamily: 'Raleway', color: '#080706' }} />
+                    <Legend
+                      iconType="circle"
+                      iconSize={8}
+                      wrapperStyle={{ fontSize: 11, color: '#080706', fontWeight: 400 }}
+                      formatter={(value) => (
+                        <span style={{ color: '#080706', fontSize: 11, fontWeight: 400 }}>
+                          {value}
+                        </span>
+                      )}
+                    />
                   </PieChart>
                 </ResponsiveContainer>
               )
@@ -268,7 +303,7 @@ function Dashboard() {
         </div>
       </div>
 
-      {/* ── Estimación del mes ── */}
+      {/* ── Estimación del mes ──
       {!loading && mostrarEstimacion && (
         <div className="rounded-2xl shadow-sm overflow-hidden" style={{ border: '1px solid #080706' }}>
           <div className="px-4 py-3" style={{ background: GOLD }}>
@@ -331,9 +366,10 @@ function Dashboard() {
           </div>
         </div>
       )}
+      ── fin Estimación ── */}
 
       {/* ── Tabla órdenes recientes ── */}
-      <div className="rounded-2xl shadow-sm overflow-hidden" style={{ border: '1px solid #080706' }}>
+      <div className="rounded-2xl shadow-sm overflow-hidden">
         <div className="px-4 md:px-6 py-4" style={{ background: GOLD }}>
           <div className="flex items-center gap-3">
             <ShoppingCart size={18} className="text-white/90" />
@@ -361,7 +397,7 @@ function Dashboard() {
               <table className="w-full text-sm">
                 <thead>
                   <tr className="text-xs uppercase tracking-wider"
-                    style={{ background: GOLD, color: '#080706' }}>
+                    style={{ background: GOLD, color: '#f3f4f6' }}>
                     {['N° Orden', 'Cliente', 'Total', 'Estado Orden', 'Estado Pago', 'Fecha'].map(h => (
                       <th key={h} className="px-4 py-3 text-left font-bold">{h}</th>
                     ))}
@@ -412,7 +448,7 @@ function Dashboard() {
             <div className="md:hidden p-4 space-y-3 bg-white">
               {data.ordenes_recientes.map(o => (
                 <div key={o.id} className="rounded-xl p-4 space-y-2"
-                  style={{ backgroundColor: '#f9fafb', border: '1px solid #080706' }}>
+                  style={{ backgroundColor: '#f9fafb', border: '1px solid #cfcfcf' }}>
                   <div className="flex items-center justify-between">
                     <span className="font-bold text-sm" style={{ color: '#92590a' }}>
                       #{o.numero_orden || o.id}
