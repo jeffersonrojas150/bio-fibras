@@ -46,7 +46,7 @@
 }
 .fav-hero-title {
   font-family: 'Raleway', sans-serif;
-  font-size: 64px;
+  font-size: 65px;
   font-weight: 200;
   color: #ffffff;
   letter-spacing: 0.22em;
@@ -165,7 +165,7 @@
 }
 
 @media (max-width: 576px) {
-  .fav-hero        { height: 240px; padding-bottom: 28px; }
+  .fav-hero        { height: 250px; padding-bottom: 28px; }
   .fav-hero-title  { font-size: 32px; letter-spacing: 0.15em; }
   
   .fav-container {

@@ -27,7 +27,7 @@ const Header = () => {
 
   const searchInputRef = useRef(null);
 
-  const isHomePage = location.pathname === '/' || location.pathname === '/favoritos';
+  const isHomePage = location.pathname === '/' || location.pathname === '/favoritos' || location.pathname === '/contacto';
 
   const announcements = [
     { icon: <i className="bi bi-truck"></i>, text: "Envíos a todo el Perú" },
