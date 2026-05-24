@@ -195,10 +195,10 @@ function Dashboard() {
         <StatCard loading={loading} icon={Package} label="Productos Activos"
           value={data?.total_productos ?? '—'}
           sub={data?.productos_sin_stock > 0 ? `${data.productos_sin_stock} sin stock` : 'Stock completo'}
-          iconBg="#f5e6cc" iconColor="#7e4400" />
+          iconBg="#fabf37" iconColor="#080706" />
         <StatCard loading={loading} icon={Users} label="Usuarios"
           value={data?.total_usuarios ?? '—'} sub="Clientes registrados"
-          iconBg="#ede9fe" iconColor="#7c3aed" />
+          iconBg="#df72f2" iconColor="#080706" />
       </div>
 
       {/* ── Cards estado órdenes ── */}
