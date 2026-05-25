@@ -32,7 +32,7 @@ function Login() {
       style={{ backgroundColor: '#f5f0e8' }}>
       <div className="bg-white rounded-2xl shadow-xl p-8 w-full max-w-md">
 
-        {/* Logo */}
+        {/*Logo*/}
         <div className="flex flex-col items-center mb-8">
           <img src={logo} alt="Biofibras" className="h-16 w-auto mb-3" />
           <h1 className="text-2xl font-bold tracking-widest" style={{ color: '#2c5530' }}>
@@ -44,7 +44,7 @@ function Login() {
         {/* Form */}
         <form onSubmit={handleSubmit} className="space-y-4">
 
-          {/* Usuario */}
+          {/*Usuario*/}
           <div>
             <label className="block text-sm font-semibold text-gray-700 mb-1">
               Usuario
