@@ -1,14 +1,18 @@
 // src/components/Topbar.jsx
+import { useState } from 'react'
 import { Bell, Menu, Globe } from 'lucide-react'
 import logo from '../assets/logo.png'
+import NotificationPanel from './UI/NotificationPanel'
 
-const goldGradient = 'linear-gradient(135deg, #d7ad44 0%, #b8941a 30%)'
+const GOLD = 'linear-gradient(135deg, #d7ad44 0%, #b8941a 30%)'
 
-function Topbar({ onMenuClick }) {
+function Topbar({ onMenuClick, notificaciones = [] }) {
+  const [showNotif, setShowNotif] = useState(false)
+
   return (
     <header
       className="px-4 md:px-6 py-3 flex items-center justify-between shadow-md rounded-b-2xl mx-2 z-10"
-      style={{ background: goldGradient }}
+      style={{ background: GOLD }}
     >
       {/* ── Izquierda: Logo + Texto ── */}
       <div className="flex items-center gap-2">
@@ -27,10 +31,31 @@ function Topbar({ onMenuClick }) {
       <div className="flex items-center gap-2 md:gap-3">
 
         {/* Campana */}
-        <button className="relative p-2.5 rounded-xl hover:bg-white/20 active:bg-white/30 transition-colors">
-          <Bell size={24} className="text-white" />
-          <span className="absolute top-1.5 right-1.5 w-2.5 h-2.5 bg-red-500 border-2 border-white rounded-full" />
-        </button>
+        <div className="relative">
+          <button
+            onClick={() => setShowNotif(prev => !prev)}
+            className="relative p-2.5 rounded-xl hover:bg-white/20 active:bg-white/30 transition-colors"
+          >
+            <Bell size={24} className="text-white" />
+            {notificaciones.length > 0 && (
+              <span
+                className="absolute -top-1 -right-1 min-w-[18px] h-[18px] px-1 flex items-center justify-center
+                           bg-red-500 border-2 border-white rounded-full text-white font-bold"
+                style={{ fontSize: '9px', lineHeight: 1 }}
+              >
+                {notificaciones.length > 9 ? '9+' : notificaciones.length}
+              </span>
+            )}
+          </button>
+
+          {/* Panel — componente separado */}
+          {showNotif && (
+            <NotificationPanel
+              notificaciones={notificaciones}
+              onClose={() => setShowNotif(false)}
+            />
+          )}
+        </div>
 
         <div className="w-px h-6 bg-white/30 hidden sm:block" />
 
@@ -54,7 +79,7 @@ function Topbar({ onMenuClick }) {
           <span className="hidden sm:inline">Ver Tienda</span>
         </a>
 
-        {/* ── Hamburguesa con label "Menú" — solo móvil ── */}
+        {/* Hamburguesa — solo móvil */}
         <button
           onClick={onMenuClick}
           className="md:hidden flex flex-col items-center justify-center gap-0.5 px-2 py-1.5 rounded-xl
