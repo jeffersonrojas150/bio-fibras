@@ -248,11 +248,12 @@ class ContactFormSerializer(serializers.Serializer):
     """
     name = serializers.CharField(max_length=100, required=True)
     email = serializers.EmailField(required=True)
+    phone = serializers.CharField(max_length=20, required=False, allow_blank=True)
     subject = serializers.CharField(max_length=150, required=True)
     message = serializers.CharField(required=True)
 
     class Meta:
-        fields = ['name', 'email', 'subject', 'message']
+        fields = ['name', 'email', 'phone', 'subject', 'message']
 
 # =============================================
 # SERIALIZERS PARA EL PANEL DE ADMINISTRACIÓN

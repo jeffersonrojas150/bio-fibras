@@ -32,6 +32,9 @@
                             <div style="border-bottom: 1px solid #e0e0e0; padding-bottom: 15px; margin-bottom: 20px;">
                                 <p style="margin: 0 0 8px 0;"><strong>De:</strong> {{ nombre_remitente }}</p>
                                 <p style="margin: 0 0 8px 0;"><strong>Email:</strong> <a href="mailto:{{ email_remitente }}" style="color: #C8860D; text-decoration: none;">{{ email_remitente }}</a></p>
+                                {% if telefono_remitente %}
+                                <p style="margin: 0 0 8px 0;"><strong>Teléfono:</strong> <a href="tel:{{ telefono_remitente }}" style="color: #C8860D; text-decoration: none;">{{ telefono_remitente }}</a></p>
+                                {% endif %}
                                 <p style="margin: 0;"><strong>Asunto:</strong> {{ asunto_mensaje }}</p>
                             </div>
 
