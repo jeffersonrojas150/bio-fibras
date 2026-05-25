@@ -94,7 +94,7 @@ function Login() {
         </form>
 
         <p className="text-center text-xs text-gray-400 mt-6">
-          © 2025 Biofibras — Solo para administradores
+          © 2026 Biofibras - Solo para administradores
         </p>
       </div>
     </div>
