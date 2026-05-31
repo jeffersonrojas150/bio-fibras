@@ -29,8 +29,7 @@ def enviar_correo_confirmacion_orden(orden):
 
 def enviar_correo_nueva_orden_admin(orden, request):
     try:
-        admin_path = reverse('admin:api_orden_change', args=[orden.id])
-        admin_url = request.build_absolute_uri(admin_path)
+        admin_url = f"https://admin.bio-fibras.com.pe/orders/{orden.id}"
         contexto = {
             'orden': orden,
             'usuario': orden.usuario,
