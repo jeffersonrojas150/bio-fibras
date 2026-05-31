@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Container, Row, Col, Button, Form, Badge, Offcanvas, Spinner, Alert, Pagination } from 'react-bootstrap';
-import { FaFilter } from 'react-icons/fa';
+import { FaFilter, FaChevronDown } from 'react-icons/fa';
 
 import apiClient from '../../api';
 import CustomSortDropdown from './CustomSortDropdown';
@@ -21,10 +21,12 @@ const Products = () => {
   const [categories, setCategories] = useState([]);
   const [filteredProducts, setFilteredProducts] = useState([]);
 
+  const [categoriesExpanded, setCategoriesExpanded] = useState(true);
+
   // Estados para los filtros 
   const [selectedCategories, setSelectedCategories] = useState(new Set());
   const [selectedPriceRanges, setSelectedPriceRanges] = useState(new Set());
-  const [sortBy, setSortBy] = useState('name');
+  const [sortBy, setSortBy] = useState('price-low');
   const [showFilters, setShowFilters] = useState(false);
 
   // === ESTADOS PARA LA PAGINACIÓN  ===
@@ -159,7 +161,7 @@ const Products = () => {
   const clearFilters = () => {
     setSelectedCategories(new Set());
     setSelectedPriceRanges(new Set());
-    setSortBy('name');
+    setSortBy('price-low');
     if (categorySlugFromUrl) navigate('/productos');
   };
 
@@ -169,14 +171,32 @@ const Products = () => {
   const FilterSidebar = ({ isMobile = false }) => (
     <div className="filters-container">
       <div className="filters-header">
-        <h5>Filtrar Productos</h5>
+        {!isMobile && <h5>Filtrar Productos</h5>}
         {!isMobile && hasActiveFilters && (<Button variant="link" className="clear-filters-btn" onClick={clearFilters}>Limpiar Filtros</Button>)}
       </div>
       <div className="filter-section">
-        <h4>Categorías</h4>
-        <div className="checkbox-group">
-          {categories.map((category) => (<Form.Check key={category.value} type="checkbox" id={`category-${category.value}-${isMobile}`} label={category.label} checked={selectedCategories.has(category.value)} onChange={() => handleCategoryChange(category.value)} className="filter-checkbox" />))}
-        </div>
+        <h4
+          className="filter-section-toggle"
+          onClick={() => setCategoriesExpanded(!categoriesExpanded)}
+        >
+          Categorías
+          <FaChevronDown className={`chevron-icon ms-auto ${categoriesExpanded ? 'open' : ''}`} />
+        </h4>
+        {categoriesExpanded && (
+          <div className="checkbox-group categories-scrollable">
+            {categories.map((category) => (
+              <Form.Check
+                key={category.value}
+                type="checkbox"
+                id={`category-${category.value}-${isMobile}`}
+                label={category.label}
+                checked={selectedCategories.has(category.value)}
+                onChange={() => handleCategoryChange(category.value)}
+                className="filter-checkbox"
+              />
+            ))}
+          </div>
+        )}
       </div>
       <div className="filter-section">
         <h4>Precio</h4>
@@ -323,7 +343,7 @@ const PaginationComponent = () => {
         </Row>
       </Container>
       <Offcanvas show={showFilters} onHide={() => setShowFilters(false)} placement="start" className="mobile-filters-offcanvas">
-        <Offcanvas.Header closeButton><Offcanvas.Title>Filtros</Offcanvas.Title></Offcanvas.Header>
+        <Offcanvas.Header closeButton><Offcanvas.Title>Filtrar Productos</Offcanvas.Title></Offcanvas.Header>
         <Offcanvas.Body>
           <FilterSidebar isMobile={true} />
           <div className="mobile-filter-actions">
