@@ -188,6 +188,7 @@ class Orden(models.Model):
 
     usuario = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True, related_name='ordenes', verbose_name="Usuario")
     direccion = models.ForeignKey(Direccion, on_delete=models.SET_NULL, null=True, related_name='ordenes', verbose_name="Dirección de envío")
+    direccion_snapshot = models.JSONField(null=True, blank=True, verbose_name="Snapshot de la dirección al momento de la compra")
     
     total = models.DecimalField(max_digits=10, decimal_places=2, verbose_name="Monto total de la compra")
     metodo_pago = models.CharField(max_length=50, choices=MetodoPago.choices, default=MetodoPago.TRANSFERENCIA, verbose_name="Método de pago")

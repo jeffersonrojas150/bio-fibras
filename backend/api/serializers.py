@@ -203,8 +203,7 @@ class OrdenSerializer(serializers.ModelSerializer):
     
     usuario = serializers.StringRelatedField(read_only=True)
 
-    direccion = DireccionSerializer(read_only=True) 
-
+    direccion = serializers.SerializerMethodField()
     direccion_id = serializers.IntegerField(write_only=True, source='direccion')
 
     class Meta:
@@ -215,8 +214,14 @@ class OrdenSerializer(serializers.ModelSerializer):
             'fecha_creacion', 'items', 'direccion', 'direccion_id',
             'comprobante_envio'
         ]
-
         read_only_fields = ['total', 'cantidad_compra', 'usuario']
+
+    def get_direccion(self, obj):
+        if obj.direccion:
+            return DireccionSerializer(obj.direccion).data
+        if obj.direccion_snapshot:
+            return obj.direccion_snapshot
+        return None
 
 
 class PasswordResetRequestSerializer(serializers.Serializer):
@@ -373,7 +378,7 @@ class AdminOrdenSerializer(serializers.ModelSerializer):
     items = OrdenItemSerializer(many=True, read_only=True)
     usuario_email = serializers.SerializerMethodField()
     usuario_nombre = serializers.SerializerMethodField()
-    direccion = DireccionSerializer(read_only=True)
+    direccion = serializers.SerializerMethodField()
 
     class Meta:
         model = Orden
@@ -389,6 +394,13 @@ class AdminOrdenSerializer(serializers.ModelSerializer):
             'numero_orden', 'usuario', 'total',
             'cantidad_compra', 'fecha_creacion',
         ]
+        
+    def get_direccion(self, obj):
+        if obj.direccion:
+            return DireccionSerializer(obj.direccion).data
+        if obj.direccion_snapshot:
+            return obj.direccion_snapshot
+        return None
 
     def get_usuario_email(self, obj):
         return obj.usuario.email if obj.usuario else None

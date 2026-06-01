@@ -212,6 +212,19 @@ class OrdenListCreateView(generics.ListCreateAPIView):
             metodo_pago=metodo_pago,
             cantidad_compra=cantidad_total_items
         )
+        nueva_orden.direccion_snapshot = {
+            'nombres': direccion.nombres,
+            'apellidos': direccion.apellidos,
+            'dni': direccion.dni,
+            'telefono': direccion.telefono,
+            'departamento': direccion.departamento,
+            'provincia': direccion.provincia,
+            'distrito': direccion.distrito,
+            'direccion_completo': direccion.direccion_completo,
+            'agencia_recojo': direccion.agencia_recojo,
+            'direccion_agencia': direccion.direccion_agencia,
+        }
+        nueva_orden.save()
 
         for item in items_carrito:
             precio = item.producto.precio_oferta or item.producto.precio_unitario
@@ -589,6 +602,19 @@ class MercadoPagoWebhookView(APIView):
                                 mercado_pago_status=payment_status,
                                 mercado_pago_status_detail=status_detail,
                             )
+                            nueva_orden.direccion_snapshot = {
+                                'nombres': direccion.nombres,
+                                'apellidos': direccion.apellidos,
+                                'dni': direccion.dni,
+                                'telefono': direccion.telefono,
+                                'departamento': direccion.departamento,
+                                'provincia': direccion.provincia,
+                                'distrito': direccion.distrito,
+                                'direccion_completo': direccion.direccion_completo,
+                                'agencia_recojo': direccion.agencia_recojo,
+                                'direccion_agencia': direccion.direccion_agencia,
+                            }
+                            nueva_orden.save()
                             
                             # Asociar la orden al payment_record
                             payment_record.orden = nueva_orden
