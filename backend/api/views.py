@@ -223,6 +223,8 @@ class OrdenListCreateView(generics.ListCreateAPIView):
             'direccion_completo': direccion.direccion_completo,
             'agencia_recojo': direccion.agencia_recojo,
             'direccion_agencia': direccion.direccion_agencia,
+            'latitud': str(direccion.latitud) if direccion.latitud else None,
+            'longitud': str(direccion.longitud) if direccion.longitud else None,
         }
         nueva_orden.save()
 
@@ -613,6 +615,8 @@ class MercadoPagoWebhookView(APIView):
                                 'direccion_completo': direccion.direccion_completo,
                                 'agencia_recojo': direccion.agencia_recojo,
                                 'direccion_agencia': direccion.direccion_agencia,
+                                'latitud': str(direccion.latitud) if direccion.latitud else None,
+                                'longitud': str(direccion.longitud) if direccion.longitud else None,
                             }
                             nueva_orden.save()
                             
