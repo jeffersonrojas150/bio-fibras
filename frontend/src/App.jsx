@@ -1,6 +1,7 @@
 import { BrowserRouter as Router, Routes, Route, Navigate, useLocation } from "react-router-dom";
 import React from "react";
 import { GoogleOAuthProvider } from "@react-oauth/google";
+import { Analytics } from '@vercel/analytics/react';
 
 
 import Home from "./pages/Home/Home";
@@ -131,6 +132,7 @@ const PrivateRoute = ({ children }) => {
           </CategoryProvider>
         </GoogleOAuthProvider>
       </AuthProvider>
+      <Analytics />
     </div>
   );
 }
