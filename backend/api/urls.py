@@ -72,8 +72,9 @@ urlpatterns = [
     path('ordenes/<int:pk>/', OrdenDetailView.as_view(), name='detalle-orden'),
 
     # ---- PAGOS ----
-    path('pagos/crear-preferencia/', CrearPreferenciaPagoView.as_view(), name='crear-preferencia-pago'),
-    path('pagos/webhook', MercadoPagoWebhookView.as_view(), name='mercado-pago-webhook'),
+    # Mercado Pago deshabilitado temporalmente — descomentar para reactivar
+    # path('pagos/crear-preferencia/', CrearPreferenciaPagoView.as_view(), name='crear-preferencia-pago'),
+    # path('pagos/webhook', MercadoPagoWebhookView.as_view(), name='mercado-pago-webhook'),
 
     # ---- ADMIN ----
     path('admin-api/dashboard/', AdminDashboardView.as_view(), name='admin-dashboard'),

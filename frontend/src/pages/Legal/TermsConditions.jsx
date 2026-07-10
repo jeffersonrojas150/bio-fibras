@@ -150,18 +150,20 @@ const TermsConditions = () => {
                                 </p>
 
                                 <p>
-                                    Durante el proceso podrás elegir entre tres métodos de pago: 
-                                    <strong> Mercado Pago</strong>, <strong> Yape</strong> o 
+                                    Durante el proceso podrás elegir entre dos métodos de pago:
+                                    <strong> Yape</strong> o
                                     <strong> transferencia bancaria</strong>.
                                 </p>
 
+                                {/* Mercado Pago deshabilitado temporalmente — descomentar para reactivar
                                 <p>
-                                    Si eliges pagar mediante <strong>Mercado Pago</strong>, la validación del pago es 
+                                    Si eliges pagar mediante <strong>Mercado Pago</strong>, la validación del pago es
                                     automática y tu pedido pasará inmediatamente al estado <strong>"Confirmado"</strong>.
                                 </p>
+                                */}
 
                                 <p>
-                                    Si eliges pagar por <strong>Yape</strong> o <strong>transferencia bancaria</strong>, 
+                                    Si eliges pagar por <strong>Yape</strong> o <strong>transferencia bancaria</strong>,
                                     deberás enviar el comprobante o voucher por <strong>WhatsApp</strong> o 
                                     <strong> correo electrónico</strong>, indicando el código de tu pedido. 
                                     Solo después de verificar el pago, tu pedido será aceptado y procederemos con el envío.
@@ -173,11 +175,13 @@ const TermsConditions = () => {
                                 <p>Actualmente aceptamos los siguientes métodos de pago:</p>
 
                                 <ul>
+                                {/* Mercado Pago deshabilitado temporalmente — descomentar para reactivar
                                 <li>
                                     <strong>Pago online con Mercado Pago:</strong> podrás pagar con tarjeta de crédito,
                                     débito, Yape, Plin o saldo en Mercado Pago. Es un proceso totalmente seguro y
                                     automático. Una vez completado el pago, tu pedido se confirma inmediatamente.
                                 </li>
+                                */}
 
                                 <li>
                                     <strong>Yape:</strong> puedes realizar el pago manualmente escaneando nuestro código QR o
@@ -199,12 +203,14 @@ const TermsConditions = () => {
                                 enviado.
                                 </p>
 
+                                {/* Mercado Pago deshabilitado temporalmente — descomentar para reactivar
                                 <p>
                                 En el caso del pago online mediante Mercado Pago, el sistema valida automáticamente la
                                 transacción y el pedido pasa a estado "Confirmado" de inmediato.
                                 </p>
+                                */}
 
-                              
+
 
                                 <h3>4.3 Seguridad de Pagos</h3>
                                 <p>

@@ -24,7 +24,8 @@ const Checkout = () => {
   const [addresses, setAddresses] = useState([]);
   const [loadingAddresses, setLoadingAddresses] = useState(true);
   const [selectedAddressId, setSelectedAddressId] = useState(null);
-  const [paymentMethod, setPaymentMethod] = useState('mercado_pago');
+  // Mercado Pago deshabilitado temporalmente — método por defecto cambiado a pago manual (Yape)
+  const [paymentMethod, setPaymentMethod] = useState('yape');
 
   const totalPrice = getTotalPrice();
   const shipping = 0;

@@ -3,7 +3,8 @@
 import React, { useState } from 'react';
 import { Card, Form, Button, Alert, Spinner, Collapse } from 'react-bootstrap';
 import { FaUniversity, FaMobileAlt, FaCreditCard, FaArrowLeft, FaLock, FaWhatsapp } from 'react-icons/fa';
-import { crearPreferenciaPago } from '../../services/mercadoPagoService';
+// Mercado Pago deshabilitado temporalmente — descomentar para reactivar
+// import { crearPreferenciaPago } from '../../services/mercadoPagoService';
 
 const PaymentMethods = ({
   selectedMethod,
@@ -12,14 +13,17 @@ const PaymentMethods = ({
   onPrev,
   isProcessing,
   finalTotal,
-  selectedAddressId,
+  selectedAddressId, // eslint-disable-line no-unused-vars -- reservado para cuando se reactive Mercado Pago
 }) => {
 
-  const [isMercadoPagoProcessing, setIsMercadoPagoProcessing] = useState(false);
-  const [mpError, setMpError] = useState('');
+  // Mercado Pago deshabilitado temporalmente
+  // const [isMercadoPagoProcessing, setIsMercadoPagoProcessing] = useState(false);
+  // const [mpError, setMpError] = useState('');
 
   // Estado para controlar si se seleccionó "Pagar vía WhatsApp"
-  const [showWhatsAppOptions, setShowWhatsAppOptions] = useState(false);
+  // Inicia en true: al ser la única opción disponible (Mercado Pago deshabilitado),
+  // se muestran sus sub-opciones (Transferencia/Yape) desde el inicio sin requerir click.
+  const [showWhatsAppOptions, setShowWhatsAppOptions] = useState(true);
 
   // Determinar cuál es la opción principal seleccionada
   const mainOption = selectedMethod === 'mercado_pago' ? 'online' : 'whatsapp';
@@ -46,31 +50,31 @@ const PaymentMethods = ({
     }
   };
 
-  // Handler para Mercado Pago
-  const handleMercadoPagoPayment = async () => {
-    if (!selectedAddressId) {
-      setMpError('Debes seleccionar una dirección de envío primero.');
-      return;
-    }
-
-    setIsMercadoPagoProcessing(true);
-    setMpError('');
-
-    try {
-      // Crear preferencia en Mercado Pago
-      const response = await crearPreferenciaPago(selectedAddressId);
-
-      const { init_point } = response;
-
-      // Redirigir al usuario a Mercado Pago
-      window.location.href = init_point;
-
-    } catch (error) {
-      console.error('Error al procesar pago con Mercado Pago:', error);
-      setMpError('No se pudo iniciar el pago con Mercado Pago. Por favor, intenta nuevamente.');
-      setIsMercadoPagoProcessing(false);
-    }
-  };
+  // Mercado Pago deshabilitado temporalmente — descomentar para reactivar
+  // const handleMercadoPagoPayment = async () => {
+  //   if (!selectedAddressId) {
+  //     setMpError('Debes seleccionar una dirección de envío primero.');
+  //     return;
+  //   }
+  //
+  //   setIsMercadoPagoProcessing(true);
+  //   setMpError('');
+  //
+  //   try {
+  //     // Crear preferencia en Mercado Pago
+  //     const response = await crearPreferenciaPago(selectedAddressId);
+  //
+  //     const { init_point } = response;
+  //
+  //     // Redirigir al usuario a Mercado Pago
+  //     window.location.href = init_point;
+  //
+  //   } catch (error) {
+  //     console.error('Error al procesar pago con Mercado Pago:', error);
+  //     setMpError('No se pudo iniciar el pago con Mercado Pago. Por favor, intenta nuevamente.');
+  //     setIsMercadoPagoProcessing(false);
+  //   }
+  // };
 
   return (
     <Card className="payment-card">
@@ -79,14 +83,17 @@ const PaymentMethods = ({
         2. Elige tu Método de Pago
       </Card.Header>
       <Card.Body>
+        {/* Mercado Pago deshabilitado temporalmente
         {mpError && <Alert variant="danger" dismissible onClose={() => setMpError('')}>{mpError}</Alert>}
+        */}
 
         <Form onSubmit={handleManualPaymentSubmit}>
           <div className="payment-methods">
 
-            {/* ========================================== */}
-            {/* OPCIÓN PRINCIPAL 1: PAGAR EN LÍNEA */}
-            {/* ========================================== */}
+            {/* ==========================================
+            Mercado Pago deshabilitado temporalmente — descomentar para reactivar
+            OPCIÓN PRINCIPAL 1: PAGAR EN LÍNEA
+            ==========================================
             <div
               className={`payment-method ${mainOption === 'online' ? 'selected' : ''}`}
               onClick={() => handleMainOptionChange('online')}
@@ -107,6 +114,7 @@ const PaymentMethods = ({
                 </div>
               </div>
             </div>
+            */}
 
             {/* ========================================== */}
             {/* OPCIÓN PRINCIPAL 2: PAGAR VÍA WHATSAPP */}
@@ -193,6 +201,7 @@ const PaymentMethods = ({
           {/* MENSAJES INFORMATIVOS SEGÚN SELECCIÓN */}
           {/* ========================================== */}
 
+          {/* Mercado Pago deshabilitado temporalmente
           {selectedMethod === 'mercado_pago' && (
             <Alert variant="info" className="mt-4 d-flex align-items-center">
               <FaLock className="me-2" style={{ fontSize: '1.5rem', color: '#0dcaf0' }} />
@@ -201,6 +210,7 @@ const PaymentMethods = ({
               </div>
             </Alert>
           )}
+          */}
 
           {(selectedMethod === 'transferencia' || selectedMethod === 'yape') && (
             <Alert variant="info" className="mt-4 d-flex align-items-center">
@@ -219,14 +229,14 @@ const PaymentMethods = ({
             <Button
               variant="outline-secondary"
               onClick={onPrev}
-              disabled={isProcessing || isMercadoPagoProcessing}
+              disabled={isProcessing}
             >
               <FaArrowLeft className="me-2" />
               Volver a Envío
             </Button>
 
+            {/* Mercado Pago deshabilitado temporalmente — descomentar para reactivar
             {selectedMethod === 'mercado_pago' ? (
-              // Botón para Mercado Pago
               <Button
                 onClick={handleMercadoPagoPayment}
                 className="btn-fiofibras"
@@ -241,8 +251,7 @@ const PaymentMethods = ({
                   `Pagar S/ ${finalTotal.toFixed(2)}`
                 )}
               </Button>
-            ) : (
-              // Botón para pagos manuales
+            ) : ( */}
               <Button type="submit" className="btn-fiofibras" disabled={isProcessing}>
                 {isProcessing ? (
                   <>
@@ -253,7 +262,7 @@ const PaymentMethods = ({
                   `Confirmar Pedido - S/ ${finalTotal.toFixed(2)}`
                 )}
               </Button>
-            )}
+            {/* )} */}
           </div>
         </Form>
       </Card.Body>
