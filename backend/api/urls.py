@@ -18,6 +18,7 @@ from .views import (
     DireccionViewSet,
     OrdenListCreateView,
     OrdenDetailView,
+    SubirComprobantePagoView,
     PasswordResetRequestView,
     PasswordResetConfirmView,
     ContactFormView,
@@ -70,6 +71,7 @@ urlpatterns = [
     # ---- ÓRDENES ----
     path('ordenes/', OrdenListCreateView.as_view(), name='listar-crear-ordenes'),
     path('ordenes/<int:pk>/', OrdenDetailView.as_view(), name='detalle-orden'),
+    path('ordenes/<int:pk>/comprobante/', SubirComprobantePagoView.as_view(), name='subir-comprobante-pago'),
 
     # ---- PAGOS ----
     # Mercado Pago deshabilitado temporalmente — descomentar para reactivar
