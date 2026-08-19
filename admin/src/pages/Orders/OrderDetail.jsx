@@ -3,24 +3,11 @@ import { useRef } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import {
   ArrowLeft, Package, User, MapPin, CreditCard,
-  FileImage, CheckCircle, XCircle, Truck, Clock,
-  Save, Upload, X, AlertCircle, Building2, ShoppingCart,
+  FileImage, CheckCircle, XCircle, Truck,
+  Save, Upload, X, Building2, ShoppingCart,
 } from 'lucide-react'
 import { useOrderDetail } from './hooks/useOrderDetail'
-
-const ESTADO_PAGO_OPTIONS = [
-  { value: 'pendiente', label: 'Pendiente', bg: '#f2d811', color: '#080706', Icon: Clock       },
-  { value: 'pagado',    label: 'Pagado',    bg: '#c4fa82', color: '#080706', Icon: CheckCircle },
-  { value: 'rechazado', label: 'Rechazado', bg: '#ba0404', color: '#ffffff', Icon: AlertCircle },
-  { value: 'cancelado', label: 'Cancelado', bg: '#fa0505', color: '#ffffff', Icon: XCircle     },
-]
-
-const ESTADO_ORDEN_OPTIONS = [
-  { value: 'pendiente', label: 'Pendiente', bg: '#f2d811', color: '#080706', Icon: Clock       },
-  { value: 'enviado',   label: 'Enviado',   bg: '#52faec', color: '#080706', Icon: Truck       },
-  { value: 'entregado', label: 'Entregado', bg: '#3c95fa', color: '#080706', Icon: CheckCircle },
-  { value: 'cancelado', label: 'Cancelado', bg: '#fa0505', color: '#ffffff', Icon: XCircle     },
-]
+import { ESTADO_PAGO_OPTIONS, ESTADO_ORDEN_OPTIONS } from '../../constants/orderStatus'
 
 function Badge({ value, options }) {
   const cfg = options.find(o => o.value === value) || { label: value, bg: '#f5f5f5', color: '#555' }

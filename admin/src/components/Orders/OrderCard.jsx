@@ -1,20 +1,7 @@
 // src/components/Orders/OrderCard.jsx
 import { useNavigate } from 'react-router-dom'
 import { Eye, ShoppingCart, User, CreditCard, Package } from 'lucide-react'
-
-const ESTADO_PAGO_COLORS = {
-  'pendiente': { bg: '#f2d811', color: '#080706', label: 'Pendiente' },
-  'pagado':    { bg: '#c4fa82', color: '#080706', label: 'Pagado'    },
-  'rechazado': { bg: '#ba0404', color: '#ffffff', label: 'Rechazado' },
-  'cancelado': { bg: '#fa0505', color: '#ffffff', label: 'Cancelado' },
-}
-
-const ESTADO_ORDEN_COLORS = {
-  'pendiente': { bg: '#f2d811', color: '#080706', label: 'Pendiente' },
-  'enviado':   { bg: '#52faec', color: '#080706', label: 'Enviado'   },
-  'entregado': { bg: '#3c95fa', color: '#080706', label: 'Entregado' },
-  'cancelado': { bg: '#fa0505', color: '#ffffff', label: 'Cancelado' },
-}
+import { ESTADO_PAGO_COLORS, ESTADO_ORDEN_COLORS } from '../../constants/orderStatus'
 
 function Badge({ value, map }) {
   const cfg = map[value] || { bg: '#f5f5f5', color: '#555', label: value }
