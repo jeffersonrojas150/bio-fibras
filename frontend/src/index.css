@@ -1,6 +1,8 @@
 /* src/index.css */
 
 @import url('https://fonts.googleapis.com/css2?family=Raleway:wght@300;600;700&display=swap');
+   @import "tailwindcss/theme.css";
+   @import "tailwindcss/utilities.css";
 
 :root {
   --font-body: 'Raleway', sans-serif;
