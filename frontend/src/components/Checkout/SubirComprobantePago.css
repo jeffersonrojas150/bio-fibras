@@ -1,0 +1,39 @@
+/* src/components/Checkout/SubirComprobantePago.css */
+
+.comprobante-upload-card {
+  border: 3px solid #d7ad44;
+  border-radius: 15px;
+  box-shadow: 0 8px 25px rgba(215, 173, 68, 0.25);
+}
+
+.comprobante-upload-card .card-header {
+  background: linear-gradient(135deg, #d7ad44 0%, #b8941a 100%);
+  color: white;
+  font-size: 1.2rem;
+  font-weight: 700;
+  padding: 1.25rem 1.5rem;
+  border-radius: 12px 12px 0 0;
+}
+
+.comprobante-upload-card .card-body {
+  padding: 2rem 1.5rem;
+}
+
+.comprobante-upload-success {
+  border-color: #228B22;
+}
+
+.comprobante-upload-success .card-header {
+  display: none;
+}
+
+@media (max-width: 576px) {
+  .comprobante-upload-card .card-header {
+    font-size: 1.05rem;
+    padding: 1rem;
+  }
+
+  .comprobante-upload-card .card-body {
+    padding: 1.5rem 1rem;
+  }
+}
