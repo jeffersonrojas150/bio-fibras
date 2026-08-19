@@ -173,9 +173,10 @@ class OrdenListCreateView(generics.ListCreateAPIView):
         aprovechar la gestión de la vista genérica.
         """
         usuario = self.request.user
-        items_carrito = Carrito.objects.filter(usuario=usuario)
-        
-        if not items_carrito.exists():
+        items_carrito_qs = Carrito.objects.filter(usuario=usuario)
+        items_carrito = list(items_carrito_qs)
+
+        if not items_carrito:
             raise serializers.ValidationError({"error": "Tu carrito está vacío."})
 
         direccion_id = self.request.data.get('direccion_id')
@@ -183,24 +184,31 @@ class OrdenListCreateView(generics.ListCreateAPIView):
 
         if not direccion_id or not metodo_pago:
             raise serializers.ValidationError({"error": "La dirección de envío y el método de pago son requeridos."})
-        
+
         try:
             direccion = Direccion.objects.get(id=direccion_id, usuario=usuario)
         except Direccion.DoesNotExist:
             raise serializers.ValidationError({"error": "La dirección especificada no es válida o no te pertenece."})
 
+        # select_for_update() bloquea las filas de producto hasta que termine la
+        # transacción, evitando que dos checkouts concurrentes vendan más stock
+        # del disponible.
+        producto_ids = [item.producto_id for item in items_carrito]
+        productos_bloqueados = Producto.objects.select_for_update().in_bulk(producto_ids)
+
         total_orden = 0
         cantidad_total_items = 0
-        
+
         for item in items_carrito:
-            if item.cantidad > item.producto.stock:
+            producto = productos_bloqueados[item.producto_id]
+            if item.cantidad > producto.stock:
                 raise serializers.ValidationError(
-                    {"error": f"Stock insuficiente para '{item.producto.nombre}'. Disponible: {item.producto.stock}"}
+                    {"error": f"Stock insuficiente para '{producto.nombre}'. Disponible: {producto.stock}"}
                 )
-            precio = item.producto.precio_oferta or item.producto.precio_unitario
+            precio = producto.precio_oferta or producto.precio_unitario
             total_orden += item.cantidad * precio
             cantidad_total_items += item.cantidad
-        
+
         nueva_orden = serializer.save(
             usuario=usuario,
             direccion=direccion,
@@ -225,18 +233,19 @@ class OrdenListCreateView(generics.ListCreateAPIView):
         nueva_orden.save()
 
         for item in items_carrito:
-            precio = item.producto.precio_oferta or item.producto.precio_unitario
+            producto = productos_bloqueados[item.producto_id]
+            precio = producto.precio_oferta or producto.precio_unitario
             OrdenItem.objects.create(
                 orden=nueva_orden,
-                producto=item.producto,
+                producto=producto,
                 cantidad=item.cantidad,
                 precio_unitario=precio,
                 precio_total=item.cantidad * precio
             )
-            item.producto.stock -= item.cantidad
-            item.producto.save()
-            
-        items_carrito.delete()
+            producto.stock -= item.cantidad
+            producto.save()
+
+        items_carrito_qs.delete()
         enviar_correo_confirmacion_orden(nueva_orden)
         enviar_correo_nueva_orden_admin(nueva_orden, self.request)
 
@@ -573,21 +582,34 @@ class MercadoPagoWebhookView(APIView):
                                 return Response({"status": "usuario/dirección no encontrados"}, status=status.HTTP_404_NOT_FOUND)
                             
                             # Obtener items del carrito
-                            items_carrito = Carrito.objects.filter(usuario=usuario)
-                            
-                            if not items_carrito.exists():
+                            items_carrito_qs = Carrito.objects.filter(usuario=usuario)
+                            items_carrito = list(items_carrito_qs)
+
+                            if not items_carrito:
                                 print(f"⚠️ El carrito está vacío para el usuario {usuario_id}")
                                 return Response({"status": "carrito vacío"}, status=status.HTTP_400_BAD_REQUEST)
-                            
-                            # Calcular total
+
+                            # select_for_update() bloquea las filas de producto hasta que
+                            # termine la transacción, evitando vender más stock del disponible.
+                            producto_ids = [item.producto_id for item in items_carrito]
+                            productos_bloqueados = Producto.objects.select_for_update().in_bulk(producto_ids)
+
+                            # Calcular total y validar stock
                             total_orden = 0
                             cantidad_total_items = 0
-                            
+
                             for item in items_carrito:
-                                precio = item.producto.precio_oferta or item.producto.precio_unitario
+                                producto = productos_bloqueados[item.producto_id]
+                                if item.cantidad > producto.stock:
+                                    print(f"⚠️ Stock insuficiente para '{producto.nombre}' al procesar pago {payment_id}")
+                                    return Response(
+                                        {"status": f"stock insuficiente para '{producto.nombre}'"},
+                                        status=status.HTTP_400_BAD_REQUEST
+                                    )
+                                precio = producto.precio_oferta or producto.precio_unitario
                                 total_orden += item.cantidad * precio
                                 cantidad_total_items += item.cantidad
-                            
+
                             # CREAR LA ORDEN AHORA
                             nueva_orden = Orden.objects.create(
                                 usuario=usuario,
@@ -622,22 +644,22 @@ class MercadoPagoWebhookView(APIView):
                             
                             # Crear items de la orden
                             for item in items_carrito:
-                                precio = item.producto.precio_oferta or item.producto.precio_unitario
+                                producto = productos_bloqueados[item.producto_id]
+                                precio = producto.precio_oferta or producto.precio_unitario
                                 OrdenItem.objects.create(
                                     orden=nueva_orden,
-                                    producto=item.producto,
+                                    producto=producto,
                                     cantidad=item.cantidad,
                                     precio_unitario=precio,
                                     precio_total=item.cantidad * precio
                                 )
-                                
+
                                 # Descontar stock
-                                producto = item.producto
                                 producto.stock -= item.cantidad
                                 producto.save()
-                            
+
                             # Limpiar carrito
-                            items_carrito.delete()
+                            items_carrito_qs.delete()
                             
                             print(f"✅ Orden #{nueva_orden.numero_orden} creada y marcada como PAGADA")
                             

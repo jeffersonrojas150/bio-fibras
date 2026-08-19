@@ -17,7 +17,11 @@ def comprimir_imagen(imagen_field, formato='WEBP'):
 
     img = Image.open(imagen_field)
 
-    if img.mode in ('RGBA', 'P'):
+    if img.mode == 'P':
+        img = img.convert('RGBA') if 'transparency' in img.info else img.convert('RGB')
+    elif img.mode == 'LA':
+        img = img.convert('RGBA')
+    elif img.mode not in ('RGB', 'RGBA'):
         img = img.convert('RGB')
 
     img.thumbnail(MAX_SIZE, Image.LANCZOS)
