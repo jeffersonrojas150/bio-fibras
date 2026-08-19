@@ -391,7 +391,7 @@ class AdminOrdenSerializer(serializers.ModelSerializer):
             'usuario_nombre', 'direccion', 'total', 'metodo_pago',
             'estado_pago', 'estado_orden', 'cantidad_compra',
             'comprobante_pago', 'comprobante_envio',
-            'mercado_pago_payment_id', 'mercado_pago_status',
+            'mercado_pago_payment_id', 'mercado_pago_status', 'motivo_rechazo',
             'fecha_creacion', 'fecha_actualizacion', 'items',
         ]
         read_only_fields = [

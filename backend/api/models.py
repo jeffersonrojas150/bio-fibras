@@ -1,7 +1,12 @@
 from django.db import models
 from django.conf import settings
 import time, random
-from .email_service import enviar_correo_actualizacion_estado, enviar_correo_orden_cancelada, enviar_correo_voucher_disponible
+from .email_service import (
+    enviar_correo_actualizacion_estado,
+    enviar_correo_orden_cancelada,
+    enviar_correo_voucher_disponible,
+    enviar_correo_pago_rechazado,
+)
 from .utils.image_utils import comprimir_imagen
 
 # =================================================================
@@ -267,6 +272,8 @@ class Orden(models.Model):
                 print("¡El estado de la orden ha cambiado! Decidiendo qué correo enviar...")
                 if self.estado_pago == self.EstadoPago.CANCELADO:
                     enviar_correo_orden_cancelada(self)
+                elif self.estado_pago == self.EstadoPago.RECHAZADO:
+                    enviar_correo_pago_rechazado(self)
                 else:
                     if not (not estado_anterior.comprobante_envio and self.comprobante_envio):
                          enviar_correo_actualizacion_estado(self)
