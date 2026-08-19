@@ -174,6 +174,7 @@ class Orden(models.Model):
     # MODIFICADO: Estados de pago más claros para MP
     class EstadoPago(models.TextChoices):
         PENDIENTE = 'pendiente', 'Pendiente de Pago'  # ← RENOMBRADO
+        EN_REVISION = 'en_revision', 'En Revisión'
         PAGADO = 'pagado', 'Pagado'
         RECHAZADO = 'rechazado', 'Pago Rechazado'  # ← NUEVO
         CANCELADO = 'cancelado', 'Cancelado'
@@ -234,6 +235,7 @@ class Orden(models.Model):
     # =====================================================
 
     recordatorio_enviado = models.BooleanField(default=False, verbose_name="¿Recordatorio de pago enviado?")
+    motivo_rechazo = models.TextField(blank=True, default='', verbose_name="Motivo del rechazo")
     
     fecha_creacion = models.DateTimeField(auto_now_add=True, verbose_name="Fecha de creación")
     fecha_actualizacion = models.DateTimeField(auto_now=True, verbose_name="Última actualización")
