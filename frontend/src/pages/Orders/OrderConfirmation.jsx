@@ -55,8 +55,8 @@ const OrderConfirmation = () => {
         </div>
 
         {/* === RENDERIZADO CONDICIONAL DE INSTRUCCIONES DE PAGO === */}
-        {order.metodo_pago === 'yape' && <YapeInstructions orderNumber={order.numero_orden} />}
-        {order.metodo_pago === 'transferencia' && <TransferInstructions orderNumber={order.numero_orden} />}
+        {order.metodo_pago === 'yape' && <YapeInstructions />}
+        {order.metodo_pago === 'transferencia' && <TransferInstructions />}
         {order.metodo_pago === 'mercado_pago' && (
           <Alert variant="success" className="mt-4">
             <strong>✅ Pago procesado con Mercado Pago</strong>
