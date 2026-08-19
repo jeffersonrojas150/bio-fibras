@@ -132,6 +132,7 @@ function OrderDetail() {
     order, loading, saving, toast, hasChanges,
     estadoPago,  setEstadoPago,
     estadoOrden, setEstadoOrden,
+    motivoRechazo, setMotivoRechazo,
     pagFile,    pagPreview,
     envioFile,  envioPreview,
     handleFileChange,
@@ -334,6 +335,21 @@ function OrderDetail() {
                 options={ESTADO_PAGO_OPTIONS}
                 onChange={setEstadoPago}
               />
+              {estadoPago === 'rechazado' && (
+                <div className="flex flex-col gap-1.5">
+                  <label className="text-xs font-semibold uppercase tracking-wide" style={{ color: '#7e4400' }}>
+                    Motivo del rechazo
+                  </label>
+                  <textarea
+                    value={motivoRechazo}
+                    onChange={e => setMotivoRechazo(e.target.value)}
+                    rows={3}
+                    placeholder="Explica por qué se rechaza el comprobante (ej. el monto no coincide)"
+                    className="w-full rounded-xl border px-3 py-2 text-sm"
+                    style={{ borderColor: '#e8d5a3' }}
+                  />
+                </div>
+              )}
             </div>
           </SectionCard>
 
@@ -376,7 +392,7 @@ function OrderDetail() {
 
           <button
             onClick={handleSave}
-            disabled={!hasChanges || saving}
+            disabled={!hasChanges || saving || (estadoPago === 'rechazado' && !motivoRechazo.trim())}
             className="w-full flex items-center justify-center gap-2 py-3 rounded-xl text-sm font-bold text-white transition-all"
             style={{
               backgroundColor: hasChanges && !saving ? '#166534' : '#ccc',

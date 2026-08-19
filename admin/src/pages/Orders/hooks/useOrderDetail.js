@@ -13,6 +13,7 @@ export function useOrderDetail(id) {
 
   const [estadoPago,  setEstadoPago]  = useState('')
   const [estadoOrden, setEstadoOrden] = useState('')
+  const [motivoRechazo, setMotivoRechazo] = useState('')
 
   const [pagFile,      setPagFile]      = useState(null)
   const [pagPreview,   setPagPreview]   = useState(null)
@@ -32,6 +33,7 @@ export function useOrderDetail(id) {
       setOrder(o)
       setEstadoPago(o.estado_pago)
       setEstadoOrden(o.estado_orden)
+      setMotivoRechazo(o.motivo_rechazo || '')
     } catch (e) {
       console.error(e)
       showToast('No se pudo cargar la orden', 'error')
@@ -54,8 +56,9 @@ export function useOrderDetail(id) {
   }
 
   const hasChanges = order && (
-    estadoPago  !== order.estado_pago  ||
-    estadoOrden !== order.estado_orden ||
+    estadoPago    !== order.estado_pago  ||
+    estadoOrden   !== order.estado_orden ||
+    motivoRechazo !== (order.motivo_rechazo || '') ||
     pagFile   !== null ||
     envioFile !== null
   )
@@ -67,11 +70,12 @@ export function useOrderDetail(id) {
         const fd = new FormData()
         fd.append('estado_pago',  estadoPago)
         fd.append('estado_orden', estadoOrden)
+        fd.append('motivo_rechazo', motivoRechazo)
         if (pagFile)   fd.append('comprobante_pago',  pagFile)
         if (envioFile) fd.append('comprobante_envio', envioFile)
         await updateOrder(id, fd)
       } else {
-        await updateOrder(id, { estado_pago: estadoPago, estado_orden: estadoOrden })
+        await updateOrder(id, { estado_pago: estadoPago, estado_orden: estadoOrden, motivo_rechazo: motivoRechazo })
       }
       showToast('Orden actualizada correctamente')
       clearFile(setPagFile, setPagPreview)
@@ -91,6 +95,7 @@ export function useOrderDetail(id) {
     order, loading, saving, toast, hasChanges,
     estadoPago,  setEstadoPago,
     estadoOrden, setEstadoOrden,
+    motivoRechazo, setMotivoRechazo,
     pagFile,    pagPreview,
     envioFile,  envioPreview,
     handleFileChange, clearFile,
