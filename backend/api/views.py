@@ -10,6 +10,7 @@ from django.contrib.auth.tokens import PasswordResetTokenGenerator
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode 
 from django.utils.encoding import force_bytes
 from django.core.exceptions import ValidationError
+from django.shortcuts import get_object_or_404
 from .filters import ProductoFilter
 from django.conf import settings
 from allauth.socialaccount.providers.google.views import GoogleOAuth2Adapter
@@ -67,11 +68,6 @@ from django.views.decorators.csrf import csrf_exempt
 from django.utils.decorators import method_decorator
 import json
 
-
-# Al inicio del archivo, después de los imports
-print("=" * 50)
-print(f"🔍 DEBUG está en: {settings.DEBUG}")
-print("=" * 50)
 
 class ProductoListView(generics.ListAPIView):
     serializer_class = ProductoListSerializer
@@ -857,9 +853,8 @@ class AdminImagenProductoView(generics.CreateAPIView):
     serializer_class = AdminImagenProductoSerializer
 
     def perform_create(self, serializer):
-        from .models import ImagenProducto
         producto_id = self.kwargs['producto_id']
-        producto = Producto.objects.get(id=producto_id)
+        producto = get_object_or_404(Producto, id=producto_id)
         serializer.save(producto=producto)
 
 
