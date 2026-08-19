@@ -36,6 +36,17 @@ const MyOrders = () => {
     return <Badge bg={config.variant}>{config.text}</Badge>;
   };
 
+  const getPagoBadge = (estadoPago) => {
+    const config = {
+      pendiente: { text: 'Pago pendiente', variant: 'warning' },
+      en_revision: { text: 'En revisión', variant: 'info' },
+      pagado: { text: 'Pagado', variant: 'success' },
+      rechazado: { text: 'Rechazado', variant: 'danger' },
+      cancelado: { text: 'Cancelado', variant: 'danger' },
+    }[estadoPago] || { text: estadoPago, variant: 'secondary' };
+    return <Badge bg={config.variant}>{config.text}</Badge>;
+  };
+
   const filteredOrders = (orders || []).filter(order => {
     if (filter === 'all')       return true;
     if (filter === 'cancelado') return order.estado_pago === 'cancelado';
@@ -132,7 +143,8 @@ const MyOrders = () => {
                         </div>
                       </Col>
                       <Col md={6} className="text-md-end">
-                        {getStatusBadge(order.estado_orden, order.estado_pago)}
+                        {getStatusBadge(order.estado_orden, order.estado_pago)}{' '}
+                        {getPagoBadge(order.estado_pago)}
                       </Col>
                     </Row>
 

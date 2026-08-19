@@ -3,6 +3,7 @@ import { useParams, Link } from 'react-router-dom';
 import { Container, Row, Col, Card, Spinner, Alert, Badge, Table, Button, Modal } from 'react-bootstrap';
 import { FaArrowLeft, FaBox, FaUser, FaTruck, FaCreditCard, FaFileImage } from 'react-icons/fa';
 import apiClient from '../../api';
+import SubirComprobantePago from '../../components/Checkout/SubirComprobantePago';
 import './Orders.css';
 
 const OrderDetail = () => {
@@ -44,6 +45,17 @@ const OrderDetail = () => {
             entregado: { text: 'Entregado', variant: 'success' },
         };
         const config = statusConfig[estadoOrden] || { text: 'Procesando', variant: 'secondary' };
+        return <Badge bg={config.variant} className="fs-6">{config.text}</Badge>;
+    };
+
+    const getPagoBadge = (estadoPago) => {
+        const config = {
+            pendiente: { text: 'Pago pendiente', variant: 'warning' },
+            en_revision: { text: 'Comprobante en revisión', variant: 'info' },
+            pagado: { text: 'Pagado', variant: 'success' },
+            rechazado: { text: 'Comprobante rechazado', variant: 'danger' },
+            cancelado: { text: 'Cancelado', variant: 'danger' },
+        }[estadoPago] || { text: estadoPago, variant: 'secondary' };
         return <Badge bg={config.variant} className="fs-6">{config.text}</Badge>;
     };
 
@@ -121,6 +133,11 @@ const OrderDetail = () => {
                     </Col>
 
                     <Col lg={4}>
+                        {order && (order.metodo_pago === 'yape' || order.metodo_pago === 'transferencia') &&
+                            ['pendiente', 'en_revision', 'rechazado'].includes(order.estado_pago) && (
+                                <SubirComprobantePago orden={order} onUploaded={setOrder} />
+                        )}
+
                         <Card className="shipping-info-card mb-4">
                             <Card.Header as="h5"><FaBox className="me-2" />Resumen</Card.Header>
                             <Card.Body>
@@ -128,6 +145,10 @@ const OrderDetail = () => {
                                 <p className="d-flex justify-content-between align-items-center">
                                     <strong>Estado:</strong>
                                     {getStatusBadge(order?.estado_orden, order?.estado_pago)}
+                                </p>
+                                <p className="d-flex justify-content-between align-items-center">
+                                    <strong>Pago:</strong>
+                                    {getPagoBadge(order?.estado_pago)}
                                 </p>
                                 <hr />
                                 <h6><FaCreditCard className="me-2" />Método de Pago</h6>

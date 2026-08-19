@@ -3,24 +3,11 @@ import { useRef } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import {
   ArrowLeft, Package, User, MapPin, CreditCard,
-  FileImage, CheckCircle, XCircle, Truck, Clock,
-  Save, Upload, X, AlertCircle, Building2, ShoppingCart,
+  FileImage, CheckCircle, XCircle, Truck,
+  Save, Upload, X, Building2, ShoppingCart,
 } from 'lucide-react'
 import { useOrderDetail } from './hooks/useOrderDetail'
-
-const ESTADO_PAGO_OPTIONS = [
-  { value: 'pendiente', label: 'Pendiente', bg: '#f2d811', color: '#080706', Icon: Clock       },
-  { value: 'pagado',    label: 'Pagado',    bg: '#c4fa82', color: '#080706', Icon: CheckCircle },
-  { value: 'rechazado', label: 'Rechazado', bg: '#ba0404', color: '#ffffff', Icon: AlertCircle },
-  { value: 'cancelado', label: 'Cancelado', bg: '#fa0505', color: '#ffffff', Icon: XCircle     },
-]
-
-const ESTADO_ORDEN_OPTIONS = [
-  { value: 'pendiente', label: 'Pendiente', bg: '#f2d811', color: '#080706', Icon: Clock       },
-  { value: 'enviado',   label: 'Enviado',   bg: '#52faec', color: '#080706', Icon: Truck       },
-  { value: 'entregado', label: 'Entregado', bg: '#3c95fa', color: '#080706', Icon: CheckCircle },
-  { value: 'cancelado', label: 'Cancelado', bg: '#fa0505', color: '#ffffff', Icon: XCircle     },
-]
+import { ESTADO_PAGO_OPTIONS, ESTADO_ORDEN_OPTIONS } from '../../constants/orderStatus'
 
 function Badge({ value, options }) {
   const cfg = options.find(o => o.value === value) || { label: value, bg: '#f5f5f5', color: '#555' }
@@ -145,6 +132,7 @@ function OrderDetail() {
     order, loading, saving, toast, hasChanges,
     estadoPago,  setEstadoPago,
     estadoOrden, setEstadoOrden,
+    motivoRechazo, setMotivoRechazo,
     pagFile,    pagPreview,
     envioFile,  envioPreview,
     handleFileChange,
@@ -347,6 +335,21 @@ function OrderDetail() {
                 options={ESTADO_PAGO_OPTIONS}
                 onChange={setEstadoPago}
               />
+              {estadoPago === 'rechazado' && (
+                <div className="flex flex-col gap-1.5">
+                  <label className="text-xs font-semibold uppercase tracking-wide" style={{ color: '#7e4400' }}>
+                    Motivo del rechazo
+                  </label>
+                  <textarea
+                    value={motivoRechazo}
+                    onChange={e => setMotivoRechazo(e.target.value)}
+                    rows={3}
+                    placeholder="Explica por qué se rechaza el comprobante (ej. el monto no coincide)"
+                    className="w-full rounded-xl border px-3 py-2 text-sm"
+                    style={{ borderColor: '#e8d5a3' }}
+                  />
+                </div>
+              )}
             </div>
           </SectionCard>
 
@@ -389,7 +392,7 @@ function OrderDetail() {
 
           <button
             onClick={handleSave}
-            disabled={!hasChanges || saving}
+            disabled={!hasChanges || saving || (estadoPago === 'rechazado' && !motivoRechazo.trim())}
             className="w-full flex items-center justify-center gap-2 py-3 rounded-xl text-sm font-bold text-white transition-all"
             style={{
               backgroundColor: hasChanges && !saving ? '#166534' : '#ccc',

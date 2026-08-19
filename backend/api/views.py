@@ -3,6 +3,7 @@ from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated, AllowAny
+from rest_framework.parsers import MultiPartParser, FormParser
 from django.db import transaction
 from django.contrib.auth.models import User
 from django.contrib.auth.models import User as UserModel
@@ -252,9 +253,54 @@ class OrdenListCreateView(generics.ListCreateAPIView):
 class OrdenDetailView(generics.RetrieveAPIView):
     serializer_class = OrdenSerializer
     permission_classes = [IsAuthenticated]
-    
+
     def get_queryset(self):
         return Orden.objects.filter(usuario=self.request.user)
+
+
+class SubirComprobantePagoSerializer(serializers.Serializer):
+    comprobante_pago = serializers.ImageField()
+
+
+class SubirComprobantePagoView(APIView):
+    """
+    Permite al dueño de una orden (yape/transferencia) subir la captura
+    de su pago. La orden pasa a 'en_revision' para que el admin la revise.
+    """
+    permission_classes = [IsAuthenticated]
+    parser_classes = [MultiPartParser, FormParser]
+
+    def post(self, request, pk, *args, **kwargs):
+        orden = get_object_or_404(Orden, pk=pk, usuario=request.user)
+
+        if orden.metodo_pago not in (Orden.MetodoPago.YAPE, Orden.MetodoPago.TRANSFERENCIA):
+            return Response(
+                {"error": "Este pedido no admite comprobante de pago por este medio."},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
+        if orden.estado_pago not in (
+            Orden.EstadoPago.PENDIENTE,
+            Orden.EstadoPago.EN_REVISION,
+            Orden.EstadoPago.RECHAZADO,
+        ):
+            return Response(
+                {"error": "Este pedido ya no admite subir un comprobante de pago."},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
+        serializer = SubirComprobantePagoSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+
+        orden.comprobante_pago = serializer.validated_data['comprobante_pago']
+        orden.estado_pago = Orden.EstadoPago.EN_REVISION
+        orden.motivo_rechazo = ''
+        orden.save()
+
+        return Response(
+            OrdenSerializer(orden, context={'request': request}).data,
+            status=status.HTTP_200_OK
+        )
 
 
 class PasswordResetRequestView(generics.GenericAPIView):

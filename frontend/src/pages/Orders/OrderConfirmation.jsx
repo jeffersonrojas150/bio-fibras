@@ -1,6 +1,6 @@
 // src/pages/Orders/OrderConfirmation.jsx
 
-import React, { useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Container, Row, Col, Card, Button, Alert, Table, Badge } from 'react-bootstrap';
 import { FaCheckCircle, FaHome, FaWhatsapp, FaEnvelope } from 'react-icons/fa';
 import { useLocation, useNavigate } from 'react-router-dom';
@@ -8,12 +8,13 @@ import { useLocation, useNavigate } from 'react-router-dom';
 // Importamos los nuevos componentes de instrucciones
 import YapeInstructions from '../../components/Checkout/YapeInstructions';
 import TransferInstructions from '../../components/Checkout/TransferInstructions';
+import SubirComprobantePago from '../../components/Checkout/SubirComprobantePago';
 import './Orders.css';
 
 const OrderConfirmation = () => {
   const location = useLocation();
   const navigate = useNavigate();
-  const order = location.state?.order; // Obtenemos la orden REAL desde el estado de la navegación
+  const [order, setOrder] = useState(location.state?.order); // Obtenemos la orden REAL desde el estado de la navegación
 
   useEffect(() => {
     // Si no hay datos de la orden, es un acceso inválido. Redirigir a inicio.
@@ -61,6 +62,10 @@ const OrderConfirmation = () => {
             <strong>✅ Pago procesado con Mercado Pago</strong>
             <p className="mb-0 mt-2">Tu pago fue confirmado exitosamente. No necesitas realizar ninguna acción adicional.</p>
           </Alert>
+        )}
+
+        {(order.metodo_pago === 'yape' || order.metodo_pago === 'transferencia') && (
+          <SubirComprobantePago orden={order} onUploaded={setOrder} />
         )}
 
         <Row className="mt-5">

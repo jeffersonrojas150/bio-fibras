@@ -228,3 +228,24 @@ def enviar_correo_orden_cancelada_admin(orden):
     except Exception as e:
         print(f"ERROR al enviar correo de cancelación por admin para #{orden.numero_orden}: {e}")
         return False
+
+
+def enviar_correo_pago_rechazado(orden):
+    try:
+        contexto = {
+            'orden': orden,
+            'usuario': orden.usuario,
+            'frontend_url': settings.FRONTEND_URL,
+        }
+        html = render_to_string('emails/pago_rechazado.html', contexto)
+        resend.Emails.send({
+            "from": FROM_EMAIL,
+            "to": [orden.usuario.email],
+            "subject": f"Tu comprobante del pedido #{orden.numero_orden} necesita revisión",
+            "html": html,
+        })
+        print(f"Correo de rechazo de pago enviado para la orden #{orden.numero_orden}")
+        return True
+    except Exception as e:
+        print(f"ERROR al enviar correo de rechazo para #{orden.numero_orden}: {e}")
+        return False
