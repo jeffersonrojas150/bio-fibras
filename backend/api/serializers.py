@@ -212,9 +212,13 @@ class OrdenSerializer(serializers.ModelSerializer):
             'id', 'usuario', 'direccion', 'total', 'metodo_pago', 'numero_orden',
             'estado_pago', 'estado_orden', 'cantidad_compra',
             'fecha_creacion', 'items', 'direccion_id',
-            'comprobante_envio'
+            'comprobante_envio', 'comprobante_pago', 'motivo_rechazo',
         ]
-        read_only_fields = ['total', 'cantidad_compra', 'usuario']
+        read_only_fields = [
+            'total', 'cantidad_compra', 'usuario',
+            'estado_pago', 'estado_orden',
+            'comprobante_pago', 'motivo_rechazo',
+        ]
 
     def get_direccion(self, obj):
         if obj.direccion:

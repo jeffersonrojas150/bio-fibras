@@ -2,6 +2,7 @@ from django.contrib.auth.models import User
 from django.test import TestCase
 
 from .models import Orden
+from .serializers import OrdenSerializer
 
 
 class OrdenEstadoPagoTest(TestCase):
@@ -25,3 +26,21 @@ class OrdenEstadoPagoTest(TestCase):
         orden.refresh_from_db()
         self.assertEqual(orden.estado_pago, 'rechazado')
         self.assertEqual(orden.motivo_rechazo, 'El monto no coincide con el total del pedido.')
+
+
+class OrdenSerializerClienteTest(TestCase):
+    def test_estado_pago_no_se_puede_asignar_por_el_cliente_al_crear(self):
+        serializer = OrdenSerializer(data={
+            'direccion_id': 1,
+            'metodo_pago': 'yape',
+            'estado_pago': 'pagado',
+        })
+        serializer.is_valid()
+        self.assertNotIn('estado_pago', serializer.validated_data)
+
+    def test_expone_comprobante_pago_y_motivo_rechazo_de_solo_lectura(self):
+        usuario = User.objects.create_user(username='cliente4', password='x')
+        orden = Orden.objects.create(usuario=usuario, total=100, cantidad_compra=1)
+        data = OrdenSerializer(orden).data
+        self.assertIn('comprobante_pago', data)
+        self.assertIn('motivo_rechazo', data)
