@@ -532,7 +532,7 @@ body.body-menu-open { overflow: hidden; }
 .main-navbar.navbar,
 .main-navbar.navbar.navbar-light,
 .main-navbar.navbar.navbar-dark {
-  border-radius: 0 0 30px 30px;
+  border-radius: 0 0 5px 5px;
 }
 
 /* Tablets (768px - 991px) */

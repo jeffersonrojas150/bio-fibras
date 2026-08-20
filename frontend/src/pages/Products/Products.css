@@ -39,10 +39,22 @@
   font-size: 1rem;
 }
 
+.products-subtitle {
+  color: var(--text-secondary);
+  font-size: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.filters-subtitle {
+  color: var(--text-secondary);
+  font-size: 0.8rem;
+  margin: 0.15rem 0 0 0;
+}
+
 /* Sidebar de filtros (Desktop) */
 .filters-sidebar {
   position: sticky;
-  top: 90px;
+  top: 150px; /* margen suficiente: el header cambia de altura según el banner promocional (1 o 2 líneas) */
 }
 
 .filters-container {
@@ -56,7 +68,7 @@
 .filters-header {
   display: flex;
   justify-content: space-between;
-  align-items: center;
+  align-items: flex-start;
   margin-bottom: 1.5rem;
   border-bottom: 1px solid var(--border-color);
   padding-bottom: 1rem;
@@ -70,12 +82,17 @@
 .clear-filters-btn {
   color: var(--mustard-color) !important;
   text-decoration: none !important;
-  font-size: 0.9rem;
-  font-weight: 500;
-  padding: 0;
+  font-size: 0.85rem;
+  font-weight: 600;
+  padding: 0.3rem 0.7rem !important;
+  border: 1.5px solid var(--mustard-color) !important;
+  border-radius: 6px;
+  transition: all 0.2s ease;
 }
 .clear-filters-btn:hover {
-  color: var(--mustard-hover) !important;
+  color: white !important;
+  background-color: var(--mustard-color) !important;
+  border-color: var(--mustard-color) !important;
 }
 
 .filter-section {
