@@ -142,7 +142,7 @@ const Checkout = () => {
                     <small className="text-muted">Tel: {addr.telefono}</small>
                   </div>
                 }
-                className="mb-3 p-3 border rounded d-flex align-items-center"
+                className="mb-3 p-3 border rounded"
               />
             ))}
           </Form>
