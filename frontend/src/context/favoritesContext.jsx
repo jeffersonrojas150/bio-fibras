@@ -1,7 +1,8 @@
 // src/context/favoritesContext.jsx
 import React, { createContext, useState, useContext, useEffect, useCallback } from 'react';
 import apiClient from '../api';
-import { useAuth } from './authContext'; 
+import { useAuth } from './authContext';
+import { notifyError, notifyInfo } from '../utils/notify';
 
 const FavoritesContext = createContext();
 
@@ -37,7 +38,7 @@ export const FavoritesProvider = ({ children }) => {
 
   const addFavorite = async (product) => {
     if (!isAuthenticated) {
-      alert('Debes iniciar sesión para añadir a favoritos.');
+      notifyInfo('Debes iniciar sesión para añadir a favoritos.');
       return;
     }
     const previousFavorites = [...favorites];
@@ -58,7 +59,7 @@ export const FavoritesProvider = ({ children }) => {
     } catch (error) {
       console.error('Error al añadir favorito:', error.response?.data || error.message);
       setFavorites(previousFavorites);
-      alert('No se pudo añadir el producto a favoritos. Inténtalo de nuevo.');
+      notifyError('No se pudo añadir el producto a favoritos. Inténtalo de nuevo.');
     }
   };
 
@@ -75,7 +76,7 @@ export const FavoritesProvider = ({ children }) => {
       } catch (error) {
         console.error('Error al quitar favorito:', error.response?.data || error.message);
         setFavorites(previousFavorites);
-        alert('No se pudo quitar el producto de favoritos. Inténtalo de nuevo.');
+        notifyError('No se pudo quitar el producto de favoritos. Inténtalo de nuevo.');
       }
     }
   };

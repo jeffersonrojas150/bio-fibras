@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Offcanvas, Button, Badge, Form } from 'react-bootstrap';
 import { FaTimes, FaShoppingCart, FaTrash, FaMinus, FaPlus } from 'react-icons/fa';
 import { useCart } from '../../context/cartContext';
+import ConfirmDialog from '../common/ConfirmDialog/ConfirmDialog';
 import './Cart.css';
 import { useNavigate } from 'react-router-dom';
 
@@ -115,6 +116,7 @@ const CartItem = ({ item }) => {
 const Cart = () => {
   const { cartItems, isCartOpen, toggleCart, getTotalItems, getTotalPrice, clearCart } = useCart();
   const navigate = useNavigate();
+  const [showClearConfirm, setShowClearConfirm] = useState(false);
 
   const totalItems = getTotalItems();
   const totalPrice = getTotalPrice();
@@ -124,8 +126,9 @@ const Cart = () => {
     toggleCart();
   };
 
-  const handleClearCart = () => {
-    if (window.confirm('¿Estás seguro de que deseas vaciar el carrito?')) clearCart();
+  const handleConfirmClearCart = () => {
+    clearCart();
+    setShowClearConfirm(false);
   };
 
   return (
@@ -162,7 +165,7 @@ const Cart = () => {
             <div className="cart-content">
               {cartItems.length > 2 && (
                 <div className="cart-actions">
-                  <Button variant="outline-danger" size="sm" onClick={handleClearCart} className="clear-cart-btn">
+                  <Button variant="outline-danger" size="sm" onClick={() => setShowClearConfirm(true)} className="clear-cart-btn">
                     <FaTrash className="me-2" /> Vaciar carrito
                   </Button>
                 </div>
@@ -189,6 +192,15 @@ const Cart = () => {
           )}
         </Offcanvas.Body>
       </Offcanvas>
+
+      <ConfirmDialog
+        show={showClearConfirm}
+        title="Vaciar carrito"
+        message="¿Estás seguro de que deseas vaciar el carrito? Esta acción no se puede deshacer."
+        confirmLabel="Sí, vaciar"
+        onConfirm={handleConfirmClearCart}
+        onCancel={() => setShowClearConfirm(false)}
+      />
     </>
   );
 };

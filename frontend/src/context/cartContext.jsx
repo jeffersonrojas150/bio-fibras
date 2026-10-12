@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
 import { useAuth } from './authContext';
 import apiClient from '../api';
+import { notifyError, notifyInfo } from '../utils/notify';
 
 const CartContext = createContext();
 
@@ -62,7 +63,7 @@ export const CartProvider = ({ children }) => {
 
   const addToCart = async (product, quantity = 1) => {
     if (!isAuthenticated) {
-      alert("Debes iniciar sesión para agregar productos al carrito.");
+      notifyInfo("Debes iniciar sesión para agregar productos al carrito.");
       return;
     }
 
@@ -100,7 +101,7 @@ export const CartProvider = ({ children }) => {
       ));
     } catch (error) {
       console.error("Error al añadir al carrito:", error);
-      alert("Hubo un error al añadir el producto. Por favor, inténtalo de nuevo.");
+      notifyError("Hubo un error al añadir el producto. Por favor, inténtalo de nuevo.");
       setCartItems(previousCart);
     }
   };
@@ -118,7 +119,7 @@ export const CartProvider = ({ children }) => {
       await apiClient.delete(`/carrito/${itemToRemove.cartItemId}/`);
     } catch (error) {
       console.error("Error al eliminar del carrito:", error);
-      alert("Hubo un error al eliminar el producto.");
+      notifyError("Hubo un error al eliminar el producto.");
       setCartItems(previousCart);
     }
   };
@@ -154,7 +155,7 @@ export const CartProvider = ({ children }) => {
       });
     } catch (error) {
       console.error("Error al actualizar cantidad:", error);
-      alert("No se pudo actualizar la cantidad del producto.");
+      notifyError("No se pudo actualizar la cantidad del producto.");
       setCartItems(previousCart);
     }
   };

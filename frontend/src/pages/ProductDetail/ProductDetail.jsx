@@ -8,7 +8,7 @@ import { useProducts } from '../../context/productContext';
 import apiClient from '../../api';
 import './ProductDetail.css';
 
-import toast from "react-hot-toast";
+import { notifySuccess } from '../../utils/notify';
 
 import { useFavorites } from '../../context/favoritesContext';
 
@@ -115,19 +115,7 @@ const ProductDetail = () => {
   const handleAddToCart = () => {
     addToCart(product, quantity);
 
-    toast.success(`🛒 ¡"${product.name}" añadido al carrito!`, {
-      style: {
-        border: '1px solid #484406ff',
-        padding: '10px 16px',
-        color: '#000000ff',
-        background: '#f4e6c3ff',
-        fontWeight: 500,
-      },
-      iconTheme: {
-        primary: '#22c55e',
-        secondary: '#ffffff',
-      },
-    });
+    notifySuccess(`🛒 ¡"${product.name}" añadido al carrito!`);
   };
 
   // <--  Se reemplaza la función `toggleFavorite` por una que usa el contexto
@@ -154,19 +142,7 @@ const ProductDetail = () => {
         break;
       case 'instagram':
         navigator.clipboard.writeText(url);
-        toast.success('🔗 Enlace copiado. Pégalo en tu historia o bio de Instagram.', {
-          style: {
-            border: '1px solid #484406ff',
-            padding: '10px 16px',
-            color: '#000000ff',
-            background: '#f4e6c3ff',
-            fontWeight: 500,
-          },
-          iconTheme: {
-            primary: '#22c55e',
-            secondary: '#ffffff',
-          },
-        });
+        notifySuccess('🔗 Enlace copiado. Pégalo en tu historia o bio de Instagram.');
         break;
 
       default:

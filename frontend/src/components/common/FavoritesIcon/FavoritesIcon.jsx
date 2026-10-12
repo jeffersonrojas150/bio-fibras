@@ -3,6 +3,7 @@ import { Nav } from 'react-bootstrap';
 import { Link, useNavigate } from 'react-router-dom';
 import { useFavorites } from '../../../context/favoritesContext';
 import { useAuth } from '../../../context/authContext';
+import { notifyInfo } from '../../../utils/notify';
 
 export const FavoritesIcon = ({ transparent = false }) => {
   const { favoritesCount } = useFavorites();
@@ -13,7 +14,7 @@ export const FavoritesIcon = ({ transparent = false }) => {
     if (!isAuthenticated) {
       e.preventDefault();
       navigate('/login');
-      alert('Debes iniciar sesión para ver tus favoritos');
+      notifyInfo('Debes iniciar sesión para ver tus favoritos');
     }
   };
 

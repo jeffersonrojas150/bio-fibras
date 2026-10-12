@@ -4,6 +4,7 @@ import { FaPlus, FaTrash, FaMapMarkedAlt } from 'react-icons/fa';
 import { Autocomplete, useJsApiLoader } from '@react-google-maps/api';
 import apiClient from '../../api';
 import MapaPicker from '../../components/MapaPicker/MapaPicker';
+import ConfirmDialog from '../../components/common/ConfirmDialog/ConfirmDialog';
 
 const libraries = ['places'];
 
@@ -13,6 +14,7 @@ const AddressManagement = () => {
     const [error, setError] = useState('');
     const [showForm, setShowForm] = useState(false);
     const [editingId, setEditingId] = useState(null);
+    const [deleteTargetId, setDeleteTargetId] = useState(null);
 
     const [formData, setFormData] = useState({
         nombres: '',
@@ -183,17 +185,17 @@ const AddressManagement = () => {
         }
     };
 
-    const handleDelete = async (id) => {
-        if (window.confirm('¿Estás seguro de que quieres eliminar esta dirección?')) {
-            setLoading(true);
-            try {
-                await apiClient.delete(`/direcciones/${id}/`);
-                fetchAddresses();
-            } catch (err) {
-                setError('No se pudo eliminar la dirección.');
-            } finally {
-                setLoading(false);
-            }
+    const handleConfirmDelete = async () => {
+        const id = deleteTargetId;
+        setDeleteTargetId(null);
+        setLoading(true);
+        try {
+            await apiClient.delete(`/direcciones/${id}/`);
+            fetchAddresses();
+        } catch (err) {
+            setError('No se pudo eliminar la dirección.');
+        } finally {
+            setLoading(false);
         }
     };
 
@@ -333,7 +335,7 @@ const AddressManagement = () => {
                                             <Button variant="outline-primary" size="sm" onClick={() => handleEdit(addr)}>
                                                 <FaMapMarkedAlt />
                                             </Button>
-                                            <Button variant="outline-danger" size="sm" onClick={() => handleDelete(addr.id)}>
+                                            <Button variant="outline-danger" size="sm" onClick={() => setDeleteTargetId(addr.id)}>
                                                 <FaTrash />
                                             </Button>
                                         </div>
@@ -349,6 +351,15 @@ const AddressManagement = () => {
                     </Row>
                 )}
             </Card.Body>
+
+            <ConfirmDialog
+                show={deleteTargetId !== null}
+                title="Eliminar dirección"
+                message="¿Estás seguro de que quieres eliminar esta dirección? Esta acción no se puede deshacer."
+                confirmLabel="Sí, eliminar"
+                onConfirm={handleConfirmDelete}
+                onCancel={() => setDeleteTargetId(null)}
+            />
         </Card>
     );
 };
