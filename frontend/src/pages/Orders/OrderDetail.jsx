@@ -118,7 +118,17 @@ const OrderDetail = () => {
                                 </Table>
                             </Card.Body>
                         </Card>
+                    </Col>
 
+                    <Col lg={4}>
+                        {order && (order.metodo_pago === 'yape' || order.metodo_pago === 'transferencia') && (
+                            <SubirComprobantePago orden={order} onUploaded={setOrder} />
+                        )}
+                    </Col>
+                </Row>
+
+                <Row>
+                    <Col md={6}>
                         <Card className="shipping-info-card mb-4">
                             <Card.Header as="h5"><FaTruck className="me-2" />Información de Recojo</Card.Header>
                             <Card.Body>
@@ -133,11 +143,7 @@ const OrderDetail = () => {
                         </Card>
                     </Col>
 
-                    <Col lg={4}>
-                        {order && (order.metodo_pago === 'yape' || order.metodo_pago === 'transferencia') && (
-                            <SubirComprobantePago orden={order} onUploaded={setOrder} />
-                        )}
-
+                    <Col md={6}>
                         <Card className="shipping-info-card mb-4">
                             <Card.Header as="h5"><FaBox className="me-2" />Resumen</Card.Header>
                             <Card.Body>
@@ -163,10 +169,13 @@ const OrderDetail = () => {
                                     {order?.metodo_pago === 'mercado_pago' && '💰 Mercado Pago'}
                                 </p>
                             </Card.Body>
-
                         </Card>
+                    </Col>
+                </Row>
 
-                        {order?.comprobante_envio && (
+                {order?.comprobante_envio && (
+                    <Row>
+                        <Col md={6}>
                             <Card className="shipping-info-card mb-4">
                                 <Card.Header as="h5"><FaFileImage className="me-2" />Comprobante de Envío</Card.Header>
                                 <Card.Body className="text-center">
@@ -174,17 +183,19 @@ const OrderDetail = () => {
                                     <img
                                         src={order.comprobante_envio}
                                         alt="Comprobante de envío"
-                                        style={{ maxWidth: '100%', borderRadius: '8px', cursor: 'pointer' }}
+                                        style={{ maxWidth: '100%', maxHeight: '200px', borderRadius: '8px', cursor: 'pointer' }}
                                         onClick={handleShowModal}
                                     />
-                                    <Button variant="link" onClick={handleShowModal} className="mt-2">
-                                        Ver imagen completa
-                                    </Button>
+                                    <div>
+                                        <Button variant="link" size="sm" onClick={handleShowModal} className="mt-2">
+                                            Ver imagen completa
+                                        </Button>
+                                    </div>
                                 </Card.Body>
                             </Card>
-                        )}
-                    </Col>
-                </Row>
+                        </Col>
+                    </Row>
+                )}
             </Container>
 
             <Modal show={showImageModal} onHide={handleCloseModal} centered size="lg">
