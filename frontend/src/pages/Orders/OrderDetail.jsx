@@ -118,6 +118,19 @@ const OrderDetail = () => {
                                 </Table>
                             </Card.Body>
                         </Card>
+
+                        <Card className="shipping-info-card mb-4">
+                            <Card.Header as="h5"><FaTruck className="me-2" />Información de Recojo</Card.Header>
+                            <Card.Body>
+                                <h6><FaUser className="me-2" />Recibe:</h6>
+                                <p className="mb-1">{order?.direccion?.nombres} {order?.direccion?.apellidos}</p>
+                                <p className="mb-1"><strong>DNI:</strong> {order?.direccion?.dni}</p>
+                                <p><strong>Teléfono:</strong> {order?.direccion?.telefono}</p>
+                                <hr />
+                                <p className="mb-1"><strong>Agencia:</strong> {order?.direccion?.agencia_recojo}</p>
+                                <p className="mb-0"><strong>Dirección:</strong> {order?.direccion?.direccion_agencia}</p>
+                            </Card.Body>
+                        </Card>
                     </Col>
 
                     <Col lg={4}>
@@ -150,20 +163,7 @@ const OrderDetail = () => {
                                     {order?.metodo_pago === 'mercado_pago' && '💰 Mercado Pago'}
                                 </p>
                             </Card.Body>
-                            
-                        </Card>
 
-                        <Card className="shipping-info-card mb-4">
-                            <Card.Header as="h5"><FaTruck className="me-2" />Información de Recojo</Card.Header>
-                            <Card.Body>
-                                <h6><FaUser className="me-2" />Recibe:</h6>
-                                <p className="mb-1">{order?.direccion?.nombres} {order?.direccion?.apellidos}</p>
-                                <p className="mb-1"><strong>DNI:</strong> {order?.direccion?.dni}</p>
-                                <p><strong>Teléfono:</strong> {order?.direccion?.telefono}</p>
-                                <hr />
-                                <p className="mb-1"><strong>Agencia:</strong> {order?.direccion?.agencia_recojo}</p>
-                                <p className="mb-0"><strong>Dirección:</strong> {order?.direccion?.direccion_agencia}</p>
-                            </Card.Body>
                         </Card>
 
                         {order?.comprobante_envio && (
