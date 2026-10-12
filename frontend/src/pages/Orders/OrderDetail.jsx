@@ -5,6 +5,7 @@ import { FaArrowLeft, FaBox, FaUser, FaTruck, FaCreditCard, FaFileImage } from '
 import apiClient from '../../api';
 import SubirComprobantePago from '../../components/Checkout/SubirComprobantePago';
 import { getEstadoOrdenConfig, getEstadoPagoConfig } from '../../constants/orderStatus';
+import yapeLogo from '../../assets/yape-logo.png';
 import './Orders.css';
 
 const OrderDetail = () => {
@@ -139,9 +140,14 @@ const OrderDetail = () => {
                                 </p>
                                 <hr />
                                 <h6><FaCreditCard className="me-2" />Método de Pago</h6>
-                                <p>
+                                <p className="d-flex align-items-center gap-2 mb-0">
                                     {order?.metodo_pago === 'transferencia' && '💳 Transferencia Bancaria'}
-                                    {order?.metodo_pago === 'yape' && '📱 Yape'}
+                                    {order?.metodo_pago === 'yape' && (
+                                        <>
+                                            <img src={yapeLogo} alt="Yape" style={{ width: '22px', height: '22px', borderRadius: '5px' }} />
+                                            Yape
+                                        </>
+                                    )}
                                     {order?.metodo_pago === 'mercado_pago' && '💰 Mercado Pago'}
                                 </p>
                             </Card.Body>

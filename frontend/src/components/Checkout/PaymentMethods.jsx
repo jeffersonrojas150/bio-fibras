@@ -1,8 +1,9 @@
 // src/components/Checkout/PaymentMethods.jsx
 
-import React, { useState } from 'react';
-import { Card, Form, Button, Alert, Spinner, Collapse } from 'react-bootstrap';
-import { FaUniversity, FaMobileAlt, FaCreditCard, FaArrowLeft, FaLock, FaWhatsapp } from 'react-icons/fa';
+import React from 'react';
+import { Card, Form, Button, Alert, Spinner } from 'react-bootstrap';
+import { FaUniversity, FaCreditCard, FaArrowLeft, FaLock, FaInfoCircle } from 'react-icons/fa';
+import yapeLogo from '../../assets/yape-logo.png';
 // Mercado Pago deshabilitado temporalmente — descomentar para reactivar
 // import { crearPreferenciaPago } from '../../services/mercadoPagoService';
 
@@ -19,28 +20,6 @@ const PaymentMethods = ({
   // Mercado Pago deshabilitado temporalmente
   // const [isMercadoPagoProcessing, setIsMercadoPagoProcessing] = useState(false);
   // const [mpError, setMpError] = useState('');
-
-  // Estado para controlar si se seleccionó "Pagar vía WhatsApp"
-  // Inicia en true: al ser la única opción disponible (Mercado Pago deshabilitado),
-  // se muestran sus sub-opciones (Transferencia/Yape) desde el inicio sin requerir click.
-  const [showWhatsAppOptions, setShowWhatsAppOptions] = useState(true);
-
-  // Determinar cuál es la opción principal seleccionada
-  const mainOption = selectedMethod === 'mercado_pago' ? 'online' : 'whatsapp';
-
-  // Handler para seleccionar opción principal
-  const handleMainOptionChange = (option) => {
-    if (option === 'online') {
-      onChange('mercado_pago');
-      setShowWhatsAppOptions(false);
-    } else {
-      setShowWhatsAppOptions(true);
-      // Por defecto, seleccionar transferencia si no hay nada seleccionado
-      if (selectedMethod === 'mercado_pago' || !selectedMethod) {
-        onChange('transferencia');
-      }
-    }
-  };
 
   // Handler para pagos manuales (transferencia/yape)
   const handleManualPaymentSubmit = (e) => {
@@ -117,82 +96,51 @@ const PaymentMethods = ({
             */}
 
             {/* ========================================== */}
-            {/* OPCIÓN PRINCIPAL 2: PAGAR VÍA WHATSAPP */}
+            {/* OPCIÓN: TRANSFERENCIA BANCARIA */}
             {/* ========================================== */}
             <div
-              className={`payment-method ${mainOption === 'whatsapp' ? 'selected' : ''}`}
-              onClick={() => handleMainOptionChange('whatsapp')}
+              className={`payment-method ${selectedMethod === 'transferencia' ? 'selected' : ''}`}
+              onClick={() => onChange('transferencia')}
             >
               <div className="payment-method-header">
                 <Form.Check
                   type="radio"
-                  name="mainPaymentOption"
-                  id="whatsapp"
-                  checked={mainOption === 'whatsapp'}
-                  onChange={() => handleMainOptionChange('whatsapp')}
+                  name="paymentMethod"
+                  id="transferencia"
+                  checked={selectedMethod === 'transferencia'}
+                  onChange={() => onChange('transferencia')}
                   className="payment-method-radio"
                 />
-                <FaWhatsapp className="payment-method-icon" style={{ color: '#25D366' }} />
+                <FaUniversity className="payment-method-icon" style={{ color: '#d7ad44' }} />
                 <div className="payment-method-info">
-                  <h6>Pagar vía WhatsApp</h6>
-                  <p>Transferencia o Yape - Envía tu comprobante</p>
+                  <h6>Transferencia Bancaria</h6>
+                  <p>BCP - Recibe instrucciones por correo</p>
                 </div>
               </div>
+            </div>
 
-              {/* SUB-OPCIONES (SOLO SI SE SELECCIONA WHATSAPP) */}
-              <Collapse in={showWhatsAppOptions}>
-                <div className="whatsapp-suboptions mt-3 ps-5">
-
-                  {/* Sub-opción 1: Transferencia */}
-                  <div
-                    className={`payment-method-sub ${selectedMethod === 'transferencia' ? 'selected' : ''}`}
-                    onClick={(e) => { e.stopPropagation(); onChange('transferencia'); }}
-                  >
-                    <Form.Check
-                      type="radio"
-                      name="whatsappMethod"
-                      id="transferencia"
-                      checked={selectedMethod === 'transferencia'}
-                      onChange={() => onChange('transferencia')}
-                      label={
-                        <div className="d-flex align-items-center">
-                          <FaUniversity className="me-2" style={{ color: '#d7ad44' }} />
-                          <div>
-                            <strong>Transferencia Bancaria</strong>
-                            <br />
-                            <small className="text-muted">BCP - Recibe instrucciones por correo</small>
-                          </div>
-                        </div>
-                      }
-                    />
-                  </div>
-
-                  {/* Sub-opción 2: Yape */}
-                  <div
-                    className={`payment-method-sub ${selectedMethod === 'yape' ? 'selected' : ''}`}
-                    onClick={(e) => { e.stopPropagation(); onChange('yape'); }}
-                  >
-                    <Form.Check
-                      type="radio"
-                      name="whatsappMethod"
-                      id="yape"
-                      checked={selectedMethod === 'yape'}
-                      onChange={() => onChange('yape')}
-                      label={
-                        <div className="d-flex align-items-center">
-                          <FaMobileAlt className="me-2" style={{ color: '#d7ad44' }} />
-                          <div>
-                            <strong>Yape</strong>
-                            <br />
-                            <small className="text-muted">Yapea y envía el comprobante</small>
-                          </div>
-                        </div>
-                      }
-                    />
-                  </div>
-
+            {/* ========================================== */}
+            {/* OPCIÓN: YAPE */}
+            {/* ========================================== */}
+            <div
+              className={`payment-method ${selectedMethod === 'yape' ? 'selected' : ''}`}
+              onClick={() => onChange('yape')}
+            >
+              <div className="payment-method-header">
+                <Form.Check
+                  type="radio"
+                  name="paymentMethod"
+                  id="yape"
+                  checked={selectedMethod === 'yape'}
+                  onChange={() => onChange('yape')}
+                  className="payment-method-radio"
+                />
+                <img src={yapeLogo} alt="Yape" className="payment-method-logo" />
+                <div className="payment-method-info">
+                  <h6>Yape</h6>
+                  <p>Yapea al número de Biofibras y sube tu comprobante</p>
                 </div>
-              </Collapse>
+              </div>
             </div>
 
           </div>
@@ -214,7 +162,7 @@ const PaymentMethods = ({
 
           {(selectedMethod === 'transferencia' || selectedMethod === 'yape') && (
             <Alert variant="info" className="mt-4 d-flex align-items-center">
-              <FaWhatsapp className="me-2" style={{ fontSize: '1.5rem', color: '#25D366' }} />
+              <FaInfoCircle className="me-2" style={{ fontSize: '1.5rem', color: '#0dcaf0' }} />
               <div>
                 <strong>Instrucciones de Pago:</strong> Las instrucciones detalladas para completar tu pago se mostrarán al finalizar la compra y también se enviarán a tu correo electrónico.
               </div>
