@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate, useSearchParams, useLocation } from 'react-router-dom';
 import { Container, Row, Col, Button, Form, Badge, Offcanvas, Spinner, Alert, Pagination } from 'react-bootstrap';
 import { FaFilter } from 'react-icons/fa';
 
@@ -13,6 +13,9 @@ import './Products.css';
 const Products = () => {
   const { categorySlug: categorySlugFromUrl } = useParams();
   const navigate = useNavigate();
+  const location = useLocation();
+  const [searchParams] = useSearchParams();
+  const searchQuery = searchParams.get('search')?.trim() || '';
 
   // === ESTADO GLOBAL ===
   const { products: allProducts, loading, error, fetchProducts } = useProducts();
@@ -81,7 +84,16 @@ const Products = () => {
 
     let productsToFilter = [...allProducts];
 
-    // Filtrado por categoría 
+    // Filtrado por búsqueda (viene del buscador del Header vía ?search=)
+    if (searchQuery) {
+      const term = searchQuery.toLowerCase();
+      productsToFilter = productsToFilter.filter(p =>
+        p.nombre?.toLowerCase().includes(term) ||
+        p.categoria?.toLowerCase().includes(term)
+      );
+    }
+
+    // Filtrado por categoría
     if (selectedCategorySlug) {
       const categoryName = categories.find(c => c.value === selectedCategorySlug)?.label;
       if (categoryName) {
@@ -115,7 +127,7 @@ const Products = () => {
 
     setFilteredProducts(productsToFilter);
     setCurrentPage(1);
-  }, [selectedCategorySlug, selectedPriceRanges, sortBy, allProducts, categories, loading]);
+  }, [searchQuery, selectedCategorySlug, selectedPriceRanges, sortBy, allProducts, categories, loading]);
 
   // === LÓGICA DE PAGINACIÓN ===
   const indexOfLastProduct = currentPage * PRODUCTS_PER_PAGE;
@@ -160,7 +172,9 @@ const Products = () => {
     navigate('/productos');
   };
 
-  const hasActiveFilters = selectedPriceRanges.size > 0 || !!selectedCategorySlug;
+  const clearSearch = () => navigate(location.pathname);
+
+  const hasActiveFilters = selectedPriceRanges.size > 0 || !!selectedCategorySlug || !!searchQuery;
 
   // === SIDEBAR SOLO CON PRECIO ===
   const FilterSidebar = ({ isMobile = false }) => (
@@ -255,9 +269,11 @@ const Products = () => {
           <div className="no-products-content">
             <h4>No se encontraron productos</h4>
             <p>
-              {hasActiveFilters
-                ? "Prueba ajustando o limpiando los filtros para encontrar lo que buscas."
-                : `Actualmente no hay productos disponibles en ${selectedCategorySlug ? `la categoría "${categoryName}"` : 'nuestro catálogo'}.`}
+              {searchQuery
+                ? `No encontramos productos que coincidan con "${searchQuery}".`
+                : hasActiveFilters
+                  ? "Prueba ajustando o limpiando los filtros para encontrar lo que buscas."
+                  : `Actualmente no hay productos disponibles en ${selectedCategorySlug ? `la categoría "${categoryName}"` : 'nuestro catálogo'}.`}
             </p>
             {hasActiveFilters && (
               <Button variant="primary" className="btn-mustard" onClick={clearFilters}>
@@ -285,6 +301,14 @@ const Products = () => {
       <Container className="py-4">
         <div className="products-header">
           <h1 className="products-main-title">Nuestros Productos</h1>
+          {searchQuery && (
+            <p className="products-count">
+              Resultados de búsqueda para: <strong>"{searchQuery}"</strong>{' '}
+              <Button variant="link" className="p-0 ms-1" onClick={clearSearch}>
+                (quitar búsqueda)
+              </Button>
+            </p>
+          )}
            {!loading && !error && (
           <p className="products-count">
             Mostrando {currentProducts.length} de {filteredProducts.length} producto{filteredProducts.length !== 1 && 's'}

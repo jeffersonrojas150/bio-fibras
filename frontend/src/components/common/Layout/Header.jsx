@@ -72,7 +72,7 @@ const Header = () => {
     setIsSearching(true);
     const delayDebounceFn = setTimeout(async () => {
       try {
-        const response = await apiClient.get(`/productos/?search=${searchTerm}`);
+        const response = await apiClient.get(`/productos/?search=${encodeURIComponent(searchTerm)}`);
         setSearchResults(response.data.results || []);
       } catch (error) {
         console.error("Error en la búsqueda:", error);
