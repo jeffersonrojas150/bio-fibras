@@ -74,9 +74,9 @@ const OrderDetail = () => {
                     <FaArrowLeft className="me-2" /> Volver a Mis Órdenes
                 </Link>
 
-                <Row>
+                <Row className="align-items-stretch">
                     <Col lg={8}>
-                        <Card className="order-details-card mb-4">
+                        <Card className="order-details-card mb-4 h-100">
                             <Card.Header as="h5">Detalles del Pedido #{order?.numero_orden}</Card.Header>
                             <Card.Body>
                                 <Table responsive borderless className="order-items-table">
@@ -127,9 +127,9 @@ const OrderDetail = () => {
                     </Col>
                 </Row>
 
-                <Row>
+                <Row className="align-items-stretch">
                     <Col md={6}>
-                        <Card className="shipping-info-card mb-4">
+                        <Card className="shipping-info-card mb-4 h-100">
                             <Card.Header as="h5"><FaTruck className="me-2" />Información de Recojo</Card.Header>
                             <Card.Body>
                                 <h6><FaUser className="me-2" />Recibe:</h6>
@@ -144,7 +144,7 @@ const OrderDetail = () => {
                     </Col>
 
                     <Col md={6}>
-                        <Card className="shipping-info-card mb-4">
+                        <Card className="shipping-info-card mb-4 h-100">
                             <Card.Header as="h5"><FaBox className="me-2" />Resumen</Card.Header>
                             <Card.Body>
                                 <p><strong>Fecha:</strong> {new Date(order?.fecha_creacion).toLocaleDateString('es-PE', { day: '2-digit', month: 'long', year: 'numeric' })}</p>
@@ -174,7 +174,7 @@ const OrderDetail = () => {
                 </Row>
 
                 {order?.comprobante_envio && (
-                    <Row>
+                    <Row className="justify-content-center">
                         <Col md={6}>
                             <Card className="shipping-info-card mb-4">
                                 <Card.Header as="h5"><FaFileImage className="me-2" />Comprobante de Envío</Card.Header>

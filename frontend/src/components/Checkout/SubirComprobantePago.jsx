@@ -83,7 +83,7 @@ const SubirComprobantePago = ({ orden, onUploaded }) => {
   if (orden.estado_pago === 'en_revision') {
     return (
       <>
-        <Card className="comprobante-upload-card comprobante-upload-success mt-4">
+        <Card className="comprobante-upload-card comprobante-upload-success mt-4 h-100">
           <Card.Body className="text-center">
             <FaCheckCircle size={48} style={{ color: '#228B22' }} className="mb-3" />
             <h5>¡Comprobante recibido!</h5>
@@ -105,7 +105,7 @@ const SubirComprobantePago = ({ orden, onUploaded }) => {
   if (orden.estado_pago === 'pagado') {
     return (
       <>
-        <Card className="comprobante-upload-card comprobante-upload-success mt-4">
+        <Card className="comprobante-upload-card comprobante-upload-success mt-4 h-100">
           <Card.Body className="text-center">
             <FaCheckCircle size={48} style={{ color: '#228B22' }} className="mb-3" />
             <h5>Pago confirmado</h5>
@@ -121,7 +121,7 @@ const SubirComprobantePago = ({ orden, onUploaded }) => {
   if (orden.estado_pago === 'cancelado') {
     return (
       <>
-        <Card className="comprobante-upload-card mt-4">
+        <Card className="comprobante-upload-card mt-4 h-100">
           <Card.Header as="h5">Comprobante de Pago</Card.Header>
           <Card.Body>
             <ComprobanteReadOnly src={orden.comprobante_pago} onExpand={() => setShowImageModal(true)} />
@@ -135,7 +135,7 @@ const SubirComprobantePago = ({ orden, onUploaded }) => {
   // Pendiente (primera vez) o rechazado (corrección): formulario de subida habilitado
   return (
     <>
-      <Card className="comprobante-upload-card mt-4">
+      <Card className="comprobante-upload-card mt-4 h-100">
         <Card.Header as="h5">
           {orden.estado_pago === 'rechazado' ? 'Sube tu comprobante corregido' : 'Último paso: sube tu comprobante de pago'}
         </Card.Header>
