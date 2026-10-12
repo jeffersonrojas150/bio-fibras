@@ -78,7 +78,18 @@ const OrderConfirmation = () => {
                   <tbody>
                     {order.items.map((item) => (
                       <tr key={item.id}>
-                        <td>{item.producto_nombre}</td>
+                        <td>
+                          <div className="order-item-display">
+                            {item.producto_imagen ? (
+                              <img src={item.producto_imagen} alt={item.producto_nombre} className="order-item-thumbnail" />
+                            ) : (
+                              <div className="order-item-thumbnail-placeholder">
+                                <i className="bi bi-image-fill text-muted"></i>
+                              </div>
+                            )}
+                            <span>{item.producto_nombre}</span>
+                          </div>
+                        </td>
                         <td className="text-center">x {item.cantidad}</td>
                         <td className="text-end">S/ {parseFloat(item.precio_total).toFixed(2)}</td>
                       </tr>
