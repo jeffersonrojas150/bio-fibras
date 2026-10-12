@@ -112,10 +112,11 @@ const ProductDetail = () => {
     setQuantity(newQuantity);
   };
 
-  const handleAddToCart = () => {
-    addToCart(product, quantity);
-
-    notifySuccess(`🛒 ¡"${product.name}" añadido al carrito!`);
+  const handleAddToCart = async () => {
+    const seAgrego = await addToCart(product, quantity);
+    if (seAgrego) {
+      notifySuccess(`🛒 ¡"${product.name}" añadido al carrito!`);
+    }
   };
 
   // <--  Se reemplaza la función `toggleFavorite` por una que usa el contexto

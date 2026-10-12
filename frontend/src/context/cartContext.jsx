@@ -61,15 +61,18 @@ export const CartProvider = ({ children }) => {
     }
   }, [isAuthenticated, fetchCart]);
 
+  // Devuelve true solo si el producto quedó agregado de verdad, para que
+  // quien la llame sepa si corresponde mostrar su propio aviso de éxito.
   const addToCart = async (product, quantity = 1) => {
     if (!isAuthenticated) {
       notifyInfo("Debes iniciar sesión para agregar productos al carrito.");
-      return;
+      return false;
     }
 
     const existingItem = cartItems.find(item => item.id === product.id);
     if (existingItem) {
-      return updateQuantity(product.id, existingItem.quantity + quantity);
+      await updateQuantity(product.id, existingItem.quantity + quantity);
+      return true;
     }
 
     const previousCart = [...cartItems];
@@ -99,10 +102,12 @@ export const CartProvider = ({ children }) => {
           }
           : item
       ));
+      return true;
     } catch (error) {
       console.error("Error al añadir al carrito:", error);
       notifyError("Hubo un error al añadir el producto. Por favor, inténtalo de nuevo.");
       setCartItems(previousCart);
+      return false;
     }
   };
 
