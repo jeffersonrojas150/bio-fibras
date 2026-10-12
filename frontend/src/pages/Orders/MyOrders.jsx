@@ -5,6 +5,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/authContext';
 import { useOrders } from '../../context/ordersContext';
 import { useState } from 'react';
+import { getEstadoOrdenConfig, getEstadoPagoConfig } from '../../constants/orderStatus';
 import './MyOrders.css';
 
 const MyOrders = () => {
@@ -24,26 +25,12 @@ const MyOrders = () => {
   }, [isAuthenticated, navigate, fetchOrders]);
 
   const getStatusBadge = (estadoOrden, estadoPago) => {
-    if (estadoPago === 'cancelado') {
-      return <Badge bg="danger">Cancelado</Badge>;
-    }
-    const statusConfig = {
-      pendiente: { text: 'Pendiente', variant: 'warning' },
-      enviado:   { text: 'Enviado',   variant: 'info'    },
-      entregado: { text: 'Entregado', variant: 'success' },
-    };
-    const config = statusConfig[estadoOrden] || { text: 'Procesando', variant: 'secondary' };
+    const config = getEstadoOrdenConfig(estadoOrden, estadoPago);
     return <Badge bg={config.variant}>{config.text}</Badge>;
   };
 
   const getPagoBadge = (estadoPago) => {
-    const config = {
-      pendiente: { text: 'Pago pendiente', variant: 'warning' },
-      en_revision: { text: 'En revisión', variant: 'info' },
-      pagado: { text: 'Pagado', variant: 'success' },
-      rechazado: { text: 'Rechazado', variant: 'danger' },
-      cancelado: { text: 'Cancelado', variant: 'danger' },
-    }[estadoPago] || { text: estadoPago, variant: 'secondary' };
+    const config = getEstadoPagoConfig(estadoPago);
     return <Badge bg={config.variant}>{config.text}</Badge>;
   };
 

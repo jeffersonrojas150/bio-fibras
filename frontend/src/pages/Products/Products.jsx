@@ -3,11 +3,11 @@ import { useParams, useNavigate, useSearchParams, useLocation } from 'react-rout
 import { Container, Row, Col, Button, Form, Badge, Offcanvas, Spinner, Alert, Pagination } from 'react-bootstrap';
 import { FaFilter } from 'react-icons/fa';
 
-import apiClient from '../../api';
 import CustomSortDropdown from './CustomSortDropdown';
 import ProductCard from '../../components/ProductCard/ProductCard';
 import CategoryCarousel from '../../components/CategoryCarousel/CategoryCarousel';
 import { useProducts } from '../../context/productContext';
+import { useCategories } from '../../context/categoryContext';
 import './Products.css';
 
 const Products = () => {
@@ -19,9 +19,9 @@ const Products = () => {
 
   // === ESTADO GLOBAL ===
   const { products: allProducts, loading, error, fetchProducts } = useProducts();
+  const { categories, fetchCategories } = useCategories();
 
   // === ESTADOS LOCALES ===
-  const [categories, setCategories] = useState([]);
   const [filteredProducts, setFilteredProducts] = useState([]);
 
 
@@ -53,24 +53,8 @@ const Products = () => {
   // === EFECTO PARA OBTENER DATOS INICIALES ===
   useEffect(() => {
     fetchProducts();
-
-    const fetchCategories = async () => {
-      if (categories.length === 0) {
-        try {
-          const categoriesResponse = await apiClient.get('/categorias/');
-          const transformedCategories = (categoriesResponse.data.results || categoriesResponse.data).map(cat => ({
-            value: cat.slug,
-            label: cat.nombre,
-          }));
-          setCategories(transformedCategories);
-        } catch (err) {
-          console.error("Error al obtener las categorías:", err);
-        }
-      }
-    };
-
     fetchCategories();
-  }, [fetchProducts, categories.length]);
+  }, [fetchProducts, fetchCategories]);
 
   // === SINCRONIZAR CATEGORÍA CON LA URL ===
   useEffect(() => {
@@ -95,7 +79,7 @@ const Products = () => {
 
     // Filtrado por categoría
     if (selectedCategorySlug) {
-      const categoryName = categories.find(c => c.value === selectedCategorySlug)?.label;
+      const categoryName = categories.find(c => c.slug === selectedCategorySlug)?.name;
       if (categoryName) {
         productsToFilter = productsToFilter.filter(p => p.categoria === categoryName);
       }
@@ -263,7 +247,7 @@ const Products = () => {
     if (error) return <Alert variant="danger" className="text-center">{error}</Alert>;
 
     if (filteredProducts.length === 0) {
-      const categoryName = categories.find(c => c.value === selectedCategorySlug)?.label || 'la vista actual';
+      const categoryName = categories.find(c => c.slug === selectedCategorySlug)?.name || 'la vista actual';
       return (
         <div className="no-products">
           <div className="no-products-content">

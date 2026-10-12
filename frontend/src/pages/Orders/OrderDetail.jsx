@@ -4,6 +4,7 @@ import { Container, Row, Col, Card, Spinner, Alert, Badge, Table, Button, Modal 
 import { FaArrowLeft, FaBox, FaUser, FaTruck, FaCreditCard, FaFileImage } from 'react-icons/fa';
 import apiClient from '../../api';
 import SubirComprobantePago from '../../components/Checkout/SubirComprobantePago';
+import { getEstadoOrdenConfig, getEstadoPagoConfig } from '../../constants/orderStatus';
 import './Orders.css';
 
 const OrderDetail = () => {
@@ -36,26 +37,12 @@ const OrderDetail = () => {
     }, [orderId]);
 
     const getStatusBadge = (estadoOrden, estadoPago) => {
-        if (estadoPago === 'cancelado') {
-            return <Badge bg="danger">Cancelado</Badge>;
-        }
-        const statusConfig = {
-            pendiente: { text: 'Pendiente', variant: 'warning' },
-            enviado: { text: 'Enviado', variant: 'info' },
-            entregado: { text: 'Entregado', variant: 'success' },
-        };
-        const config = statusConfig[estadoOrden] || { text: 'Procesando', variant: 'secondary' };
+        const config = getEstadoOrdenConfig(estadoOrden, estadoPago);
         return <Badge bg={config.variant} className="fs-6">{config.text}</Badge>;
     };
 
     const getPagoBadge = (estadoPago) => {
-        const config = {
-            pendiente: { text: 'Pago pendiente', variant: 'warning' },
-            en_revision: { text: 'Comprobante en revisión', variant: 'info' },
-            pagado: { text: 'Pagado', variant: 'success' },
-            rechazado: { text: 'Comprobante rechazado', variant: 'danger' },
-            cancelado: { text: 'Cancelado', variant: 'danger' },
-        }[estadoPago] || { text: estadoPago, variant: 'secondary' };
+        const config = getEstadoPagoConfig(estadoPago);
         return <Badge bg={config.variant} className="fs-6">{config.text}</Badge>;
     };
 
