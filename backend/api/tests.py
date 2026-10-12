@@ -121,6 +121,28 @@ class SubirComprobantePagoViewTest(TestCase):
         self.assertEqual(orden.estado_pago, 'en_revision')
         self.assertEqual(orden.motivo_rechazo, '')
 
+    @patch('api.email_service.resend.Emails.send')
+    def test_resubir_tras_rechazo_avisa_al_admin_por_correo(self, mock_send):
+        orden = self._crear_orden(estado_pago='rechazado', motivo_rechazo='Monto incorrecto')
+        url = f'/api/ordenes/{orden.id}/comprobante/'
+        response = self.api.post(url, {'comprobante_pago': _imagen_de_prueba()}, format='multipart')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        self.assertEqual(mock_send.call_count, 1)
+        call_kwargs = mock_send.call_args[0][0]
+        self.assertEqual(call_kwargs['to'], ['bio.fibras.j@gmail.com'])
+        self.assertIn('Monto incorrecto', call_kwargs['html'])
+        self.assertIn(orden.numero_orden, call_kwargs['html'])
+
+    @patch('api.email_service.resend.Emails.send')
+    def test_primera_subida_no_avisa_al_admin_por_correo(self, mock_send):
+        """Solo la corrección tras un rechazo dispara el aviso al admin, no la primera subida."""
+        orden = self._crear_orden()
+        url = f'/api/ordenes/{orden.id}/comprobante/'
+        response = self.api.post(url, {'comprobante_pago': _imagen_de_prueba()}, format='multipart')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(mock_send.call_count, 0)
+
 
 class RechazoPagoEmailTest(TestCase):
     @patch('api.email_service.resend.Emails.send')

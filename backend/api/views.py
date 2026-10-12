@@ -56,12 +56,13 @@ from .serializers import (
 from django.db.models import F, Sum, Count, Q
 
 from .email_service import (
-    enviar_correo_confirmacion_orden, 
-    enviar_correo_nueva_orden_admin, 
-    enviar_correo_password_reset, 
-    enviar_correo_contacto, 
+    enviar_correo_confirmacion_orden,
+    enviar_correo_nueva_orden_admin,
+    enviar_correo_password_reset,
+    enviar_correo_contacto,
     enviar_correo_confirmacion_mercadopago,
     enviar_correo_orden_cancelada_admin,
+    enviar_correo_comprobante_reenviado_admin,
     )
 
 from .mercado_pago_service import MercadoPagoService
@@ -289,6 +290,9 @@ class SubirComprobantePagoView(APIView):
                 status=status.HTTP_400_BAD_REQUEST
             )
 
+        era_rechazado = orden.estado_pago == Orden.EstadoPago.RECHAZADO
+        motivo_rechazo_anterior = orden.motivo_rechazo
+
         serializer = SubirComprobantePagoSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
 
@@ -296,6 +300,11 @@ class SubirComprobantePagoView(APIView):
         orden.estado_pago = Orden.EstadoPago.EN_REVISION
         orden.motivo_rechazo = ''
         orden.save()
+
+        # Si venía de un rechazo, el admin no tiene otra forma de enterarse
+        # de que ya hay un comprobante corregido esperando revisión.
+        if era_rechazado:
+            enviar_correo_comprobante_reenviado_admin(orden, motivo_rechazo_anterior)
 
         return Response(
             OrdenSerializer(orden, context={'request': request}).data,

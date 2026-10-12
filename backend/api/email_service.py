@@ -249,3 +249,31 @@ def enviar_correo_pago_rechazado(orden):
     except Exception as e:
         print(f"ERROR al enviar correo de rechazo para #{orden.numero_orden}: {e}")
         return False
+
+
+def enviar_correo_comprobante_reenviado_admin(orden, motivo_rechazo_anterior):
+    """
+    Avisa al admin cuando un cliente sube un comprobante corregido después de
+    que su comprobante anterior fue rechazado — sin esto, el admin no tiene
+    forma de enterarse de que hay un nuevo comprobante listo para revisar.
+    """
+    try:
+        admin_url = f"https://admin.bio-fibras.com.pe/orders/{orden.id}"
+        contexto = {
+            'orden': orden,
+            'usuario': orden.usuario,
+            'motivo_rechazo_anterior': motivo_rechazo_anterior,
+            'admin_url': admin_url,
+        }
+        html = render_to_string('emails/comprobante_reenviado_admin.html', contexto)
+        resend.Emails.send({
+            "from": FROM_EMAIL,
+            "to": ["bio.fibras.j@gmail.com"],
+            "subject": f"⚠️ Comprobante corregido para revisar - Pedido #{orden.numero_orden}",
+            "html": html,
+        })
+        print(f"Correo de comprobante reenviado (admin) enviado para la orden #{orden.numero_orden}")
+        return True
+    except Exception as e:
+        print(f"ERROR al enviar correo de comprobante reenviado (admin) para #{orden.numero_orden}: {e}")
+        return False
