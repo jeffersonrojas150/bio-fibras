@@ -1,20 +1,20 @@
 // src/components/Checkout/SubirComprobantePago.jsx
 import React, { useState } from 'react';
 import { Card, Button, Alert, Form, Spinner, Modal } from 'react-bootstrap';
-import { FaUpload, FaCheckCircle, FaWhatsapp, FaExclamationTriangle } from 'react-icons/fa';
+import { FaUpload, FaCheckCircle, FaWhatsapp, FaExclamationTriangle, FaFileImage } from 'react-icons/fa';
 import apiClient from '../../api';
 import './SubirComprobantePago.css';
 
 const ComprobanteReadOnly = ({ src, onExpand }) => (
-  <div className="text-center mb-3">
+  <div className="text-center mb-2">
     <img
       src={src}
       alt="Comprobante de pago"
-      style={{ maxWidth: '100%', maxHeight: '260px', borderRadius: '8px', cursor: 'pointer' }}
+      style={{ maxWidth: '100%', maxHeight: '160px', borderRadius: '8px', cursor: 'pointer' }}
       onClick={onExpand}
     />
     <div>
-      <Button variant="link" size="sm" onClick={onExpand}>
+      <Button variant="link" size="sm" className="py-1" onClick={onExpand}>
         Ver imagen completa
       </Button>
     </div>
@@ -83,15 +83,16 @@ const SubirComprobantePago = ({ orden, onUploaded }) => {
   if (orden.estado_pago === 'en_revision') {
     return (
       <>
-        <Card className="comprobante-upload-card comprobante-upload-success mt-4 h-100">
+        <Card className="shipping-info-card h-100">
+          <Card.Header as="h5"><FaFileImage className="me-2" />Comprobante de Pago</Card.Header>
           <Card.Body className="text-center">
-            <FaCheckCircle size={48} style={{ color: '#228B22' }} className="mb-3" />
-            <h5>¡Comprobante recibido!</h5>
+            <FaCheckCircle size={36} style={{ color: '#228B22' }} className="mb-2" />
+            <h6>¡Comprobante recibido!</h6>
             <ComprobanteReadOnly src={orden.comprobante_pago} onExpand={() => setShowImageModal(true)} />
-            <p className="text-muted">
+            <p className="text-muted small">
               Tu pedido #{orden.numero_orden} quedó en revisión. Avísanos por WhatsApp para agilizar la confirmación.
             </p>
-            <Button variant="success" href={whatsappUrl} target="_blank" className="w-100">
+            <Button variant="success" size="sm" href={whatsappUrl} target="_blank" className="w-100">
               <FaWhatsapp className="me-2" /> Avisar por WhatsApp
             </Button>
           </Card.Body>
@@ -105,10 +106,11 @@ const SubirComprobantePago = ({ orden, onUploaded }) => {
   if (orden.estado_pago === 'pagado') {
     return (
       <>
-        <Card className="comprobante-upload-card comprobante-upload-success mt-4 h-100">
+        <Card className="shipping-info-card h-100">
+          <Card.Header as="h5"><FaFileImage className="me-2" />Comprobante de Pago</Card.Header>
           <Card.Body className="text-center">
-            <FaCheckCircle size={48} style={{ color: '#228B22' }} className="mb-3" />
-            <h5>Pago confirmado</h5>
+            <FaCheckCircle size={36} style={{ color: '#228B22' }} className="mb-2" />
+            <h6>Pago confirmado</h6>
             <ComprobanteReadOnly src={orden.comprobante_pago} onExpand={() => setShowImageModal(true)} />
           </Card.Body>
         </Card>
@@ -121,8 +123,8 @@ const SubirComprobantePago = ({ orden, onUploaded }) => {
   if (orden.estado_pago === 'cancelado') {
     return (
       <>
-        <Card className="comprobante-upload-card mt-4 h-100">
-          <Card.Header as="h5">Comprobante de Pago</Card.Header>
+        <Card className="shipping-info-card h-100">
+          <Card.Header as="h5"><FaFileImage className="me-2" />Comprobante de Pago</Card.Header>
           <Card.Body>
             <ComprobanteReadOnly src={orden.comprobante_pago} onExpand={() => setShowImageModal(true)} />
           </Card.Body>

@@ -74,9 +74,9 @@ const OrderDetail = () => {
                     <FaArrowLeft className="me-2" /> Volver a Mis Órdenes
                 </Link>
 
-                <Row className="align-items-stretch">
+                <Row className="align-items-stretch mb-4">
                     <Col lg={8}>
-                        <Card className="order-details-card mb-4 h-100">
+                        <Card className="order-details-card h-100">
                             <Card.Header as="h5">Detalles del Pedido #{order?.numero_orden}</Card.Header>
                             <Card.Body>
                                 <Table responsive borderless className="order-items-table">
@@ -127,9 +127,9 @@ const OrderDetail = () => {
                     </Col>
                 </Row>
 
-                <Row className="align-items-stretch">
+                <Row className="align-items-stretch mb-4">
                     <Col md={6}>
-                        <Card className="shipping-info-card mb-4 h-100">
+                        <Card className="shipping-info-card h-100">
                             <Card.Header as="h5"><FaTruck className="me-2" />Información de Recojo</Card.Header>
                             <Card.Body>
                                 <h6><FaUser className="me-2" />Recibe:</h6>
@@ -144,7 +144,7 @@ const OrderDetail = () => {
                     </Col>
 
                     <Col md={6}>
-                        <Card className="shipping-info-card mb-4 h-100">
+                        <Card className="shipping-info-card h-100">
                             <Card.Header as="h5"><FaBox className="me-2" />Resumen</Card.Header>
                             <Card.Body>
                                 <p><strong>Fecha:</strong> {new Date(order?.fecha_creacion).toLocaleDateString('es-PE', { day: '2-digit', month: 'long', year: 'numeric' })}</p>
