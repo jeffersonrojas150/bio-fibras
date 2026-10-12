@@ -1,13 +1,14 @@
 // src/pages/Orders/OrderDetail.jsx
-import { useRef } from 'react'
+import { useRef, useState } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import {
   ArrowLeft, Package, User, MapPin, CreditCard,
   FileImage, CheckCircle, XCircle, Truck,
-  Save, Upload, X, Building2, ShoppingCart,
+  Save, Upload, X, Building2, ShoppingCart, ZoomIn,
 } from 'lucide-react'
 import { useOrderDetail } from './hooks/useOrderDetail'
 import { ESTADO_PAGO_OPTIONS, ESTADO_ORDEN_OPTIONS } from '../../constants/orderStatus'
+import ImageLightbox from '../../components/UI/ImageLightbox'
 
 function Badge({ value, options }) {
   const cfg = options.find(o => o.value === value) || { label: value, bg: '#f5f5f5', color: '#555' }
@@ -81,18 +82,28 @@ function SelectEstado({ label, value, options, onChange }) {
 
 function ComprobanteUpload({ label, currentUrl, preview, onFileChange, onClear }) {
   const inputRef = useRef()
+  const [lightboxSrc, setLightboxSrc] = useState(null)
+  const imageSrc = preview || currentUrl
   return (
     <div className="flex flex-col gap-2">
       <span className="text-xs font-semibold uppercase tracking-wide" style={{ color: '#7e4400' }}>
         {label}
       </span>
-      {(preview || currentUrl) && (
-        <div className="relative w-full max-w-xs">
+      {imageSrc && (
+        <div className="relative w-full max-w-xs group">
           <img
-            src={preview || currentUrl} alt={label}
-            className="w-full rounded-xl border object-contain max-h-48"
+            src={imageSrc} alt={label}
+            onClick={() => setLightboxSrc(imageSrc)}
+            className="w-full rounded-xl border object-contain max-h-48 cursor-zoom-in"
             style={{ borderColor: '#e8d5a3' }}
           />
+          <div
+            onClick={() => setLightboxSrc(imageSrc)}
+            className="absolute inset-0 flex items-center justify-center rounded-xl opacity-0 group-hover:opacity-100 transition-opacity cursor-zoom-in pointer-events-none group-hover:pointer-events-auto"
+            style={{ backgroundColor: 'rgba(0,0,0,0.25)' }}
+          >
+            <ZoomIn size={24} className="text-white" />
+          </div>
           {preview && (
             <button
               onClick={onClear}
@@ -104,6 +115,7 @@ function ComprobanteUpload({ label, currentUrl, preview, onFileChange, onClear }
           )}
         </div>
       )}
+      <ImageLightbox src={lightboxSrc} alt={label} onClose={() => setLightboxSrc(null)} />
       {!preview && (
         <button
           onClick={() => inputRef.current.click()}
