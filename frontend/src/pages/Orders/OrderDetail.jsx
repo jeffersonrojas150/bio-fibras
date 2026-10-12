@@ -121,9 +121,8 @@ const OrderDetail = () => {
                     </Col>
 
                     <Col lg={4}>
-                        {order && (order.metodo_pago === 'yape' || order.metodo_pago === 'transferencia') &&
-                            ['pendiente', 'en_revision', 'rechazado'].includes(order.estado_pago) && (
-                                <SubirComprobantePago orden={order} onUploaded={setOrder} />
+                        {order && (order.metodo_pago === 'yape' || order.metodo_pago === 'transferencia') && (
+                            <SubirComprobantePago orden={order} onUploaded={setOrder} />
                         )}
 
                         <Card className="shipping-info-card mb-4">
@@ -162,9 +161,8 @@ const OrderDetail = () => {
                                 <p className="mb-1"><strong>DNI:</strong> {order?.direccion?.dni}</p>
                                 <p><strong>Teléfono:</strong> {order?.direccion?.telefono}</p>
                                 <hr />
-                                <h6>Agencia:</h6>
-                                <p className="mb-1"><strong>{order?.direccion?.agencia_recojo}</strong></p>
-                                <p className="mb-0">{order?.direccion?.direccion_agencia}</p>
+                                <p className="mb-1"><strong>Agencia:</strong> {order?.direccion?.agencia_recojo}</p>
+                                <p className="mb-0"><strong>Dirección:</strong> {order?.direccion?.direccion_agencia}</p>
                             </Card.Body>
                         </Card>
 
