@@ -4,6 +4,7 @@ import { Container, Row, Col, Button, Form, Badge, Modal, Alert, Spinner } from 
 import { FaHeart, FaRegHeart, FaShoppingCart, FaArrowLeft, FaMinus, FaPlus, FaShare, FaWhatsapp, FaFacebook, FaInstagram, FaBox, FaShippingFast, FaUndo } from 'react-icons/fa';
 
 import { useCart } from '../../context/cartContext';
+import { useProducts } from '../../context/productContext';
 import apiClient from '../../api';
 import './ProductDetail.css';
 
@@ -19,6 +20,7 @@ const ProductDetail = () => {
   const { cartItems: cart, addToCart, loading: cartLoading } = useCart();
   // <-- Obtener las funciones del contexto de favoritos
   const { isFavorite, addFavorite, removeFavorite } = useFavorites();
+  const { products: allProducts, fetchProducts } = useProducts();
 
   // Estados del producto, carga y error
   const [product, setProduct] = useState(null);
@@ -77,6 +79,31 @@ const ProductDetail = () => {
 
     fetchProductData();
   }, [slug, navigate]);
+
+  // Productos relacionados: misma categoría, reutilizando el caché global de productos
+  useEffect(() => {
+    fetchProducts();
+  }, [fetchProducts]);
+
+  useEffect(() => {
+    if (!product || allProducts.length === 0) {
+      setRelatedProducts([]);
+      return;
+    }
+
+    const related = allProducts
+      .filter(p => p.categoria === product.category && p.id !== product.id)
+      .slice(0, 4)
+      .map(p => ({
+        id: p.id,
+        slug: p.slug,
+        image: p.imagen_principal,
+        name: p.nombre,
+        price: p.precio_oferta ? parseFloat(p.precio_oferta) : parseFloat(p.precio_unitario),
+      }));
+
+    setRelatedProducts(related);
+  }, [product, allProducts]);
 
 
 
