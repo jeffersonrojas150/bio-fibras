@@ -274,6 +274,10 @@ class Orden(models.Model):
                     enviar_correo_orden_cancelada(self)
                 elif self.estado_pago == self.EstadoPago.RECHAZADO:
                     enviar_correo_pago_rechazado(self)
+                elif self.estado_pago == self.EstadoPago.EN_REVISION:
+                    # El cliente acaba de subir su comprobante de pago: es él mismo
+                    # quien provoca este cambio de estado, no hay nada nuevo que notificarle.
+                    pass
                 else:
                     if not (not estado_anterior.comprobante_envio and self.comprobante_envio):
                          enviar_correo_actualizacion_estado(self)

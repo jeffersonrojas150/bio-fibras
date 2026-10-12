@@ -141,7 +141,8 @@ class RechazoPagoEmailTest(TestCase):
         self.assertEqual(call_kwargs['to'], ['cliente5@test.com'])
 
     @patch('api.email_service.resend.Emails.send')
-    def test_en_revision_sigue_usando_correo_generico(self, mock_send):
+    def test_en_revision_no_envia_correo(self, mock_send):
+        """El cliente provoca este cambio al subir su comprobante; no hay nada nuevo que notificarle."""
         usuario = User.objects.create_user(username='cliente6', password='x', email='cliente6@test.com')
         orden = Orden.objects.create(usuario=usuario, total=100, cantidad_compra=1)
         mock_send.reset_mock()
@@ -149,6 +150,4 @@ class RechazoPagoEmailTest(TestCase):
         orden.estado_pago = Orden.EstadoPago.EN_REVISION
         orden.save()
 
-        self.assertEqual(mock_send.call_count, 1)
-        call_kwargs = mock_send.call_args[0][0]
-        self.assertIn('Actualización de tu pedido', call_kwargs['subject'])
+        self.assertEqual(mock_send.call_count, 0)
