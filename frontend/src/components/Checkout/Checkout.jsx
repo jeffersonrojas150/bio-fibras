@@ -97,7 +97,7 @@ const Checkout = () => {
       // Invalidar caché para que MyOrders recargue en la próxima visita
       invalidateOrders();
 
-      navigate('/order-confirmation', { state: { order: newOrder } });
+      navigate('/order-confirmation', { state: { order: newOrder }, replace: true });
 
     } catch (err) {
       console.error('Error al procesar el pedido:', err.response?.data || err);

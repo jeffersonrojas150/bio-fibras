@@ -24,6 +24,18 @@ const OrderConfirmation = () => {
     }
   }, [order, navigate]);
 
+  // Evita que el cliente vuelva a un paso anterior (checkout/carrito) con el botón "atrás":
+  // cada intento de retroceder re-inserta la entrada actual en el historial.
+  useEffect(() => {
+    if (!order) return undefined;
+    window.history.pushState(window.history.state, '', window.location.href);
+    const bloquearAtras = () => {
+      window.history.pushState(window.history.state, '', window.location.href);
+    };
+    window.addEventListener('popstate', bloquearAtras);
+    return () => window.removeEventListener('popstate', bloquearAtras);
+  }, [order]);
+
   // Mientras el efecto redirige, no renderizamos nada.
   if (!order) {
     return null;

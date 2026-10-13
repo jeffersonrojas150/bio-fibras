@@ -32,8 +32,11 @@
                             <div style="background-color: #fef9ef; border-left: 4px solid #C8860D; padding: 20px; margin: 25px 0; border-radius: 0 5px 5px 0;">
                                 <h3 style="margin-top: 0; color: #C8860D; font-size: 18px;">¿Necesitas ayuda o ya realizaste el pago?</h3>
                                 <p style="color: #555555; line-height: 1.6;">
-                                    Si ya pagaste, por favor envíanos el comprobante para poder procesar tu orden. Si tienes alguna duda o problema, no dudes en contactarnos.
+                                    Si ya pagaste, sube tu comprobante en el detalle de tu pedido para que podamos procesar tu orden. Si tienes alguna duda o problema, no dudes en contactarnos.
                                 </p>
+                                <a href="{{ frontend_url }}/ordenes/{{ orden.id }}" target="_blank" style="background-color: #C8860D; color: white; padding: 12px 25px; text-decoration: none; border-radius: 5px; display: inline-block; font-weight: bold; margin-top: 15px; margin-right: 8px;">
+                                    Subir voucher de pago
+                                </a>
                                 <a href="https://wa.me/51910881837?text=Hola,%20tengo%20una%20consulta%20sobre%20mi%20pedido%20%23{{ orden.numero_orden }}" target="_blank" style="background-color: #25D366; color: white; padding: 12px 25px; text-decoration: none; border-radius: 5px; display: inline-block; font-weight: bold; margin-top: 15px;">
                                     Contactar por WhatsApp
                                 </a>

@@ -12,6 +12,7 @@ def enviar_correo_confirmacion_orden(orden):
             'orden': orden,
             'items': orden.items.all(),
             'usuario': orden.usuario,
+            'frontend_url': settings.FRONTEND_URL,
         }
         html = render_to_string('emails/confirmacion_orden.html', contexto)
         resend.Emails.send({
@@ -120,6 +121,7 @@ def enviar_correo_recordatorio_pago(orden):
         contexto = {
             'orden': orden,
             'usuario': orden.usuario,
+            'frontend_url': settings.FRONTEND_URL,
         }
         html = render_to_string('emails/recordatorio_pago.html', contexto)
         resend.Emails.send({

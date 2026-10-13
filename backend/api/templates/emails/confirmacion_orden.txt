@@ -28,9 +28,9 @@ Para confirmar tu pedido, por favor realiza el pago a través de Yape a los sigu
 Titular: Jairo Jhanpier Villegas Solano
 Número: 910 881 837
 
-¡IMPORTANTE! Una vez realizado el pago, envía la captura junto con tu número de pedido #{{ orden.numero_orden }} a nuestro WhatsApp.
+¡IMPORTANTE! Una vez realizado el pago, sube la captura de tu voucher en el detalle de tu pedido #{{ orden.numero_orden }}, dentro de tu cuenta en Bio-Fibras.
 
-Puedes usar este enlace: https://wa.me/51910881837?text=Hola,%20adjunto%20el%20voucher%20de%20mi%20pedido%20%23{{ orden.numero_orden }}
+Súbelo aquí: {{ frontend_url }}/ordenes/{{ orden.id }}
 
 {% elif orden.metodo_pago == 'transferencia' %}
 Para confirmar tu pedido, por favor realiza una transferencia o depósito a nuestra cuenta BCP:
@@ -40,9 +40,9 @@ Titular: Jairo Jhanpier Villegas Solano
 Cuenta de Ahorro: 47571003862030
 CCI: 00247517100386203021
 
-¡IMPORTANTE! Una vez realizado el pago, envía la captura junto con tu número de pedido #{{ orden.numero_orden }} a nuestro WhatsApp.
+¡IMPORTANTE! Una vez realizado el pago, sube la captura de tu voucher en el detalle de tu pedido #{{ orden.numero_orden }}, dentro de tu cuenta en Bio-Fibras.
 
-Puedes usar este enlace: https://wa.me/51910881837?text=Hola,%20adjunto%20el%20voucher%20de%20mi%20pedido%20%23{{ orden.numero_orden }}
+Súbelo aquí: {{ frontend_url }}/ordenes/{{ orden.id }}
 
 {% endif %}
 

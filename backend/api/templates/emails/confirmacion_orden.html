@@ -84,11 +84,11 @@
                                 {% endif %}
 
 
-                                <p style="color: #555555; line-height: 1.6; margin-top: 15px;"><strong>¡Importante!</strong> Una vez realizado el pago, envía la captura junto con tu número de pedido <strong>#{{ orden.numero_orden }}</strong> a nuestro WhatsApp.</p>
+                                <p style="color: #555555; line-height: 1.6; margin-top: 15px;"><strong>¡Importante!</strong> Una vez realizado el pago, sube la captura de tu voucher en el detalle de tu pedido <strong>#{{ orden.numero_orden }}</strong>, dentro de tu cuenta en Bio-Fibras.</p>
                                
-                                <!-- Botón CTA Mejorado -->
-                                <a href="https://wa.me/51910881837?text=Hola,%20adjunto%20el%20voucher%20de%20mi%20pedido%20%23{{ orden.numero_orden }}" target="_blank" style="background-color: #25D366; color: white; padding: 12px 25px; text-decoration: none; border-radius: 5px; display: inline-block; font-weight: bold; margin-top: 15px;">
-                                    Enviar Voucher por WhatsApp
+                                <!-- Botón CTA -->
+                                <a href="{{ frontend_url }}/ordenes/{{ orden.id }}" target="_blank" style="background-color: #C8860D; color: white; padding: 12px 25px; text-decoration: none; border-radius: 5px; display: inline-block; font-weight: bold; margin-top: 15px;">
+                                    Subir voucher de pago
                                 </a>
                             </div>
                            
