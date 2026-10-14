@@ -11,7 +11,11 @@ Nuevo Estado del Pago: {{ orden.get_estado_pago_display }}
 Nuevo Estado del Envío: {{ orden.get_estado_orden_display }}
 
 ========================================
-
+{% if orden.estado_pago == 'pagado' and orden.estado_orden == 'pendiente' %}
+¡Tu pago fue aprobado! Revisamos tu comprobante y fue verificado con éxito.
+Ya no tienes que hacer nada más: solo queda esperar mientras preparamos tu pedido.
+Te avisaremos cuando sea enviado.
+{% endif %}
 Puedes revisar los detalles de tu pedido en cualquier momento desde tu cuenta en nuestra web.
 
 Gracias por tu paciencia.

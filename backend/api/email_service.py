@@ -253,6 +253,28 @@ def enviar_correo_pago_rechazado(orden):
         return False
 
 
+def enviar_correo_pedido_entregado(orden):
+    try:
+        contexto = {
+            'orden': orden,
+            'usuario': orden.usuario,
+            'items': orden.items.all(),
+            'frontend_url': settings.FRONTEND_URL,
+        }
+        html = render_to_string('emails/pedido_entregado.html', contexto)
+        resend.Emails.send({
+            "from": FROM_EMAIL,
+            "to": [orden.usuario.email],
+            "subject": f"¡Entregamos tu pedido #{orden.numero_orden} con éxito! 🎉",
+            "html": html,
+        })
+        print(f"Correo de pedido entregado enviado para la orden #{orden.numero_orden}")
+        return True
+    except Exception as e:
+        print(f"ERROR al enviar correo de pedido entregado para #{orden.numero_orden}: {e}")
+        return False
+
+
 def enviar_correo_comprobante_reenviado_admin(orden, motivo_rechazo_anterior):
     """
     Avisa al admin cuando un cliente sube un comprobante corregido después de

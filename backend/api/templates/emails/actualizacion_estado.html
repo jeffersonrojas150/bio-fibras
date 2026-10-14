@@ -131,11 +131,14 @@
                                     </p>
                                 </div>
                             {% elif orden.estado_pago == 'pagado' and orden.estado_orden == 'pendiente' %}
-                                <div style="background-color: #fff3e0; border-left: 4px solid #f57c00; padding: 20px; margin-top: 25px; border-radius: 0 5px 5px 0;">
-                                    <h3 style="margin-top: 0; color: #f57c00; font-size: 18px;">Preparando tu pedido 📦</h3>
+                                <div style="background-color: #e7f4e8; border-left: 4px solid #2e7d32; padding: 20px; margin-top: 25px; border-radius: 0 5px 5px 0;">
+                                    <h3 style="margin-top: 0; color: #2e7d32; font-size: 18px;">¡Tu pago fue aprobado! ✓</h3>
                                     <p style="color: #555555; line-height: 1.8;">
-                                        Tu pago ha sido confirmado y estamos preparando tu pedido con mucho cuidado. 
-                                        Te notificaremos cuando sea enviado.
+                                        Revisamos tu comprobante y tu pago fue verificado y aprobado con éxito.
+                                        Ya no tienes que hacer nada más: solo queda esperar mientras preparamos tu pedido con mucho cuidado.
+                                    </p>
+                                    <p style="color: #555555; line-height: 1.8; margin-top: 10px;">
+                                        Te avisaremos por correo cuando sea enviado. Mientras tanto, puedes seguir el estado de tu pedido abajo.
                                     </p>
                                 </div>
                             {% endif %}

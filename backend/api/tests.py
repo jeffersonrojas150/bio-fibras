@@ -173,3 +173,35 @@ class RechazoPagoEmailTest(TestCase):
         orden.save()
 
         self.assertEqual(mock_send.call_count, 0)
+
+
+class PedidoEntregadoEmailTest(TestCase):
+    @patch('api.email_service.resend.Emails.send')
+    def test_marcar_entregado_envia_correo_dedicado_no_el_generico(self, mock_send):
+        usuario = User.objects.create_user(username='cliente7', password='x', email='cliente7@test.com')
+        orden = Orden.objects.create(
+            usuario=usuario, total=100, cantidad_compra=1,
+            estado_pago='pagado', estado_orden='enviado',
+        )
+        mock_send.reset_mock()
+
+        orden.estado_orden = Orden.EstadoOrden.ENTREGADO
+        orden.save()
+
+        self.assertEqual(mock_send.call_count, 1)
+        call_kwargs = mock_send.call_args[0][0]
+        self.assertIn('Pedido entregado con éxito', call_kwargs['html'])
+        self.assertEqual(call_kwargs['to'], ['cliente7@test.com'])
+
+    @patch('api.email_service.resend.Emails.send')
+    def test_guardar_orden_ya_entregada_no_reenvia_correo(self, mock_send):
+        usuario = User.objects.create_user(username='cliente8', password='x', email='cliente8@test.com')
+        orden = Orden.objects.create(
+            usuario=usuario, total=100, cantidad_compra=1,
+            estado_pago='pagado', estado_orden='entregado',
+        )
+        mock_send.reset_mock()
+
+        orden.save()
+
+        self.assertEqual(mock_send.call_count, 0)

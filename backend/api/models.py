@@ -6,6 +6,7 @@ from .email_service import (
     enviar_correo_orden_cancelada,
     enviar_correo_voucher_disponible,
     enviar_correo_pago_rechazado,
+    enviar_correo_pedido_entregado,
 )
 from .utils.image_utils import comprimir_imagen
 
@@ -278,6 +279,11 @@ class Orden(models.Model):
                     # El cliente acaba de subir su comprobante de pago: es él mismo
                     # quien provoca este cambio de estado, no hay nada nuevo que notificarle.
                     pass
+                elif (self.estado_orden == self.EstadoOrden.ENTREGADO
+                      and estado_anterior.estado_orden != self.EstadoOrden.ENTREGADO):
+                    # Entrega confirmada por el admin: correo de celebración dedicado
+                    # en lugar de la actualización de estado genérica.
+                    enviar_correo_pedido_entregado(self)
                 else:
                     if not (not estado_anterior.comprobante_envio and self.comprobante_envio):
                          enviar_correo_actualizacion_estado(self)
